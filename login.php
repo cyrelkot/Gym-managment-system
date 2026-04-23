@@ -1,172 +1,252 @@
-
 <?php
 session_start();
 error_reporting(0);
 require_once('include/config.php');
-$msg = ""; 
-if(isset($_POST['submit'])) {
-  $email = trim($_POST['email']);
-  $password = md5(($_POST['password']));
-  if($email != "" && $password != "") {
-    try {
-      $query = "select id, fname, lname, email, mobile, password, address, create_date, status from tbluser where email=:email and password=:password";
-      $stmt = $dbh->prepare($query);
-      $stmt->bindParam('email', $email, PDO::PARAM_STR);
-      $stmt->bindValue('password', $password, PDO::PARAM_STR);
-      $stmt->execute();
-      $count = $stmt->rowCount();
-      $row   = $stmt->fetch(PDO::FETCH_ASSOC);
-      if($count == 1 && !empty($row)) {
-        if (isset($row['status']) && intval($row['status']) === 0) {
-          $msg = "Your account is pending approval by admin.";
-        } else {
-          $_SESSION['uid']   = $row['id'];
-          $_SESSION['email'] = $row['email'];
-          $_SESSION['name'] = $row['fname'];
-          header("location: index.php");
-          exit;
+
+$msg = "";
+
+if (isset($_POST['submit'])) {
+    $email = trim($_POST['email']);
+    $password = md5($_POST['password']);
+
+    if ($email !== "" && !empty($_POST['password'])) {
+        try {
+            $sql = "SELECT id, fname, status FROM tbluser WHERE email = :email AND password = :password LIMIT 1";
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':email', $email, PDO::PARAM_STR);
+            $query->bindParam(':password', $password, PDO::PARAM_STR);
+            $query->execute();
+            $user = $query->fetch(PDO::FETCH_ASSOC);
+
+            if (!empty($user)) {
+                if ((int)$user['status'] === 0) {
+                    $msg = "Your account is pending admin approval.";
+                } else {
+                    $_SESSION['uid'] = $user['id'];
+                    $_SESSION['fname'] = $user['fname'];
+                    header("location:index.php");
+                    exit;
+                }
+            } else {
+                $msg = "Invalid email or password.";
+            }
+        } catch (PDOException $e) {
+            $msg = "Login failed.";
         }
-      } else {
-        $msg = "Invalid username and password!";
-      }
-    } catch (PDOException $e) {
-      // Fallback for schemas without a 'status' column
-      try {
-        $query = "select id, fname, lname, email, mobile, password, address, create_date from tbluser where email=:email and password=:password";
-        $stmt = $dbh->prepare($query);
-        $stmt->bindParam('email', $email, PDO::PARAM_STR);
-        $stmt->bindValue('password', $password, PDO::PARAM_STR);
-        $stmt->execute();
-        $count = $stmt->rowCount();
-        $row   = $stmt->fetch(PDO::FETCH_ASSOC);
-        if($count == 1 && !empty($row)) {
-          $_SESSION['uid']   = $row['id'];
-          $_SESSION['email'] = $row['email'];
-          $_SESSION['name'] = $row['fname'];
-          header("location: index.php");
-          exit;
-        } else {
-          $msg = "Invalid username and password!";
-        }
-      } catch (PDOException $e2) {
-        echo "Error : ".$e2->getMessage();
-      }
+    } else {
+        $msg = "Fill all fields.";
     }
-  } else {
-    $msg = "Both fields are required!";
-  }
 }
 ?>
 <!DOCTYPE html>
 <html lang="zxx">
 <head>
-	<title>Gym Management System</title>
-	<meta charset="UTF-8">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/magnific-popup.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
-	<link rel="stylesheet" href="css/animate.css"/>
+<title>Gym Management System</title>
+<meta charset="UTF-8">
 
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
+<link rel="stylesheet" href="css/bootstrap.min.css"/>
+<link rel="stylesheet" href="css/font-awesome.min.css"/>
 
+<style>
+
+/* ===== BODY ===== */
+body{
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:#fff;
+}
+
+/* ===== HEADER ===== */
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    padding:15px 50px;
+    background:rgba(0,0,0,0.4);
+}
+
+.logo{
+    color:#22c55e;
+    font-weight:bold;
+    font-size:20px;
+}
+
+.menu a{
+    color:#fff;
+    margin-left:20px;
+    text-decoration:none;
+}
+
+/* ===== LOGIN ===== */
+.login-container{
+    height:90vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-card{
+    width:100%;
+    max-width:400px;
+    padding:40px;
+    border-radius:15px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(15px);
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+    text-align:center;
+}
+
+.login-card h3{
+    margin-bottom:5px;
+}
+
+.login-card p{
+    color:#cbd5f5;
+    font-size:14px;
+}
+
+/* INPUT GROUP FIXED */
+.input-group{
+    position:relative;
+    margin:15px 0;
+}
+
+/* LEFT ICON */
+.input-group i.fa-lock,
+.input-group i.fa-envelope{
+    position:absolute;
+    top:50%;
+    left:12px;
+    transform:translateY(-50%);
+    color:#94a3b8;
+}
+
+/* INPUT */
+.login-card input{
+    width:100%;
+    padding:12px 45px 12px 40px; /* IMPORTANT FIX */
+    border:none;
+    border-radius:8px;
+    background:rgba(255,255,255,0.1);
+    color:#fff;
+    outline:none;
+}
+
+.login-card input::placeholder{
+    color:#cbd5f5;
+}
+
+/* EYE ICON FIX */
+.toggle-password{
+    position:absolute;
+    top:50%;
+    right:15px;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#94a3b8;
+    font-size:16px;
+}
+
+.toggle-password:hover{
+    color:#22c55e;
+}
+
+/* BUTTON */
+.btn-main{
+    width:100%;
+    padding:12px;
+    border:none;
+    background:#22c55e;
+    color:#fff;
+    border-radius:8px;
+    margin-top:10px;
+    font-weight:bold;
+}
+
+.btn-main:hover{
+    background:#16a34a;
+}
+
+/* LINK */
+.btn-secondary{
+    display:block;
+    margin-top:12px;
+    color:#22c55e;
+    text-decoration:none;
+}
+
+/* ERROR */
+.error{
+    background:#dc2626;
+    padding:10px;
+    border-radius:6px;
+    margin-bottom:10px;
+}
+
+</style>
 </head>
 <body>
-	<!-- Page Preloder -->
-	
 
-	<!-- Header Section -->
-	<?php include 'include/header.php';?>
-	<!-- Header Section end -->
+<!-- HEADER -->
+<div class="top-header">
+    <div class="logo">GYM MS</div>
+    <div class="menu">
+        <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
+        <a href="admin/">Admin</a>
+    </div>
+</div>
 
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>Login</h2>
-					
-				</div>
-			</div>
-		</div>
-	</section>
+<!-- LOGIN -->
+<div class="login-container">
+    <div class="login-card">
 
+        <h3>User Login</h3>
+        <p>Access your account</p>
 
+        <?php if (!empty($msg)) { ?>
+        <div class="error"><?php echo htmlentities($msg); ?></div>
+        <?php } ?>
 
-	<!-- Pricing Section -->
-	<section class="pricing-section spad">
-		<div class="container">
-			
-			<div class="row">
-				<div class="col-lg-3 col-sm-6">
-					
-				</div>
-				<div class="col-lg-6 col-sm-6">
-					<div class="pricing-item entermediate">
-						<div class="pi-top">
+        <form method="post">
 
-						</div>
-						<div class="pi-price">
-							<h3>User</h3>
-							<p>Login</p>
-						</div>
-						 <?php if($error){?><div class="errorWrap" style="color:red;"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-                else if($msg){?><div class="succWrap" style="color:red;"><strong>Error</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
+            <div class="input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="text" name="email" placeholder="Enter Email" required>
+            </div>
 
-						<form class="singup-form contact-form" method="post">
-						<div class="row">
-							<div class="col-md-12">
-								<input type="text" name="email" id="email" placeholder="Your Email" autocomplete="off" required>
-							</div>
-							<div class="col-md-12">
-								<input type="password" name="password" id="password" placeholder="Password" autocomplete="off" required>
-							</div>
-							
-							
-						</div>
-						<div class="row">
-					<div class="col-md-6">
-					<input type="submit" id="submit" name="submit" value="Login" class="site-btn sb-gradient">
-					</div>
-<div class="col-md-6">
-	
-<a href="registration.php" class="site-btn sb-gradient">Registration</a>
-					</div>
-				</div>
-	
-</form>
-					</div>
-				</div>
-				<div class="col-lg-3 col-sm-6">
-					
-				</div>
-				
-			</div>
-		</div>
-	</section>
-	
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" id="password" placeholder="Enter Password" required>
 
-	<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
+                <span class="toggle-password" onclick="togglePassword()">
+                    <i class="fa fa-eye" id="eyeIcon"></i>
+                </span>
+            </div>
 
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
+            <button type="submit" name="submit" class="btn-main">Login</button>
+            <a href="registration.php" class="btn-secondary">Create Account</a>
 
-	<!-- Search model end -->
+        </form>
 
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
+    </div>
+</div>
 
-	</body>
+<script>
+function togglePassword(){
+    var pass = document.getElementById("password");
+    var icon = document.getElementById("eyeIcon");
+
+    if(pass.type === "password"){
+        pass.type = "text";
+        icon.classList.replace("fa-eye","fa-eye-slash");
+    }else{
+        pass.type = "password";
+        icon.classList.replace("fa-eye-slash","fa-eye");
+    }
+}
+</script>
+
+</body>
 </html>

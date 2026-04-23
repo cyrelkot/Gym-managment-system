@@ -1,124 +1,194 @@
-<?php 
+<?php
 session_start();
-error_reporting(0);
 include 'include/config.php';
 
-// Require login
-if(strlen($_SESSION['uid'])==0){
-    header('location:login.php');
-    exit;
+$user = null;
+if (!empty($_SESSION['uid'])) {
+    $uid = $_SESSION['uid'];
+
+    // Get user info for logged-in users
+    $sql = "SELECT * FROM tbluser WHERE id=:uid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':uid', $uid, PDO::PARAM_INT);
+    $query->execute();
+    $user = $query->fetch(PDO::FETCH_OBJ);
 }
-
-$uid = $_SESSION['uid'];
-
-// Ensure user is approved before allowing booking
-$check = $dbh->prepare("SELECT status FROM tbluser WHERE id=:uid");
-$check->bindParam(':uid',$uid,PDO::PARAM_INT);
-$check->execute();
-$user = $check->fetch(PDO::FETCH_ASSOC);
-$approved = ($user && isset($user['status']) && intval($user['status']) === 1);
-
-if(isset($_POST['submit']))
-{ 
-    if(!$approved){
-        echo "<script>alert('Your account is pending admin approval. You cannot book packages yet.');</script>";
-        echo "<script>window.location.href='booking-history.php'</script>";
-        exit;
-    }
-
-    $pid=$_POST['pid'];
-
-    $sql="INSERT INTO tblbooking (package_id,userid) Values(:pid,:uid)";
-
-    $query = $dbh -> prepare($sql);
-    $query->bindParam(':pid',$pid,PDO::PARAM_STR);
-    $query->bindParam(':uid',$uid,PDO::PARAM_STR);
-    $query -> execute();
-    echo "<script>alert('Package has been booked.');</script>";
-    echo "<script>window.location.href='booking-history.php'</script>";
-
-}
-
 ?>
+
 <!DOCTYPE html>
-<html lang="zxx">
+<html>
 <head>
-	<title>Gym Management System</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="Ahana Yoga HTML Template">
-	<meta name="keywords" content="yoga, html">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/magnific-popup.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
-	<link rel="stylesheet" href="css/animate.css"/>
+    <title>User Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
+    <style>
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#0b1220;
+            color:#fff;
+        }
 
+        /* HEADER */
+        .header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:15px 30px;
+            background:#111827;
+            border-bottom:1px solid #1f2937;
+            position:sticky;
+            top:0;
+        }
+
+        .logo{
+            font-size:20px;
+            font-weight:bold;
+            color:#00ff99;
+        }
+
+        .menu a{
+            color:#fff;
+            text-decoration:none;
+            margin-left:18px;
+            transition:0.3s;
+            font-weight:500;
+        }
+
+        .menu a:hover{
+            color:#00ff99;
+        }
+
+        /* WELCOME */
+        .welcome{
+            padding:20px 30px;
+            background:linear-gradient(90deg,#111827,#0f172a);
+            border-bottom:1px solid #1f2937;
+        }
+
+        .welcome h2{
+            margin:0;
+            color:#00ff99;
+        }
+
+        .welcome p{
+            margin:5px 0 0;
+            color:#cbd5e1;
+        }
+
+        /* LAYOUT */
+        .container{
+            padding:30px;
+        }
+
+        .grid{
+            display:grid;
+            grid-template-columns:1fr 2fr;
+            gap:20px;
+        }
+
+        /* CARDS */
+        .card{
+            background:#111827;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.4);
+            border:1px solid #1f2937;
+        }
+
+        .card h3{
+            margin-top:0;
+            color:#00ff99;
+        }
+
+        .profile p{
+            margin:10px 0;
+            color:#cbd5e1;
+        }
+
+        .btn{
+            display:inline-block;
+            padding:10px 18px;
+            margin-top:10px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            font-weight:bold;
+            text-decoration:none;
+            transition:0.3s;
+        }
+
+        .btn-dark{
+            background:#1f2937;
+            color:#fff;
+        }
+
+        .btn-dark:hover{
+            background:#374151;
+        }
+
+        @media(max-width:768px){
+            .grid{
+                grid-template-columns:1fr;
+            }
+        }
+    </style>
 </head>
+
 <body>
-	<!-- Page Preloder -->
-	
 
-	<!-- Header Section -->
-	<?php include 'include/header.php';?>
-	<!-- Header Section end -->
+<!-- HEADER -->
+<div class="header">
+    <div class="logo">GYM MS</div>
 
-	
+    <div class="menu">
+        <a href="index.php">Home</a>
+        <a href="about.php">About Gym</a>
+        <a href="contact.php">Contact</a>
+        <?php if (!empty($user)) { ?>
+            <a href="booking-history.php">My Bookings</a>
+            <a href="logout.php">Logout</a>
+        <?php } else { ?>
+            <a href="login.php">Login</a>
+        <?php } ?>
+    </div>
+</div>
 
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>About GYM Management System</h2>
-				</div>
-			</div>
-		</div>
-	</section>
+<!-- WELCOME -->
+<div class="welcome">
+    <?php if (!empty($user)) { ?>
+        <h2>Welcome, <?php echo htmlentities($user->fname); ?></h2>
+        <p>Track your fitness journey and bookings here</p>
+    <?php } else { ?>
+        <h2>About Our Gym</h2>
+        <p>Learn more about our fitness programs and services</p>
+    <?php } ?>
+</div>
 
+<!-- CONTENT -->
+<div class="container">
 
+    <div class="grid">
 
-	<!-- Pricing Section -->
-	<section class="pricing-section spad">
-		<div class="container">
-			<div class="section-title text-center">
-				<img src="img/icons/logo-icon.png" alt="">
-				<h2>About Us</h2>
-			</div>
-			<div class="row">
+        <div class="card profile">
+            <?php if (!empty($user)) { ?>
+                <h3>My Profile</h3>
+                <p><b>Name:</b> <?php echo htmlentities($user->fname . " " . $user->lname); ?></p>
+                <p><b>Email:</b> <?php echo htmlentities($user->email); ?></p>
+                <p><b>Status:</b>
+                    <?php echo ($user->status==1) ? "Approved" : "Pending"; ?>
+                </p>
+                <a href="logout.php" class="btn btn-dark">Logout</a>
+            <?php } else { ?>
+                <h3>About Gym Management System</h3>
+                <p>We help members manage workouts, classes, and bookings in one place.</p>
+                <p>Sign in to view your profile, booking history, and account status.</p>
+            <?php } ?>
+        </div>
 
-				<div class="col-lg-12 col-sm-6">
-			<p>Our gym is dedicated to promoting a healthy and active lifestyle by providing a safe, clean, and motivating environment for all members. We aim to help individuals of all fitness levels achieve their personal goals—whether it’s building strength, losing weight, or maintaining overall wellness. We are equipped with modern fitness machines, organized workout spaces, and programs designed to suit different needs, allowing everyone from beginners to experienced athletes to train and improve at their own pace. Our Gym Management System is designed to make gym operations simple and efficient, enabling members to easily view available packages, book services, and track their activity, while administrators can manage memberships, monitor bookings, and generate reports effectively. We believe that fitness is not just about physical strength but also about discipline, confidence, and a healthier lifestyle, and our goal is to support every member in their fitness journey and help them become the best version of themselves.</p>
-				</div>
-			</div>
-		</div>
-	</section>
-	
+    </div>
 
-	<!-- Footer Section -->
-	<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
+</div>
 
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
-
-	<!-- Search model end -->
-
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
-
-	</body>
+</body>
 </html>
