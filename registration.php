@@ -1,250 +1,203 @@
 <?php
-error_reporting(0);
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once('include/config.php');
 
-// Ensure approval status field exists.
-try {
-    $colStmt = $dbh->prepare("SHOW COLUMNS FROM tbluser LIKE 'status'");
-    $colStmt->execute();
-    if ($colStmt->rowCount() === 0) {
-        $dbh->exec("ALTER TABLE tbluser ADD COLUMN status TINYINT(1) NOT NULL DEFAULT 0 AFTER password");
-    }
-} catch (Exception $e) {
-    // Continue even if we can't alter the schema.
-}
+$error="";
 
-if(isset($_POST['submit']))
-{ 
+if(isset($_POST['submit'])){
+
 $fname=$_POST['fname'];
 $lname=$_POST['lname'];
-$mobile=$_POST['mobile'];
 $email=$_POST['email'];
-$state=$_POST['state'];
+$mobile=$_POST['mobile'];
 $city=$_POST['city'];
-$Password=$_POST['password'];
-$pass=md5($Password);
-$RepeatPassword = $_POST['RepeatPassword'];
+$password=$_POST['password'];
+$repeat=$_POST['RepeatPassword'];
 
-// Email id Already Exit
-
-$usermatch=$dbh->prepare("SELECT mobile,email FROM tbluser WHERE (email=:usreml || mobile=:mblenmbr)");
-$usermatch->execute(array(':usreml'=>$email,':mblenmbr'=>$mobile)); 
-while($row=$usermatch->fetch(PDO::FETCH_ASSOC))
-{
-$usrdbeml= $row['email'];
-$usrdbmble=$row['mobile'];
+if($password != $repeat){
+$error="Password does not match!";
 }
-
-
-if(empty($fname))
-{
-  $nameerror="Please Enter First Name";
-}
-
- else if(empty($mobile))
- {
- $mobileerror="Please Enter Mobile No";
- }
-
- else if(empty($email))
- {
- $emailerror="Please Enter Email";
- }
-
-else if($email==$usrdbeml || $mobile==$usrdbmble)
- {
-  $error="Email Id or Mobile Number Already Exists!";
- }
-  else if($Password=="" || $RepeatPassword=="")
- {
-    
-   $error="Password And Confirm Password Not Empty!";
- 
- }
- else if($_POST['password'] != $_POST['RepeatPassword'])
- {
-  
-   $error="Password And Confirm Password Not Matched";
- }
-
- 
 else{
-$status = 0; // 0 = pending approval, 1 = approved
-try {
-  $sql="INSERT INTO tbluser (fname,lname,email,mobile,state,city,password,status) Values(:fname,:lname,:email,:mobile,:state,:city,:Password,:status)";
 
-  $query = $dbh -> prepare($sql);
-  $query->bindParam(':fname',$fname,PDO::PARAM_STR);
-  $query->bindParam(':lname',$lname,PDO::PARAM_STR);
-  $query->bindParam(':email',$email,PDO::PARAM_STR);
-  $query->bindParam(':mobile',$mobile,PDO::PARAM_STR);
-  $query->bindParam(':state',$state,PDO::PARAM_STR);
-  $query->bindParam(':city',$city,PDO::PARAM_STR);
-  $query->bindParam(':Password',$pass,PDO::PARAM_STR);
-  $query->bindParam(':status',$status,PDO::PARAM_INT);
+$status=0;
+$hash=password_hash($password,PASSWORD_DEFAULT);
 
-  $query -> execute();
-  $lastInsertId = $dbh->lastInsertId();
-  if($lastInsertId>0)
-  {
-    echo "<script>alert('Registration successful. Your account will be activated after admin approval.');</script>";
-    echo "<script> window.location.href='login.php';</script>";
-  }
-  else 
-  {
-    $error ="Registration Not successfully";
-  }
-} catch (PDOException $e) {
-  // In case the `status` column does not exist yet, fall back to inserting without it.
-  if (strpos($e->getMessage(), 'Unknown column') !== false) {
-    $sql="INSERT INTO tbluser (fname,lname,email,mobile,state,city,password) Values(:fname,:lname,:email,:mobile,:state,:city,:Password)";
+$sql="INSERT INTO tbluser
+(fname,lname,email,mobile,city,password,status)
+VALUES
+(:fname,:lname,:email,:mobile,:city,:password,:status)";
 
-    $query = $dbh -> prepare($sql);
-    $query->bindParam(':fname',$fname,PDO::PARAM_STR);
-    $query->bindParam(':lname',$lname,PDO::PARAM_STR);
-    $query->bindParam(':email',$email,PDO::PARAM_STR);
-    $query->bindParam(':mobile',$mobile,PDO::PARAM_STR);
-    $query->bindParam(':state',$state,PDO::PARAM_STR);
-    $query->bindParam(':city',$city,PDO::PARAM_STR);
-    $query->bindParam(':Password',$pass,PDO::PARAM_STR);
-    $query -> execute();
-    $lastInsertId = $dbh->lastInsertId();
-    if($lastInsertId>0)
-    {
-      echo "<script>alert('Registration successful. Your account will be activated after admin approval once the database is updated.');</script>";
-      echo "<script> window.location.href='login.php';</script>";
-    } else {
-      $error ="Registration Not successfully";
-    }
-  } else {
-    $error = "Registration Not successfully";
-  }
+$query=$dbh->prepare($sql);
+
+$query->bindParam(':fname',$fname);
+$query->bindParam(':lname',$lname);
+$query->bindParam(':email',$email);
+$query->bindParam(':mobile',$mobile);
+$query->bindParam(':city',$city);
+$query->bindParam(':password',$hash);
+$query->bindParam(':status',$status);
+
+$query->execute();
+
+if($dbh->lastInsertId()){
+echo "<script>alert('Registration Successful!');</script>";
+echo "<script>window.location='login.php'</script>";
 }
- }
- }
- 
- ?>
-<!DOCTYPE html>
-<html lang="zxx">
-<head>
-	<title>Gym Management System</title>
-	<meta charset="UTF-8">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
 
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
+}
+}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Gym Registration</title>
+<link rel="stylesheet" href="css/bootstrap.min.css">
+
+<style>
+
+body{
+background:#0f172a;
+color:white;
+font-family:Segoe UI;
+}
+
+/* HEADER */
+header{
+background:#020617;
+padding:15px;
+}
+
+.nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+width:90%;
+margin:auto;
+}
+
+.menu a{
+color:white;
+margin-left:20px;
+text-decoration:none;
+}
+
+.menu a:hover{
+color:#22c55e;
+}
+
+/* FORM */
+.form-box{
+background:#1e293b;
+padding:30px;
+border-radius:10px;
+margin-top:50px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-bottom:15px;
+border:none;
+border-radius:5px;
+}
+
+/* PASSWORD WRAPPER */
+.pass-wrapper{
+position:relative;
+}
+
+.pass-wrapper span{
+position:absolute;
+right:10px;
+top:10px;
+cursor:pointer;
+color:#ccc;
+}
+
+button{
+background:#22c55e;
+border:none;
+padding:10px;
+color:white;
+width:100%;
+}
+
+</style>
 
 </head>
+
 <body>
-	<!-- Page Preloder -->
-	
 
-	<!-- Header Section -->
-	<?php include 'include/header.php';?>
-	<!-- Header Section end -->
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>Registration</h2>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Page top Section end -->
+<header>
+<div class="nav">
 
-	<!-- Contact Section -->
-	<section class="contact-page-section spad overflow-hidden">
-		<div class="container">
-			
-			<div class="row">
-				<div class="col-lg-2">
-				</div>
-				<div class="col-lg-8">
-					<?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-                else if($succmsg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($succmsg); ?> </div><?php }?><br><br>
-					<form class="singup-form contact-form" method="post">
-						<div class="row">
-							<div class="col-md-6">
-								<input type="text" name="fname" id="fname" placeholder="First Name" autocomplete="off" value="<?php echo $fname;?>" required>
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="lname" id="lname" placeholder="Last Name" autocomplete="off" value="<?php echo $lname;?>" required>
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="email" id="email" placeholder="Your Email" autocomplete="off" value="<?php echo $email;?>" required>
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="mobile" id="mobile" maxlength="10" placeholder="Mobile Number" autocomplete="off" value="<?php echo $mobile;?>" required>
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="state" id="state" placeholder="Your State" autocomplete="off" value="<?php echo $state;?>" required>
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="city" id="city" placeholder="Your City" autocomplete="off" value="<?php echo $city;?>" required>
-							</div>
-							<div class="col-md-6">
-								<input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
-							</div>
-							<div class="col-md-6">
-								<input type="password" name="RepeatPassword" id="RepeatPassword" placeholder="Confirm Password" autocomplete="off" required>
-							</div>
-							<div class="col-md-4">
-						<input type="submit" id="submit" name="submit" value="Register Now" class="site-btn sb-gradient">
-								
-							</div>
-						</div>
-					</form>
-				</div>
-				<div class="col-lg-2">
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Trainers Section end -->
+<div><b>GYM</b></div>
 
+<div class="menu">
+<a href="index.php">Home</a>
+<a href="about.php">About</a>
+<a href="contact.php">Contact</a>
+<a href="admin/">Admin</a>
+</div>
 
+</div>
+</header>
 
-	<!-- Footer Section -->
-<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
-	
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
+<div class="container">
 
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
+<div class="col-md-6 m-auto">
 
-	</body>
+<div class="form-box">
+
+<h3>Registration Form</h3>
+
+<?php if($error){ ?>
+<div style="background:red;padding:10px;"><?php echo $error; ?></div>
+<?php } ?>
+
+<form method="post">
+
+<input type="text" name="fname" placeholder="First Name" required>
+<input type="text" name="lname" placeholder="Last Name" required>
+<input type="email" name="email" placeholder="Email" required>
+<input type="text" name="mobile" placeholder="Mobile" required>
+<input type="text" name="city" placeholder="City" required>
+
+<!-- PASSWORD WITH EYE -->
+<div class="pass-wrapper">
+<input type="password" id="password" name="password" placeholder="Password" required>
+<span onclick="togglePass('password')">👁</span>
+</div>
+
+<div class="pass-wrapper">
+<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" required>
+<span onclick="togglePass('repeat')">👁</span>
+</div>
+
+<button type="submit" name="submit">Register Now</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+function togglePass(id){
+var x = document.getElementById(id);
+if(x.type === "password"){
+x.type = "text";
+}else{
+x.type = "password";
+}
+}
+</script>
+
+</body>
 </html>
- <style>
-.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #dd3d36;
-    color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #5cb85c;
-    color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-        </style>
