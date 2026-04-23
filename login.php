@@ -6,40 +6,58 @@ require_once('include/config.php');
 $msg = "";
 
 if (isset($_POST['submit'])) {
-    $email = trim($_POST['email']);
-    $password = md5($_POST['password']);
 
-    if ($email !== "" && !empty($_POST['password'])) {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    if ($email !== "" && !empty($password)) {
+
         try {
-            $sql = "SELECT id, fname, status FROM tbluser WHERE email = :email AND password = :password LIMIT 1";
+
+            $sql = "SELECT id, fname, password, status 
+                    FROM tbluser 
+                    WHERE email = :email 
+                    LIMIT 1";
+
             $query = $dbh->prepare($sql);
             $query->bindParam(':email', $email, PDO::PARAM_STR);
-            $query->bindParam(':password', $password, PDO::PARAM_STR);
             $query->execute();
             $user = $query->fetch(PDO::FETCH_ASSOC);
 
-            if (!empty($user)) {
-                if ((int)$user['status'] === 0) {
-                    $msg = "Your account is pending admin approval.";
+            if ($user) {
+
+                if (password_verify($password, $user['password'])) {
+
+                    if ((int)$user['status'] === 0) {
+                        $msg = "⚠️ Your account is pending admin approval.";
+                    } else {
+                        $_SESSION['uid'] = $user['id'];
+                        $_SESSION['fname'] = $user['fname'];
+
+                        header("location:index.php");
+                        exit;
+                    }
+
                 } else {
-                    $_SESSION['uid'] = $user['id'];
-                    $_SESSION['fname'] = $user['fname'];
-                    header("location:index.php");
-                    exit;
+                    $msg = "Invalid email or password.";
                 }
+
             } else {
                 $msg = "Invalid email or password.";
             }
+
         } catch (PDOException $e) {
-            $msg = "Login failed.";
+            $msg = "Login failed. Please try again.";
         }
+
     } else {
         $msg = "Fill all fields.";
     }
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 <head>
 <title>Gym Management System</title>
 <meta charset="UTF-8">
@@ -49,7 +67,6 @@ if (isset($_POST['submit'])) {
 
 <style>
 
-/* ===== BODY ===== */
 body{
     margin:0;
     font-family:'Segoe UI', sans-serif;
@@ -57,27 +74,42 @@ body{
     color:#fff;
 }
 
-/* ===== HEADER ===== */
+/* 🔥 CENTER HEADER FIX */
 .top-header{
     display:flex;
-    justify-content:space-between;
+    justify-content:center;   /* CENTER EVERYTHING */
+    align-items:center;
     padding:15px 50px;
     background:rgba(0,0,0,0.4);
+    position:relative;
 }
 
+/* LOGO LEFT CENTER */
 .logo{
+    position:absolute;
+    left:50px;
     color:#22c55e;
     font-weight:bold;
     font-size:20px;
 }
 
-.menu a{
-    color:#fff;
-    margin-left:20px;
-    text-decoration:none;
+/* MENU CENTER */
+.menu{
+    display:flex;
+    gap:25px;
 }
 
-/* ===== LOGIN ===== */
+.menu a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:500;
+}
+
+.menu a:hover{
+    color:#22c55e;
+}
+
+/* LOGIN */
 .login-container{
     height:90vh;
     display:flex;
@@ -96,24 +128,13 @@ body{
     text-align:center;
 }
 
-.login-card h3{
-    margin-bottom:5px;
-}
-
-.login-card p{
-    color:#cbd5f5;
-    font-size:14px;
-}
-
-/* INPUT GROUP FIXED */
 .input-group{
     position:relative;
     margin:15px 0;
 }
 
-/* LEFT ICON */
-.input-group i.fa-lock,
-.input-group i.fa-envelope{
+.input-group i.fa-envelope,
+.input-group i.fa-lock{
     position:absolute;
     top:50%;
     left:12px;
@@ -121,45 +142,36 @@ body{
     color:#94a3b8;
 }
 
-/* INPUT */
 .login-card input{
     width:100%;
-    padding:12px 45px 12px 40px; /* IMPORTANT FIX */
+    padding:12px 45px 12px 40px;
     border:none;
     border-radius:8px;
     background:rgba(255,255,255,0.1);
     color:#fff;
-    outline:none;
 }
 
 .login-card input::placeholder{
     color:#cbd5f5;
 }
 
-/* EYE ICON FIX */
+/* EYE */
 .toggle-password{
     position:absolute;
     top:50%;
-    right:15px;
+    right:12px;
     transform:translateY(-50%);
     cursor:pointer;
     color:#94a3b8;
-    font-size:16px;
 }
 
-.toggle-password:hover{
-    color:#22c55e;
-}
-
-/* BUTTON */
 .btn-main{
     width:100%;
     padding:12px;
-    border:none;
     background:#22c55e;
+    border:none;
     color:#fff;
     border-radius:8px;
-    margin-top:10px;
     font-weight:bold;
 }
 
@@ -167,7 +179,6 @@ body{
     background:#16a34a;
 }
 
-/* LINK */
 .btn-secondary{
     display:block;
     margin-top:12px;
@@ -175,9 +186,9 @@ body{
     text-decoration:none;
 }
 
-/* ERROR */
 .error{
-    background:#dc2626;
+    background:#f59e0b;
+    color:#000;
     padding:10px;
     border-radius:6px;
     margin-bottom:10px;
@@ -185,17 +196,21 @@ body{
 
 </style>
 </head>
+
 <body>
 
 <!-- HEADER -->
 <div class="top-header">
-    <div class="logo">GYM MS</div>
+
+    <div class="logo">GYM</div>
+
     <div class="menu">
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
         <a href="admin/">Admin</a>
     </div>
+
 </div>
 
 <!-- LOGIN -->
@@ -203,7 +218,6 @@ body{
     <div class="login-card">
 
         <h3>User Login</h3>
-        <p>Access your account</p>
 
         <?php if (!empty($msg)) { ?>
         <div class="error"><?php echo htmlentities($msg); ?></div>
@@ -218,7 +232,7 @@ body{
 
             <div class="input-group">
                 <i class="fa fa-lock"></i>
-                <input type="password" name="password" id="password" placeholder="Enter Password" required>
+                <input type="password" id="password" name="password" placeholder="Enter Password" required>
 
                 <span class="toggle-password" onclick="togglePassword()">
                     <i class="fa fa-eye" id="eyeIcon"></i>

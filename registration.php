@@ -16,8 +16,17 @@ $city=$_POST['city'];
 $password=$_POST['password'];
 $repeat=$_POST['RepeatPassword'];
 
+/* 🔥 EXACT 8 CHAR STRONG PASSWORD RULE */
+$pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8}$/";
+
 if($password != $repeat){
-$error="Password does not match!";
+    $error="Password does not match!";
+}
+else if(strlen($password) != 8){
+    $error="Password must be EXACTLY 8 characters only!";
+}
+else if(!preg_match($pattern, $password)){
+    $error="Password must include uppercase, lowercase, number & special character!";
 }
 else{
 
@@ -126,6 +135,19 @@ color:white;
 width:100%;
 }
 
+small{
+display:block;
+margin-bottom:10px;
+color:#fbbf24;
+}
+
+/* ERROR BOX */
+.error{
+background:red;
+padding:10px;
+margin-bottom:10px;
+}
+
 </style>
 
 </head>
@@ -156,7 +178,7 @@ width:100%;
 <h3>Registration Form</h3>
 
 <?php if($error){ ?>
-<div style="background:red;padding:10px;"><?php echo $error; ?></div>
+<div class="error"><?php echo $error; ?></div>
 <?php } ?>
 
 <form method="post">
@@ -167,14 +189,19 @@ width:100%;
 <input type="text" name="mobile" placeholder="Mobile" required>
 <input type="text" name="city" placeholder="City" required>
 
-<!-- PASSWORD WITH EYE -->
+<small>
+Password MUST be EXACTLY 8 characters (Uppercase, lowercase, number, symbol)
+</small>
+
+<!-- PASSWORD -->
 <div class="pass-wrapper">
-<input type="password" id="password" name="password" placeholder="Password" required>
+<input type="password" id="password" name="password" placeholder="Password" maxlength="8" required>
 <span onclick="togglePass('password')">👁</span>
 </div>
 
+<!-- CONFIRM PASSWORD -->
 <div class="pass-wrapper">
-<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" required>
+<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" maxlength="8" required>
 <span onclick="togglePass('repeat')">👁</span>
 </div>
 
@@ -191,11 +218,7 @@ width:100%;
 <script>
 function togglePass(id){
 var x = document.getElementById(id);
-if(x.type === "password"){
-x.type = "text";
-}else{
-x.type = "password";
-}
+x.type = (x.type === "password") ? "text" : "password";
 }
 </script>
 

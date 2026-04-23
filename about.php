@@ -6,7 +6,6 @@ $user = null;
 if (!empty($_SESSION['uid'])) {
     $uid = $_SESSION['uid'];
 
-    // Get user info for logged-in users
     $sql = "SELECT * FROM tbluser WHERE id=:uid";
     $query = $dbh->prepare($sql);
     $query->bindParam(':uid', $uid, PDO::PARAM_INT);
@@ -32,8 +31,8 @@ if (!empty($_SESSION['uid'])) {
         /* HEADER */
         .header{
             display:flex;
-            justify-content:space-between;
             align-items:center;
+            justify-content:space-between;
             padding:15px 30px;
             background:#111827;
             border-bottom:1px solid #1f2937;
@@ -45,13 +44,19 @@ if (!empty($_SESSION['uid'])) {
             font-size:20px;
             font-weight:bold;
             color:#00ff99;
+            flex:1;
+        }
+
+        .menu{
+            flex:2;
+            display:flex;
+            justify-content:center;
+            gap:20px;
         }
 
         .menu a{
             color:#fff;
             text-decoration:none;
-            margin-left:18px;
-            transition:0.3s;
             font-weight:500;
         }
 
@@ -59,11 +64,16 @@ if (!empty($_SESSION['uid'])) {
             color:#00ff99;
         }
 
+        .right-space{
+            flex:1;
+        }
+
         /* WELCOME */
         .welcome{
             padding:20px 30px;
             background:linear-gradient(90deg,#111827,#0f172a);
             border-bottom:1px solid #1f2937;
+            text-align:center;
         }
 
         .welcome h2{
@@ -76,24 +86,31 @@ if (!empty($_SESSION['uid'])) {
             color:#cbd5e1;
         }
 
-        /* LAYOUT */
+        /* ===== CENTER CONTENT ===== */
         .container{
+            min-height: 60vh;
+            display:flex;
+            justify-content:center;
+            align-items:center;
             padding:30px;
         }
 
         .grid{
-            display:grid;
-            grid-template-columns:1fr 2fr;
-            gap:20px;
+            width:100%;
+            max-width:600px;
+            display:flex;
+            justify-content:center;
         }
 
-        /* CARDS */
+        /* CARD */
         .card{
             background:#111827;
-            padding:25px;
+            padding:30px;
             border-radius:15px;
-            box-shadow:0 10px 25px rgba(0,0,0,0.4);
             border:1px solid #1f2937;
+            box-shadow:0 10px 25px rgba(0,0,0,0.4);
+            width:100%;
+            text-align:center;
         }
 
         .card h3{
@@ -107,15 +124,12 @@ if (!empty($_SESSION['uid'])) {
         }
 
         .btn{
-            display:inline-block;
             padding:10px 18px;
-            margin-top:10px;
-            border:none;
+            margin-top:15px;
+            display:inline-block;
             border-radius:8px;
-            cursor:pointer;
-            font-weight:bold;
             text-decoration:none;
-            transition:0.3s;
+            font-weight:bold;
         }
 
         .btn-dark{
@@ -123,13 +137,9 @@ if (!empty($_SESSION['uid'])) {
             color:#fff;
         }
 
-        .btn-dark:hover{
-            background:#374151;
-        }
-
         @media(max-width:768px){
-            .grid{
-                grid-template-columns:1fr;
+            .container{
+                padding:15px;
             }
         }
     </style>
@@ -139,12 +149,14 @@ if (!empty($_SESSION['uid'])) {
 
 <!-- HEADER -->
 <div class="header">
-    <div class="logo">GYM MS</div>
+
+    <div class="logo">GYM</div>
 
     <div class="menu">
         <a href="index.php">Home</a>
-        <a href="about.php">About Gym</a>
+        <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
+
         <?php if (!empty($user)) { ?>
             <a href="booking-history.php">My Bookings</a>
             <a href="logout.php">Logout</a>
@@ -152,6 +164,9 @@ if (!empty($_SESSION['uid'])) {
             <a href="login.php">Login</a>
         <?php } ?>
     </div>
+
+    <div class="right-space"></div>
+
 </div>
 
 <!-- WELCOME -->
@@ -171,19 +186,28 @@ if (!empty($_SESSION['uid'])) {
     <div class="grid">
 
         <div class="card profile">
+
             <?php if (!empty($user)) { ?>
+
                 <h3>My Profile</h3>
                 <p><b>Name:</b> <?php echo htmlentities($user->fname . " " . $user->lname); ?></p>
                 <p><b>Email:</b> <?php echo htmlentities($user->email); ?></p>
                 <p><b>Status:</b>
                     <?php echo ($user->status==1) ? "Approved" : "Pending"; ?>
                 </p>
+
                 <a href="logout.php" class="btn btn-dark">Logout</a>
+
             <?php } else { ?>
-                <h3>About Gym Management System</h3>
-                <p>We help members manage workouts, classes, and bookings in one place.</p>
-                <p>Sign in to view your profile, booking history, and account status.</p>
+
+                <h3>About Our Gym</h3>
+                <p>
+                    We help members achieve their fitness goals through modern equipment,
+                    professional trainers, and flexible workout programs.
+                </p>
+
             <?php } ?>
+
         </div>
 
     </div>
