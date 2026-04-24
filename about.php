@@ -1,148 +1,125 @@
 <?php
 session_start();
 include 'include/config.php';
-
-$user = null;
-if (!empty($_SESSION['uid'])) {
-    $uid = $_SESSION['uid'];
-
-    $sql = "SELECT * FROM tbluser WHERE id=:uid";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':uid', $uid, PDO::PARAM_INT);
-    $query->execute();
-    $user = $query->fetch(PDO::FETCH_OBJ);
-}
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>User Dashboard</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Our Gym</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        body{
-            margin:0;
-            font-family:Arial, sans-serif;
-            background:#0b1220;
-            color:#fff;
-        }
+<style>
 
-        /* HEADER */
-        .header{
-            display:flex;
-            align-items:center;
-            justify-content:space-between;
-            padding:15px 30px;
-            background:#111827;
-            border-bottom:1px solid #1f2937;
-            position:sticky;
-            top:0;
-        }
+body{
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background:#0f0f0f;
+    color:white;
+}
 
-        .logo{
-            font-size:20px;
-            font-weight:bold;
-            color:#00ff99;
-            flex:1;
-        }
+.header{
+    position:relative;
+    display:flex;
+    align-items:center;
+    padding:15px 40px;
+    background:#000;
+    border-bottom:2px solid #ff6600;
+}
 
-        .menu{
-            flex:2;
-            display:flex;
-            justify-content:center;
-            gap:20px;
-        }
+.logo{
+    font-size:24px;
+    font-weight:bold;
+    color:#ff6600;
+}
 
-        .menu a{
-            color:#fff;
-            text-decoration:none;
-            font-weight:500;
-        }
+.menu{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:30px;
+}
 
-        .menu a:hover{
-            color:#00ff99;
-        }
+.menu a{
+    color:#ddd;
+    text-decoration:none;
+    font-weight:500;
+    font-size:16px;
+}
 
-        .right-space{
-            flex:1;
-        }
+.menu a:hover{
+    color:#ff6600;
+}
 
-        /* WELCOME */
-        .welcome{
-            padding:20px 30px;
-            background:linear-gradient(90deg,#111827,#0f172a);
-            border-bottom:1px solid #1f2937;
-            text-align:center;
-        }
+.hero{
+    height:350px;
+    background:url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74') center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
 
-        .welcome h2{
-            margin:0;
-            color:#00ff99;
-        }
+.hero h1{
+    font-size:40px;
+    background:rgba(0,0,0,0.6);
+    padding:20px 40px;
+    border-radius:10px;
+}
 
-        .welcome p{
-            margin:5px 0 0;
-            color:#cbd5e1;
-        }
+.about{
+    max-width:900px;
+    margin:70px auto;
+    text-align:center;
+    padding:0 20px;
+}
 
-        /* ===== CENTER CONTENT ===== */
-        .container{
-            min-height: 60vh;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:30px;
-        }
+.about h2{
+    color:#ff6600;
+    margin-bottom:20px;
+}
 
-        .grid{
-            width:100%;
-            max-width:600px;
-            display:flex;
-            justify-content:center;
-        }
+.about p{
+    line-height:1.8;
+    color:#ddd;
+}
 
-        /* CARD */
-        .card{
-            background:#111827;
-            padding:30px;
-            border-radius:15px;
-            border:1px solid #1f2937;
-            box-shadow:0 10px 25px rgba(0,0,0,0.4);
-            width:100%;
-            text-align:center;
-        }
+.features{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    flex-wrap:wrap;
+    padding:50px 20px;
+}
 
-        .card h3{
-            margin-top:0;
-            color:#00ff99;
-        }
+.feature-box{
+    background:#1a1a1a;
+    padding:30px;
+    border-radius:10px;
+    width:250px;
+    text-align:center;
+    border-top:3px solid #ff6600;
+}
 
-        .profile p{
-            margin:10px 0;
-            color:#cbd5e1;
-        }
+.feature-box h3{
+    color:#ff6600;
+}
 
-        .btn{
-            padding:10px 18px;
-            margin-top:15px;
-            display:inline-block;
-            border-radius:8px;
-            text-decoration:none;
-            font-weight:bold;
-        }
+.feature-box p{
+    color:#ccc;
+}
 
-        .btn-dark{
-            background:#1f2937;
-            color:#fff;
-        }
+.footer{
+    text-align:center;
+    padding:20px;
+    background:#000;
+    border-top:1px solid #222;
+    color:#aaa;
+    margin-top:40px;
+}
 
-        @media(max-width:768px){
-            .container{
-                padding:15px;
-            }
-        }
-    </style>
+</style>
 </head>
 
 <body>
@@ -150,68 +127,66 @@ if (!empty($_SESSION['uid'])) {
 <!-- HEADER -->
 <div class="header">
 
-    <div class="logo">GYM</div>
+<div class="logo">GYM</div>
 
-    <div class="menu">
-        <a href="index.php">Home</a>
-        <a href="about.php">About</a>
-        <a href="contact.php">Contact</a>
+<div class="menu">
+    <a href="index.php">Home</a>
+    <a href="about.php">About</a>
+    <a href="contact.php">Contact</a>
 
-        <?php if (!empty($user)) { ?>
-            <a href="booking-history.php">My Bookings</a>
-            <a href="logout.php">Logout</a>
-        <?php } else { ?>
-            <a href="login.php">Login</a>
-        <?php } ?>
-    </div>
-
-    <div class="right-space"></div>
-
-</div>
-
-<!-- WELCOME -->
-<div class="welcome">
-    <?php if (!empty($user)) { ?>
-        <h2>Welcome, <?php echo htmlentities($user->fname); ?></h2>
-        <p>Track your fitness journey and bookings here</p>
+    <!-- 🔥 ADMIN / LOGOUT SWITCH -->
+    <?php if (isset($_SESSION['uid'])) { ?>
+        <a href="logout.php">Logout</a>
     <?php } else { ?>
-        <h2>About Our Gym</h2>
-        <p>Learn more about our fitness programs and services</p>
+        <a href="admin/login.php">Admin</a>
     <?php } ?>
+
 </div>
 
-<!-- CONTENT -->
-<div class="container">
+</div>
 
-    <div class="grid">
+<!-- HERO -->
+<div class="hero">
+<h1>About Our Fitness Center</h1>
+</div>
 
-        <div class="card profile">
+<!-- ABOUT -->
+<div class="about">
 
-            <?php if (!empty($user)) { ?>
+<h2>Who We Are</h2>
 
-                <h3>My Profile</h3>
-                <p><b>Name:</b> <?php echo htmlentities($user->fname . " " . $user->lname); ?></p>
-                <p><b>Email:</b> <?php echo htmlentities($user->email); ?></p>
-                <p><b>Status:</b>
-                    <?php echo ($user->status==1) ? "Approved" : "Pending"; ?>
-                </p>
+<p>
+Our gym is dedicated to helping people achieve their health and fitness goals.
+We provide modern gym equipment, certified trainers, and flexible workout programs.
+Whether you are a beginner or an experienced athlete, our gym offers the perfect
+environment to improve your strength, endurance, and overall well-being.
+</p>
 
-                <a href="logout.php" class="btn btn-dark">Logout</a>
+</div>
 
-            <?php } else { ?>
+<!-- FEATURES -->
+<div class="features">
 
-                <h3>About Our Gym</h3>
-                <p>
-                    We help members achieve their fitness goals through modern equipment,
-                    professional trainers, and flexible workout programs.
-                </p>
+<div class="feature-box">
+<h3>Modern Equipment</h3>
+<p>Train with high-quality machines and fitness equipment designed for effective workouts.</p>
+</div>
 
-            <?php } ?>
+<div class="feature-box">
+<h3>Professional Trainers</h3>
+<p>Our experienced trainers guide members to achieve their fitness goals safely.</p>
+</div>
 
-        </div>
+<div class="feature-box">
+<h3>Flexible Programs</h3>
+<p>Choose workout programs that fit your schedule and personal fitness goals.</p>
+</div>
 
-    </div>
+</div>
 
+<!-- FOOTER -->
+<div class="footer">
+© 2026 Gym Management System
 </div>
 
 </body>

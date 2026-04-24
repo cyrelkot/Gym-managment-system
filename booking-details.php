@@ -1,11 +1,13 @@
-<?php session_start();
+<?php 
+session_start();
 error_reporting(0);
 require_once('include/config.php');
-if(strlen( $_SESSION["uid"])==0)
-    {   
-header('location:login.php');
+
+if(strlen($_SESSION["uid"])==0){   
+    header('location:login.php');
+    exit;
 }
-else{
+
 $uid=$_SESSION['uid'];
 
 if (isset($_POST['update_payment_type']) && isset($_POST['paymentType'])) {
@@ -20,205 +22,267 @@ if (isset($_POST['update_payment_type']) && isset($_POST['paymentType'])) {
     exit;
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 <head>
-	<title>User | Booking History</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="Ahana Yoga HTML Template">
-	<meta name="keywords" content="yoga, html">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
+<title>Booking Details</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
+<style>
 
+/* GLOBAL */
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:#000;
+    color:#fff;
+}
+
+/* NAVBAR */
+.navbar{
+    position:relative;
+    display:flex;
+    padding:20px;
+    border-bottom:2px solid #ff6a00;
+}
+
+.logo{
+    color:#ff6a00;
+    font-weight:bold;
+    font-size:22px;
+}
+
+.nav-center{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+}
+
+.nav-center a{
+    color:#fff;
+    margin:0 15px;
+    text-decoration:none;
+}
+
+.nav-center a:hover{
+    color:#ff6a00;
+}
+
+/* HERO IMAGE */
+.hero{
+    height:280px;
+    background:url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+}
+
+.hero h1{
+    position:relative;
+    color:#ff6a00;
+}
+
+/* CONTAINER */
+.container{
+    padding:30px;
+}
+
+/* CARD */
+.card{
+    background:#111;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 20px rgba(255,106,0,0.2);
+    margin-bottom:20px;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.label{
+    color:#aaa;
+    font-size:13px;
+}
+
+.value{
+    font-weight:bold;
+}
+
+/* BUTTON */
+.btn{
+    background:#ff6a00;
+    border:none;
+    padding:8px 15px;
+    border-radius:6px;
+    color:#000;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#ff8c1a;
+}
+
+/* SELECT */
+select{
+    padding:6px;
+    border-radius:5px;
+}
+
+/* TABLE */
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th,td{
+    padding:10px;
+}
+
+th{
+    background:#1a1a1a;
+    color:#ff6a00;
+}
+
+tr:nth-child(even){
+    background:#0f0f0f;
+}
+
+</style>
 </head>
+
 <body>
-	<!-- Page Preloder -->
-	
 
-	<!-- Header Section -->
-	<?php include 'include/header.php';?>
-	<!-- Header Section end -->
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>Booking History</h2>
-					
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Page top Section end -->
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">GYM</div>
+    <div class="nav-center">
+        <a href="index.php">Home</a>
+        <a href="booking-history.php">Booking History</a>
+        <a href="logout.php">Logout</a>
+    </div>
+</div>
 
-	<!-- Contact Section -->
-	<section class="contact-page-section spad overflow-hidden">
-		<div class="container">
-			
-			<div class="row">
-				
-				<div class="col-lg-12">
-					   <table class="table table-hover table-bordered">
-                <thead>
-                   <?php $bookindid=$_GET['bookingid'];
-                  $sql="SELECT t1.id as bookingid,t3.fname as Name, t3.email as email,t1.booking_date as bookingdate,t2.titlename as title,t2.PackageDuratiobn as PackageDuratiobn,
-t2.Price as Price,t2.Description as Description,t4.category_name as category_name,t5.PackageName as PackageName,payment,paymentType FROM tblbooking as t1
- LEFT JOIN tbladdpackage as t2
- ON t1.package_id =t2.id
- LEFT JOIN tbluser as t3
- ON t1.userid=t3.id
- LEFT JOIN tblcategory as t4
- ON t2.category=t4.id
- LEFT JOIN tblpackage as t5
- ON t2.PackageType=t5.id
- where t1.id=:bookindid";
-                  $query= $dbh->prepare($sql);
-                  $query->bindParam(':bookindid',$bookindid, PDO::PARAM_STR);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  $cnt=1;
-                  if($query -> rowCount() > 0)
-                  {
-                  foreach($results as $result)
-                  {
-                  ?>
-                  <tr>
-                   <th>Booking Date</th>
-                   <td><?php echo $result->bookingdate; ?></td>
-                    <th>Name</th>
-                    <td><?php echo $result->Name; ?></td>
-                  </tr>
-                  <tr>
-                   <th>Email</th>
-                   <td><?php echo $result->email; ?></td>
-                    <th>Category</th>
-                    <td><?php echo $result->category_name; ?></td>
-                  </tr>
-                  <tr>
-                   <th>Package Name:</th>
-                   <td><?php echo $result->PackageName; ?></td>
-                    <th>Title</th>
-                    <td><?php echo $result->title; ?></td>
-                  </tr>
-                  <tr>
-                   <th>Package Duratiobn</th>
-                   <td><?php echo $result->PackageDuratiobn; ?></td>
-                    <th>Price</th>
-                    <td><?php echo $result->Price; ?></td>
-                    <?php $pricess=$result->Price; ?>
-                  </tr>
-                  <tr>
-                   <th>Description</th>
-                   <td colspan="3"><?php echo $result->Description; ?></td>
-                    
-                  </tr>
-             
-                  <tr>
-                   <th>Payment Type</th>
-                   <td colspan="3">
-                     <form method="post" class="form-inline">
-                       <input type="hidden" name="bookingid" value="<?php echo htmlentities($bookindid); ?>">
-                       <select name="paymentType" class="form-control" style="width:auto; display:inline-block;">
-                         <option value=""<?php echo ($ptype === '') ? ' selected' : ''; ?>>--select--</option>
-                         <option value="Partial Payment"<?php echo ($ptype === 'Partial Payment') ? ' selected' : ''; ?>>Partial Payment</option>
-                         <option value="Full Payment"<?php echo ($ptype === 'Full Payment') ? ' selected' : ''; ?>>Full Payment</option>
-                       </select>
-                       <button type="submit" name="update_payment_type" class="btn btn-primary btn-sm">Update</button>
-                     </form>
-                   </td>
-                  </tr>
-                  <?php  $cnt=$cnt+1; } } ?>
-                </thead>
-              </table>
+<!-- HERO -->
+<div class="hero">
+    <h1>Booking Details</h1>
+</div>
 
-            <?php   $sql="SELECT * from tblpayment
- where bookingID=:bookindid";
-                  $query= $dbh->prepare($sql);
-                  $query->bindParam(':bookindid',$bookindid, PDO::PARAM_STR);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  $cnt=1;
-                  if($query -> rowCount() > 0)
-                  { ?>
-                       <table class="table table-hover table-bordered">
-                        <tr>
-                          <th colspan="3" style="text-align:center;font-size:20px;">Payment History</th>
-                        </tr>
-                        <tr>
-                          <th>Payment Type</th>
-                          <th>Amount Paid</th>
-                          <th>Payment Date</th>
-                        </tr>
- <?php foreach($results as $result)
-                  { ?>
+<div class="container">
+
+<?php
+$bookindid=$_GET['bookingid'];
+
+$sql="SELECT t1.*, t2.titlename,t2.PackageDuratiobn,t2.Price,t2.Description,
+t4.category_name,t5.PackageName,t3.fname,t3.email
+FROM tblbooking t1
+LEFT JOIN tbladdpackage t2 ON t1.package_id=t2.id
+LEFT JOIN tbluser t3 ON t1.userid=t3.id
+LEFT JOIN tblcategory t4 ON t2.category=t4.id
+LEFT JOIN tblpackage t5 ON t2.PackageType=t5.id
+WHERE t1.id=:id";
+
+$query=$dbh->prepare($sql);
+$query->bindParam(':id',$bookindid);
+$query->execute();
+$row=$query->fetch(PDO::FETCH_OBJ);
+?>
+
+<!-- BOOKING CARD -->
+<div class="card">
+<h3>Booking Info</h3>
+
+<div class="grid">
+<div><span class="label">Name</span><br><span class="value"><?php echo $row->fname;?></span></div>
+<div><span class="label">Email</span><br><span class="value"><?php echo $row->email;?></span></div>
+<div><span class="label">Date</span><br><span class="value"><?php echo $row->booking_date;?></span></div>
+<div><span class="label">Category</span><br><span class="value"><?php echo $row->category_name;?></span></div>
+<div><span class="label">Plan</span><br><span class="value"><?php echo $row->titlename;?></span></div>
+<div><span class="label">Package</span><br><span class="value"><?php echo $row->PackageName;?></span></div>
+<div><span class="label">Duration</span><br><span class="value"><?php echo $row->PackageDuratiobn;?></span></div>
+<div><span class="label">Price</span><br><span class="value">₱<?php echo $row->Price;?></span></div>
+</div>
+
+<br>
+
+<div>
+<span class="label">Description</span><br>
+<?php echo $row->Description;?>
+</div>
+
+<br>
+
+<!-- PAYMENT UPDATE -->
+<form method="post">
+<input type="hidden" name="bookingid" value="<?php echo $bookindid;?>">
+
+<select name="paymentType">
+<option value="Partial Payment">Partial Payment</option>
+<option value="Full Payment">Full Payment</option>
+</select>
+
+<button class="btn" name="update_payment_type">Update</button>
+</form>
+
+</div>
+
+<!-- PAYMENT HISTORY -->
+<div class="card">
+<h3>Payment History</h3>
+
+<table>
 <tr>
-  <td><?php echo $result->paymentType; ?></td>
-  <td><?php echo $tpayment=$result->payment; ?></td>
-  <td><?php echo $result->payment_date; ?></td>
-</tr>
-<?php 
-$gpayment+=$tpayment;
-}  ?>
-<tr>
-  <th>Total</th>
-  <th><?php echo $gpayment;?></th>
+<th>Type</th>
+<th>Amount</th>
+<th>Date</th>
 </tr>
 
+<?php
+$sql="SELECT * FROM tblpayment WHERE bookingID=:id";
+$query=$dbh->prepare($sql);
+$query->bindParam(':id',$bookindid);
+$query->execute();
+$results=$query->fetchAll(PDO::FETCH_OBJ);
 
-                       </table>
-                     <?php } ?>
-				</div>
-			
-			</div>
-		</div>
-	</section>
-	<!-- Trainers Section end -->
+$total=0;
 
+foreach($results as $pay){
+$total += $pay->payment;
+?>
 
+<tr>
+<td><?php echo $pay->paymentType;?></td>
+<td><?php echo $pay->payment;?></td>
+<td><?php echo $pay->payment_date;?></td>
+</tr>
 
-	<!-- Footer Section -->
-<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
-	
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
+<?php } ?>
 
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
+<tr>
+<th>Total</th>
+<th><?php echo $total;?></th>
+<th></th>
+</tr>
 
-	</body>
+</table>
+
+</div>
+
+</div>
+
+</body>
 </html>
- <style>
-.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #dd3d36;
-    color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #5cb85c;
-    color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-        </style>
-        <?php } ?>

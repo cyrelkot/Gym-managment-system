@@ -2,16 +2,16 @@
 session_start();
 error_reporting(0);
 include 'include/config.php';
-$uid=$_SESSION['uid'];
 
-if(isset($_POST['submit']))
-{ 
-    $pid=$_POST['pid'];
+$uid = $_SESSION['uid'];
 
-    $sql="INSERT INTO tblbooking (package_id,userid) VALUES (:pid,:uid)";
+if (isset($_POST['submit'])) { 
+    $pid = $_POST['pid'];
+
+    $sql = "INSERT INTO tblbooking (package_id, userid) VALUES (:pid, :uid)";
     $query = $dbh->prepare($sql);
-    $query->bindParam(':pid',$pid,PDO::PARAM_STR);
-    $query->bindParam(':uid',$uid,PDO::PARAM_STR);
+    $query->bindParam(':pid', $pid, PDO::PARAM_STR);
+    $query->bindParam(':uid', $uid, PDO::PARAM_STR);
     $query->execute();
 
     echo "<script>alert('Package has been booked.');</script>";
@@ -20,7 +20,7 @@ if(isset($_POST['submit']))
 ?>
 
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 <head>
     <title>Gym Management System</title>
     <meta charset="UTF-8">
@@ -29,160 +29,172 @@ if(isset($_POST['submit']))
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/font-awesome.min.css"/>
 
-    <!-- MODERN UI STYLE -->
     <style>
         body{
             margin:0;
-            font-family: 'Segoe UI', sans-serif;
-            background:#0b0f19;
+            font-family:'Segoe UI', sans-serif;
+            background:#000;
             color:#fff;
         }
 
-        /* HEADER */
-        .header{
-            display:flex;
-            justify-content:space-between;
+        .navbar{
+            display:grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items:center;
-            padding:18px 40px;
-            background:rgba(20,20,20,0.95);
-            border-bottom:1px solid #1f2937;
+            padding:18px 50px;
+            background:#000;
+            border-bottom:2px solid #ff6a00;
             position:sticky;
             top:0;
             z-index:1000;
         }
 
         .logo{
-            font-size:22px;
-            font-weight:bold;
-            color:#00ff99;
-            letter-spacing:2px;
+            font-size:24px;
+            font-weight:900;
+            color:#ff6a00;
         }
 
-        .nav a{
+        .nav-links{
+            display:flex;
+            justify-content:center;
+            gap:25px;
+        }
+
+        .nav-links a{
             color:#fff;
             text-decoration:none;
-            margin-left:20px;
             font-weight:500;
-            transition:0.3s;
         }
 
-        .nav a:hover{
-            color:#00ff99;
+        .nav-links a:hover{
+            color:#ff6a00;
         }
 
-        /* HERO */
         .hero{
+            height:50vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
             text-align:center;
-            padding:90px 20px;
-            background:linear-gradient(135deg,#0f172a,#111827);
+            background:url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80') center/cover;
+            position:relative;
         }
 
-        .hero h2{
-            font-size:42px;
-            color:#00ff99;
-            margin-bottom:10px;
+        .hero::before{
+            content:"";
+            position:absolute;
+            width:100%;
+            height:100%;
+            background:rgba(0,0,0,0.7);
         }
 
-        .hero p{
-            color:#cbd5e1;
+        .hero h1, .hero p{
+            position:relative;
+            z-index:1;
         }
 
-        /* CARD SECTION */
+        .hero h1{
+            font-size:52px;
+            color:#ff6a00;
+        }
+
         .section{
             padding:60px 20px;
+            display:flex;
+            justify-content:center;
         }
 
-        .card-box{
-            background:#111827;
+        .card{
+            width:100%;
             max-width:650px;
-            margin:auto;
+            background:#111;
             padding:35px;
-            border-radius:15px;
-            box-shadow:0 10px 30px rgba(0,0,0,0.4);
-            border:1px solid #1f2937;
+            border-top:4px solid #ff6a00;
+            border-radius:16px;
         }
 
-        .card-box p{
-            font-size:18px;
-            margin:15px 0;
-            color:#e5e7eb;
+        .card h3{
+            text-align:center;
+            color:#ff6a00;
         }
 
-        /* BUTTON STYLE */
-        .btn-book{
-            display:inline-block;
-            padding:12px 25px;
-            background:#00ff99;
-            color:#000;
-            border:none;
-            border-radius:8px;
-            font-weight:bold;
-            transition:0.3s;
-            cursor:pointer;
+        .info{
+            padding:14px 0;
+            border-bottom:1px solid #222;
         }
 
-        .btn-book:hover{
-            background:#00cc77;
-            transform:scale(1.05);
+        .info strong{
+            color:#ff6a00;
         }
 
-        /* FOOTER */
         .footer{
             text-align:center;
             padding:20px;
-            background:#0a0a0a;
-            border-top:1px solid #1f2937;
-            color:#888;
-            margin-top:40px;
+            color:#777;
+        }
+
+        @media(max-width:768px){
+            .navbar{
+                grid-template-columns:1fr;
+                text-align:center;
+            }
+
+            .nav-links{
+                flex-wrap:wrap;
+            }
         }
     </style>
-
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
+<!-- NAVBAR -->
+<div class="navbar">
 
-    <div class="logo">GYM MS</div>
+    <div class="logo">GYM</div>
 
-    <div class="nav">
+    <div class="nav-links">
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
 
-        <?php if(strlen($_SESSION['uid'])==0): ?>
-            <a href="login.php">Login</a>
-        <?php else: ?>
-            <a href="booking-history.php">My Bookings</a>
+        <!-- 🔥 ADMIN / LOGOUT SWITCH -->
+        <?php if (isset($_SESSION['uid'])) { ?>
             <a href="logout.php">Logout</a>
-        <?php endif; ?>
+        <?php } else { ?>
+            <a href="admin/login.php">Admin</a>
+        <?php } ?>
+
     </div>
+
+    <div></div>
 
 </div>
 
-<!-- HERO SECTION -->
+<!-- HERO -->
 <div class="hero">
-    <h2>Contact Us</h2>
-    <p>We are always ready to help you achieve your fitness goals</p>
+    <h1>CONTACT US</h1>
+    <p>Push harder. Train smarter. Become unstoppable.</p>
 </div>
 
 <!-- CONTENT -->
 <div class="section">
+    <div class="card">
 
-    <div class="card-box">
+        <h3>GET IN TOUCH</h3>
 
-        <p><strong>Email:</strong> gymfitness@gmail.com</p>
-        <p><strong>Contact No:</strong> 09925965016, 09931098049</p>
-        <p><strong>Address:</strong> Test Address</p>
+        <div class="info"><strong>Email:</strong> gymfitness@gmail.com</div>
+        <div class="info"><strong>Contact:</strong> 09925965016</div>
+        <div class="info"><strong>Address:</strong> Rizal St.</div>
 
     </div>
-
 </div>
 
 <!-- FOOTER -->
 <div class="footer">
-    © 2026 Gym Management System | All Rights Reserved
+    © 2026 Gym Management System
 </div>
 
 </body>

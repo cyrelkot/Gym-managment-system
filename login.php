@@ -7,10 +7,14 @@ $msg = "";
 
 if (isset($_POST['submit'])) {
 
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
+$email = trim($_POST['email']);
+$password = $_POST['password'];
 
-    if ($email !== "" && !empty($password)) {
+if (!empty($email) && !empty($password)) {
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $msg = "Invalid email format.";
+    } else {
 
         try {
 
@@ -29,8 +33,9 @@ if (isset($_POST['submit'])) {
                 if (password_verify($password, $user['password'])) {
 
                     if ((int)$user['status'] === 0) {
-                        $msg = "⚠️ Your account is pending admin approval.";
+                        $msg = "Your account is pending admin approval.";
                     } else {
+
                         $_SESSION['uid'] = $user['id'];
                         $_SESSION['fname'] = $user['fname'];
 
@@ -47,218 +52,282 @@ if (isset($_POST['submit'])) {
             }
 
         } catch (PDOException $e) {
-            $msg = "Login failed. Please try again.";
+            $msg = "Login failed.";
         }
-
-    } else {
-        $msg = "Fill all fields.";
     }
+
+} else {
+    $msg = "Fill all fields.";
+}
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<title>Gym Management System</title>
-<meta charset="UTF-8">
 
-<link rel="stylesheet" href="css/bootstrap.min.css"/>
-<link rel="stylesheet" href="css/font-awesome.min.css"/>
+<title>Gym Login</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="css/font-awesome.min.css">
 
 <style>
 
+/* GLOBAL */
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
 body{
-    margin:0;
-    font-family:'Segoe UI', sans-serif;
-    background: linear-gradient(135deg,#0f172a,#1e293b);
-    color:#fff;
+font-family:'Segoe UI',sans-serif;
+background:url("https://images.unsplash.com/photo-1540497077202-7c8a3999166f") center/cover no-repeat;
+height:100vh;
+color:white;
 }
 
-/* 🔥 CENTER HEADER FIX */
-.top-header{
-    display:flex;
-    justify-content:center;   /* CENTER EVERYTHING */
-    align-items:center;
-    padding:15px 50px;
-    background:rgba(0,0,0,0.4);
-    position:relative;
+/* OVERLAY */
+.overlay{
+background:rgba(0,0,0,0.75);
+height:100vh;
 }
 
-/* LOGO LEFT CENTER */
+/* 🔥 HEADER (FIXED & CENTERED MENU) */
+.header{
+position:relative;
+display:flex;
+align-items:center;
+padding:20px 60px;
+}
+
+/* LOGO LEFT */
 .logo{
-    position:absolute;
-    left:50px;
-    color:#22c55e;
-    font-weight:bold;
-    font-size:20px;
+position:absolute;
+left:60px;
+font-size:24px;
+font-weight:bold;
+color:#ff6600;
 }
 
 /* MENU CENTER */
 .menu{
-    display:flex;
-    gap:25px;
+margin:0 auto;
+display:flex;
+gap:30px;
 }
 
 .menu a{
-    color:#fff;
-    text-decoration:none;
-    font-weight:500;
+color:white;
+text-decoration:none;
+font-weight:500;
 }
 
 .menu a:hover{
-    color:#22c55e;
+color:#ff6600;
 }
 
-/* LOGIN */
-.login-container{
-    height:90vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+/* MAIN */
+.main{
+display:flex;
+align-items:center;
+justify-content:space-between;
+height:85vh;
+padding:0 80px;
 }
 
+/* LEFT TEXT */
+.hero-text{
+max-width:500px;
+}
+
+.hero-text h1{
+font-size:48px;
+}
+
+.hero-text span{
+color:#ff6600;
+}
+
+.hero-text p{
+color:#ccc;
+margin-top:10px;
+}
+
+/* LOGIN CARD */
 .login-card{
-    width:100%;
-    max-width:400px;
-    padding:40px;
-    border-radius:15px;
-    background:rgba(255,255,255,0.08);
-    backdrop-filter:blur(15px);
-    box-shadow:0 10px 30px rgba(0,0,0,0.4);
-    text-align:center;
+width:350px;
+background:rgba(0,0,0,0.85);
+padding:35px;
+border-radius:10px;
 }
 
+.login-card h2{
+text-align:center;
+margin-bottom:20px;
+color:#ff6600;
+}
+
+/* INPUT GROUP */
 .input-group{
-    position:relative;
-    margin:15px 0;
+position:relative;
+margin-bottom:15px;
 }
 
-.input-group i.fa-envelope,
-.input-group i.fa-lock{
-    position:absolute;
-    top:50%;
-    left:12px;
-    transform:translateY(-50%);
-    color:#94a3b8;
+/* LEFT ICON */
+.left-icon{
+position:absolute;
+left:12px;
+top:50%;
+transform:translateY(-50%);
+color:#aaa;
+pointer-events:none;
 }
 
+/* INPUT */
 .login-card input{
-    width:100%;
-    padding:12px 45px 12px 40px;
-    border:none;
-    border-radius:8px;
-    background:rgba(255,255,255,0.1);
-    color:#fff;
+width:100%;
+padding:12px 45px;
+border:none;
+border-radius:6px;
+background:#1f1f1f;
+color:white;
+outline:none;
 }
 
-.login-card input::placeholder{
-    color:#cbd5f5;
-}
-
-/* EYE */
+/* EYE BUTTON */
 .toggle-password{
-    position:absolute;
-    top:50%;
-    right:12px;
-    transform:translateY(-50%);
-    cursor:pointer;
-    color:#94a3b8;
+position:absolute;
+right:12px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+color:#aaa;
+z-index:999;
 }
 
-.btn-main{
-    width:100%;
-    padding:12px;
-    background:#22c55e;
-    border:none;
-    color:#fff;
-    border-radius:8px;
-    font-weight:bold;
+.toggle-password i{
+pointer-events:none;
 }
 
-.btn-main:hover{
-    background:#16a34a;
+/* BUTTON */
+.btn-login{
+width:100%;
+padding:12px;
+border:none;
+background:#ff6600;
+color:white;
+border-radius:6px;
+font-weight:bold;
+cursor:pointer;
 }
 
-.btn-secondary{
-    display:block;
-    margin-top:12px;
-    color:#22c55e;
-    text-decoration:none;
+.btn-login:hover{
+background:#e65c00;
 }
 
+/* REGISTER */
+.register{
+text-align:center;
+margin-top:10px;
+}
+
+.register a{
+color:#ff6600;
+text-decoration:none;
+}
+
+/* ERROR */
 .error{
-    background:#f59e0b;
-    color:#000;
-    padding:10px;
-    border-radius:6px;
-    margin-bottom:10px;
+background:#ff4d4d;
+padding:10px;
+margin-bottom:10px;
+border-radius:6px;
+text-align:center;
 }
 
 </style>
+
 </head>
 
 <body>
 
+<div class="overlay">
+
 <!-- HEADER -->
-<div class="top-header">
+<div class="header">
+<div class="logo">GYM</div>
 
-    <div class="logo">GYM</div>
+<div class="menu">
+<a href="index.php">Home</a>
+<a href="about.php">About</a>
+<a href="contact.php">Contact</a>
+<a href="admin/">Admin</a>
+</div>
+</div>
 
-    <div class="menu">
-        <a href="index.php">Home</a>
-        <a href="about.php">About</a>
-        <a href="contact.php">Contact</a>
-        <a href="admin/">Admin</a>
-    </div>
+<!-- MAIN -->
+<div class="main">
+
+<div class="hero-text">
+<h1>Train <span>Hard</span><br>Stay <span>Strong</span></h1>
+<p>Join our gym and achieve your fitness goals.</p>
+</div>
+
+<div class="login-card">
+
+<h2>Member Login</h2>
+
+<?php if(!empty($msg)){ ?>
+<div class="error"><?php echo htmlentities($msg); ?></div>
+<?php } ?>
+
+<form method="post">
+
+<div class="input-group">
+<i class="fa fa-envelope left-icon"></i>
+<input type="email" name="email" placeholder="Email Address" required>
+</div>
+
+<div class="input-group">
+<i class="fa fa-lock left-icon"></i>
+
+<input type="password" id="password" name="password" placeholder="Password" required>
+
+<span class="toggle-password" onclick="togglePassword()">
+<i class="fa fa-eye"></i>
+</span>
+</div>
+
+<button type="submit" name="submit" class="btn-login">
+Login
+</button>
+
+<div class="register">
+<a href="registration.php">Create Account</a>
+</div>
+
+</form>
 
 </div>
 
-<!-- LOGIN -->
-<div class="login-container">
-    <div class="login-card">
+</div>
 
-        <h3>User Login</h3>
-
-        <?php if (!empty($msg)) { ?>
-        <div class="error"><?php echo htmlentities($msg); ?></div>
-        <?php } ?>
-
-        <form method="post">
-
-            <div class="input-group">
-                <i class="fa fa-envelope"></i>
-                <input type="text" name="email" placeholder="Enter Email" required>
-            </div>
-
-            <div class="input-group">
-                <i class="fa fa-lock"></i>
-                <input type="password" id="password" name="password" placeholder="Enter Password" required>
-
-                <span class="toggle-password" onclick="togglePassword()">
-                    <i class="fa fa-eye" id="eyeIcon"></i>
-                </span>
-            </div>
-
-            <button type="submit" name="submit" class="btn-main">Login</button>
-            <a href="registration.php" class="btn-secondary">Create Account</a>
-
-        </form>
-
-    </div>
 </div>
 
 <script>
 function togglePassword(){
-    var pass = document.getElementById("password");
-    var icon = document.getElementById("eyeIcon");
+var pass = document.getElementById("password");
+var icon = document.querySelector(".toggle-password i");
 
-    if(pass.type === "password"){
-        pass.type = "text";
-        icon.classList.replace("fa-eye","fa-eye-slash");
-    }else{
-        pass.type = "password";
-        icon.classList.replace("fa-eye-slash","fa-eye");
-    }
+if(pass.type === "password"){
+pass.type = "text";
+icon.classList.replace("fa-eye","fa-eye-slash");
+}else{
+pass.type = "password";
+icon.classList.replace("fa-eye-slash","fa-eye");
+}
 }
 </script>
 

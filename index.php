@@ -3,7 +3,6 @@ session_start();
 error_reporting(0);
 include 'include/config.php';
 
-// Require login
 if(strlen($_SESSION['uid'])==0){
     header('location:login.php');
     exit;
@@ -11,169 +10,275 @@ if(strlen($_SESSION['uid'])==0){
 
 $uid = $_SESSION['uid'];
 
-// Ensure user is approved before allowing booking
+/* CHECK APPROVAL */
 $approved = false;
 $check = $dbh->prepare("SELECT status FROM tbluser WHERE id=:uid");
 $check->bindParam(':uid',$uid,PDO::PARAM_INT);
 $check->execute();
 $user = $check->fetch(PDO::FETCH_ASSOC);
-if($user && isset($user['status']) && intval($user['status']) === 1) {
+
+if($user && intval($user['status']) === 1){
     $approved = true;
 }
 
-if(isset($_POST['submit']))
-{ 
+/* CHECK IF USER HAS BOOKING */
+$hasBooking = false;
+$checkBooking = $dbh->prepare("SELECT id FROM tblbooking WHERE userid = :uid LIMIT 1");
+$checkBooking->bindParam(':uid', $uid, PDO::PARAM_INT);
+$checkBooking->execute();
+
+if($checkBooking->rowCount() > 0){
+    $hasBooking = true;
+}
+
+/* BOOKING */
+if(isset($_POST['submit'])){ 
+
     if(!$approved){
-        echo "<script>alert('Your account is pending admin approval. You cannot book packages yet.');</script>";
-        echo "<script>window.location.href='booking-history.php'</script>";
+        echo "<script>alert('Your account is pending admin approval.');</script>";
         exit;
     }
 
     $pid=$_POST['pid'];
 
-    $sql="INSERT INTO tblbooking (package_id,userid) Values(:pid,:uid)";
-
-    $query = $dbh -> prepare($sql);
+    $sql="INSERT INTO tblbooking (package_id,userid) VALUES (:pid,:uid)";
+    $query = $dbh->prepare($sql);
     $query->bindParam(':pid',$pid,PDO::PARAM_STR);
     $query->bindParam(':uid',$uid,PDO::PARAM_STR);
-    $query -> execute();
-    echo "<script>alert('Package has been booked.');</script>";
-    echo "<script>window.location.href='booking-history.php'</script>";
+    $query->execute();
 
+    echo "<script>alert('Package booked successfully');</script>";
+    echo "<script>window.location.href='booking-history.php'</script>";
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Gym Fitness</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="css/bootstrap.min.css"/>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:#000;
+    color:#fff;
 }
 
-?>
-<!DOCTYPE html>
-<html lang="zxx">
-<head>
-	<title>Gym Management System</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="Ahana Yoga HTML Template">
-	<meta name="keywords" content="yoga, html">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/magnific-popup.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
-	<link rel="stylesheet" href="css/animate.css"/>
+/* NAVBAR */
+.navbar{
+    display:flex;
+    justify-content:center;
+    gap:40px;
+    padding:20px;
+    background:#000;
+    border-bottom:2px solid #ff6a00;
+    position:sticky;
+    top:0;
+}
 
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
+.navbar a{
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+}
 
+.navbar a:hover{
+    color:#ff6a00;
+}
+
+/* HERO */
+.hero{
+    height:55vh;
+    background:url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+}
+
+.hero::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+}
+
+.hero-content{
+    position:relative;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:55px;
+    color:#ff6a00;
+}
+
+/* SECTION */
+.section{
+    padding:60px 20px;
+}
+
+.title{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+/* GRID FIX */
+.row{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.col-lg-3{
+    display:flex;
+}
+
+/* CARD */
+.pricing-item{
+    background:#111;
+    border:1px solid #222;
+    border-top:3px solid #ff6a00;
+    padding:25px;
+    border-radius:15px;
+    width:100%;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    min-height:370px;
+}
+
+.pricing-item h4{
+    color:#ff6a00;
+}
+
+.price{
+    font-size:28px;
+    font-weight:bold;
+}
+
+/* DESCRIPTION */
+.desc{
+    max-height:100px;
+    overflow:hidden;
+    font-size:14px;
+    color:#ccc;
+}
+
+/* BUTTON */
+.btn-container{
+    margin-top:auto;
+}
+
+.btn-book{
+    background:#ff6a00;
+    color:#000;
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* FOOTER */
+.footer{
+    text-align:center;
+    padding:20px;
+    color:#777;
+}
+
+</style>
 </head>
+
 <body>
-	<!-- Page Preloder -->
-	
 
-	<!-- Header Section -->
-	<header class="header-section">
-		<div class="header-bottom">
-			<a href="index.php" class="site-logo" style="color:#fff; font-weight:bold; font-size:26px;">
-				GYM MS<br />
-				<small style="margin-top:-4%;">Gym Management System</small>
-			</a>
-			<div class="container">
-				<ul class="main-menu">
-					<li><a href="index.php" class="active">Home</a></li>
-					<li><a href="about.php">About</a></li>
-					<li><a href="contact.php">Contact</a></li>
-					<li><a href="admin/">Admin</a></li>
-				</ul>
-			</div>
-		</div>
-	</header>
-	<!-- Header Section end -->
+<!-- NAVBAR -->
+<div class="navbar">
+    <a href="index.php">Home</a>
+    <a href="about.php">About</a>
+    <a href="contact.php">Contact</a>
 
-	
+    <?php if($hasBooking){ ?>
+        <a href="booking-history.php">Booking History</a>
+    <?php } ?>
 
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>Home</h2>
-					<p>Physical Activity Or Can Improve Your Health</p>
-				</div>
-			</div>
-		</div>
-	</section>
+    <a href="logout.php">Logout</a>
+</div>
 
+<!-- HERO -->
+<div class="hero">
+    <div class="hero-content">
+        <h1>BUILD YOUR BODY</h1>
+        <p>Train hard. Stay strong.</p>
+    </div>
+</div>
 
+<!-- PRICING -->
+<div class="section">
 
-	<!-- Pricing Section -->
-	<section class="pricing-section spad">
-		<div class="container">
-			<div class="section-title text-center">
-				<img src="img/icons/logo-icon.png" alt="">
-				<h2>Pricing plans</h2>
-				<p>Transform your body, boost your confidence, and stay strong. Our gym is the perfect place to start your fitness journey and reach your goals!</p>
-			</div>
-			<div class="row">
-				        <?php 
+    <div class="title">
+        <h2>Fitness Plans</h2>
+    </div>
 
-$sql ="SELECT id, category, titlename, PackageType, PackageDuratiobn, Price, uploadphoto, Description, create_date from tbladdpackage";
-$query= $dbh -> prepare($sql);
-$query-> execute();
-$results = $query -> fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query -> rowCount() > 0)
-{
-foreach($results as $result)
-{
-?>
-				<div class="col-lg-3 col-sm-6">
-					<div class="pricing-item begginer">
-						<div class="pi-top">
-							<h4><?php echo $result->titlename;?></h4>
-						</div>
-						<div class="pi-price">
-							<h3><?php echo htmlentities($result->Price);?></h3>
-							<p>	<?php echo $result->PackageDuratiobn;?></p>
-						</div>
-						<ul>
-							<?php echo $result->Description;?>
-							
-						</ul>
-						<?php if(strlen($_SESSION['uid'])==0): ?>
-						<a href="login.php" class="site-btn sb-line-gradient">Booking Now</a>
-						<?php else :?>
-							<!-- <a href="#" class="site-btn sb-line-gradient">Booking Now</a> -->
-							 <form method='post'>
-                            <input type='hidden' name='pid' value='<?php echo htmlentities($result->id);?>'>
-                          
+    <div class="container">
+        <div class="row">
 
-                        <input class='site-btn sb-line-gradient' type='submit' name='submit' value='Booking Now' onclick="return confirm('Do you really want to book this package.');"> 
-                        </form> 
-							 <?php endif;?>
-					</div>
-				</div>
-				<?php  $cnt=$cnt+1; } } ?>
-			</div>
-		</div>
-	</section>
-	
+        <?php 
+        $sql ="SELECT * FROM tbladdpackage";
+        $query= $dbh->prepare($sql);
+        $query->execute();
+        $results = $query->fetchAll(PDO::FETCH_OBJ);
 
-	<!-- Footer Section -->
-	<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
+        foreach($results as $result)
+        { ?>
 
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
+            <div class="col-lg-3 col-sm-6">
 
-	<!-- Search model end -->
+                <div class="pricing-item">
 
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
+                    <div>
+                        <h4><?php echo $result->titlename; ?></h4>
 
-	</body>
+                        <div class="price">
+                            ₱<?php echo $result->Price; ?>
+                        </div>
+
+                        <p><?php echo $result->PackageDuratiobn; ?></p>
+
+                        <div class="desc">
+                            <?php echo $result->Description; ?>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <form method="post">
+                            <input type="hidden" name="pid" value="<?php echo $result->id; ?>">
+                            <input type="submit" name="submit" class="btn-book" value="Book Now">
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+
+        <?php } ?>
+
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2026 Gym Management System
+</div>
+
+</body>
 </html>
