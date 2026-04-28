@@ -1,7 +1,7 @@
 <?php session_start();
 error_reporting(0);
 include  'include/config.php'; 
-if (strlen($_SESSION['adminid']==0)) {
+if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
   } else{
 // Code for change password 

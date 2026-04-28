@@ -31,7 +31,7 @@ if (isset($_POST['approve']) && isset($_POST['userid'])) {
     }
 }
 
-if (strlen($_SESSION['adminid']==0)) {
+if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
   } else{
 ?>
