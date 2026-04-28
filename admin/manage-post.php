@@ -39,6 +39,60 @@ if (isset($_POST['delete_package']) && isset($_POST['packageid'])) {
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      body,
+      .app-content {
+        background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
+                    url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+      }
+
+      .tile {
+        background: rgba(0, 0, 0, 0.80);
+        border: 1px solid rgba(255, 102, 0, 0.45);
+        border-radius: 14px;
+        box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
+        color: #fff;
+      }
+
+      h3,
+      .table,
+      .table th,
+      .table td {
+        color: #fff !important;
+      }
+
+      hr {
+        border-top: 1px solid rgba(255, 102, 0, 0.35);
+      }
+
+      .table-bordered,
+      .table-bordered th,
+      .table-bordered td {
+        border: 1px solid rgba(255,255,255,0.12) !important;
+      }
+
+      .table thead {
+        background: rgba(255, 102, 0, 0.12);
+      }
+
+      .table-hover tbody tr:hover {
+        background: rgba(255, 102, 0, 0.08);
+      }
+
+      .btn-success {
+        background: #ff6600;
+        border-color: #ff6600;
+      }
+
+      .btn-success:hover,
+      .btn-success:focus {
+        background: #e65c00;
+        border-color: #e65c00;
+      }
+    </style>
   </head>
   <body class="app sidebar-mini rtl">
     <!-- Navbar-->

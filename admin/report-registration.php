@@ -48,6 +48,77 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      body,
+      .app-content {
+        background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
+                    url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+      }
+
+      .tile {
+        background: rgba(0, 0, 0, 0.80);
+        border: 1px solid rgba(255, 102, 0, 0.45);
+        border-radius: 14px;
+        box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
+        color: #fff;
+      }
+
+      h3,
+      label,
+      .table,
+      .table th,
+      .table td {
+        color: #fff !important;
+      }
+
+      .form-control {
+        background: #1a1a1a;
+        border: 1px solid #333;
+        color: #fff;
+      }
+
+      .form-control:focus {
+        background: #1a1a1a;
+        border-color: #ff6600;
+        box-shadow: 0 0 5px rgba(255,102,0,0.35);
+        color: #fff;
+      }
+
+      hr {
+        border-top: 1px solid rgba(255, 102, 0, 0.35);
+      }
+
+      .btn-primary,
+      .btn-success {
+        background: #ff6600;
+        border-color: #ff6600;
+      }
+
+      .btn-primary:hover,
+      .btn-primary:focus,
+      .btn-success:hover,
+      .btn-success:focus {
+        background: #e65c00;
+        border-color: #e65c00;
+      }
+
+      .table-bordered,
+      .table-bordered th,
+      .table-bordered td {
+        border: 1px solid rgba(255,255,255,0.12) !important;
+      }
+
+      .table thead {
+        background: rgba(255, 102, 0, 0.12);
+      }
+
+      .table-hover tbody tr:hover {
+        background: rgba(255, 102, 0, 0.08);
+      }
+    </style>
   </head>
   <body class="app sidebar-mini rtl">
     <!-- Navbar-->
@@ -93,11 +164,11 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
       if(isset($_POST['Submit'])){
         $fdate=$_POST['fdate'];
         $tdate=$_POST['todate'];
-        $sql="SELECT id, fname, lname, email, mobile, password, state, city, address, create_date, status from tbluser
+        $sql="SELECT id, fname, lname, email, mobile, password, city, address, create_date, status from tbluser
 where date(create_date) between :fdate and :tdate
 ORDER BY create_date DESC";
       } else {
-        $sql = "SELECT id, fname, lname, email, mobile, password, state, city, address, create_date, status from tbluser ORDER BY create_date DESC";
+        $sql = "SELECT id, fname, lname, email, mobile, password, city, address, create_date, status from tbluser ORDER BY create_date DESC";
       }
 
       try {
@@ -114,11 +185,11 @@ ORDER BY create_date DESC";
           $errormsg = "Showing registrations, but status is unavailable. (" . htmlspecialchars($e->getMessage()) . ")";
 
           if(isset($_POST['Submit'])){
-            $sql="SELECT id, fname, lname, email, mobile, password, state, city, address, create_date from tbluser
+            $sql="SELECT id, fname, lname, email, mobile, password, city, address, create_date from tbluser
 where date(create_date) between :fdate and :tdate
 ORDER BY create_date DESC";
           } else {
-            $sql = "SELECT id, fname, lname, email, mobile, password, state, city, address, create_date from tbluser ORDER BY create_date DESC";
+            $sql = "SELECT id, fname, lname, email, mobile, password, city, address, create_date from tbluser ORDER BY create_date DESC";
           }
           $query= $dbh->prepare($sql);
           if(isset($_POST['Submit'])) {
@@ -141,7 +212,6 @@ ORDER BY create_date DESC";
               <th>Name</th>
               <th>email</th>
               <th>mobile</th>
-              <th>state</th>
               <th>city</th>
               <th>Registered</th>
               <th>Status</th>
@@ -161,7 +231,6 @@ ORDER BY create_date DESC";
                     <td><?php echo htmlentities($result->fname);?> <?php echo htmlentities($result->lname);?></td>
                     <td><?php echo htmlentities($result->email);?></td>
                     <td><?php echo htmlentities($result->mobile);?></td>
-                    <td><?php echo htmlentities($result->state);?></td>
                     <td><?php echo htmlentities($result->city);?></td>
                     <td><?php echo htmlentities(date('Y-m-d H:i', strtotime($result->create_date)));?></td>
                     <td><?php if($statusColumnAvailable && isset($result->status)) { echo (intval($result->status)===1) ? 'Approved' : 'Pending'; } else { echo 'N/A'; } ?></td>

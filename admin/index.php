@@ -17,6 +17,65 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      body,
+      .app-content {
+        background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
+                    url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+      }
+
+      .app-title {
+        background: rgba(0, 0, 0, 0.72);
+        border: 1px solid rgba(255, 102, 0, 0.45);
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 24px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
+      }
+
+      .app-title h1,
+      .app-title .breadcrumb-item,
+      .app-title .breadcrumb-item a,
+      .app-title .breadcrumb-item i {
+        color: #fff !important;
+      }
+
+      .app-title h1 i {
+        color: #ff6600 !important;
+      }
+
+      .widget-small {
+        background: rgba(0, 0, 0, 0.8) !important;
+        border: 1px solid rgba(255, 102, 0, 0.45);
+        border-radius: 14px;
+        box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .widget-small:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+      }
+
+      .widget-small .icon {
+        background: #ff6600 !important;
+        color: #fff !important;
+        border-radius: 14px 0 0 14px;
+      }
+
+      .widget-small .info h4,
+      .widget-small .info p,
+      .widget-small .info b {
+        color: #fff !important;
+      }
+
+      .row a {
+        text-decoration: none !important;
+      }
+    </style>
   </head>
   <body class="app sidebar-mini rtl">
     <!-- Navbar-->

@@ -1,3 +1,48 @@
+<style>
+  .app-sidebar {
+    background: rgba(0, 0, 0, 0.94) !important;
+    border-right: 1px solid rgba(255, 102, 0, 0.35);
+    box-shadow: 4px 0 16px rgba(0, 0, 0, 0.3);
+  }
+
+  .app-menu,
+  .treeview-menu {
+    background: transparent !important;
+  }
+
+  .app-menu__item,
+  .treeview-item {
+    color: #f1f1f1 !important;
+    border-radius: 8px;
+    margin: 4px 10px;
+    transition: all 0.2s ease;
+  }
+
+  .app-menu__item:hover,
+  .app-menu__item:focus,
+  .treeview-item:hover,
+  .treeview-item:focus {
+    background: rgba(255, 102, 0, 0.16) !important;
+    color: #ff6600 !important;
+  }
+
+  .app-menu__item.active,
+  .treeview.is-expanded > .app-menu__item {
+    background: rgba(255, 102, 0, 0.22) !important;
+    color: #ff6600 !important;
+    border-left: 3px solid #ff6600;
+  }
+
+  .app-menu__icon,
+  .treeview-indicator,
+  .treeview-item .icon {
+    color: inherit !important;
+  }
+
+  .treeview-menu {
+    padding-bottom: 6px;
+  }
+</style>
 <aside class="app-sidebar">
      
       <ul class="app-menu">

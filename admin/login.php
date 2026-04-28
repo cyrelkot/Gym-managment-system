@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 error_reporting(E_ALL);
 include 'include/config.php';
@@ -29,51 +29,157 @@ if (isset($_POST['login'])) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Admin Login</title>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" type="text/css" href="css/main.css">
-  <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.95)),
+                  url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
+
+    .login-container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      background: rgba(0,0,0,0.80);
+      padding: 40px;
+      border-radius: 12px;
+      width: 350px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      text-align: center;
+      border: 1px solid #ff6600;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #ff6600;
+      letter-spacing: 2px;
+    }
+
+    .tagline {
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      color: #ccc;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      outline: none;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 14px;
+      border: 1px solid #333;
+    }
+
+    .form-control:focus {
+      border: 1px solid #ff6600;
+      box-shadow: 0 0 5px #ff6600;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: #ff6600;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-login:hover {
+      background: #e65c00;
+      transform: scale(1.03);
+    }
+
+    .back-home {
+      margin-top: 15px;
+      display: block;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .back-home:hover {
+      color: #ff6600;
+    }
+
+    .alert {
+      background: #ff3333;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      margin-bottom: 15px;
+    }
+
+  </style>
 </head>
+
 <body>
-  <section class="material-half-bg">
-    <div class="cover"></div>
-  </section>
-  <section class="login-content">
+
+<div class="login-container">
+  <div class="login-box">
+
     <div class="logo">
-      <h1>GYM MS</h1>
+      ADMIN
     </div>
-    <div class="login-box">
-      <form class="login-form" method="post">
-        <h3 class="login-head"><i class="fa fa-lg fa-fw fa-user"></i>ADMIN SIGN IN</h3>
+    <?php if ($errmsg) { ?>
+      <div class="alert"><?php echo htmlentities($errmsg); ?></div>
+    <?php } ?>
 
-        <?php if ($errmsg) { ?>
-          <div class="alert alert-danger"><?php echo htmlentities($errmsg); ?></div>
-        <?php } ?>
+    <form method="post">
 
-        <div class="form-group">
-          <label class="control-label">EMAIL</label>
-          <input class="form-control" type="email" name="email" placeholder="Email" required autofocus>
-        </div>
-        <div class="form-group">
-          <label class="control-label">PASSWORD</label>
-          <input class="form-control" type="password" name="password" placeholder="Password" required>
-        </div>
-        <div class="form-group btn-container">
-          <button class="btn btn-primary btn-block" type="submit" name="login">
-            <i class="fa fa-sign-in fa-lg fa-fw"></i>SIGN IN
-          </button>
-        </div>
-      </form>
-    </div>
-  </section>
-  <script src="js/jquery-3.2.1.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/main.js"></script>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+      </div>
+
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+      </div>
+
+      <button type="submit" name="login" class="btn-login">LOGIN</button>
+
+    </form>
+
+    <a href="../index.php" class="back-home">Back to Home</a>
+
+  </div>
+</div>
+
 </body>
 </html>
