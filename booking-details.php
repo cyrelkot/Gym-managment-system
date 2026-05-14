@@ -188,7 +188,7 @@ tr:nth-child(even){
 $bookindid=$_GET['bookingid'];
 
 $sql="SELECT t1.*, t2.titlename,t2.PackageDuratiobn,t2.Price,t2.Description,
-t4.category_name,t5.PackageName,t3.fname,t3.email
+t4.category_name,t5.PackageName as Plan,t3.fname,t3.email
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id=t2.id
 LEFT JOIN tbluser t3 ON t1.userid=t3.id
@@ -211,8 +211,8 @@ $row=$query->fetch(PDO::FETCH_OBJ);
 <div><span class="label">Email</span><br><span class="value"><?php echo $row->email;?></span></div>
 <div><span class="label">Date</span><br><span class="value"><?php echo $row->booking_date;?></span></div>
 <div><span class="label">Category</span><br><span class="value"><?php echo $row->category_name;?></span></div>
-<div><span class="label">Plan</span><br><span class="value"><?php echo $row->titlename;?></span></div>
-<div><span class="label">Package</span><br><span class="value"><?php echo $row->PackageName;?></span></div>
+<div><span class="label">Title</span><br><span class="value"><?php echo $row->titlename;?></span></div>
+<div><span class="label">Plan</span><br><span class="value"><?php echo $row->Plan;?></span></div>
 <div><span class="label">Duration</span><br><span class="value"><?php echo $row->PackageDuratiobn;?></span></div>
 <div><span class="label">Price</span><br><span class="value">₱<?php echo $row->Price;?></span></div>
 </div>
@@ -248,34 +248,42 @@ $row=$query->fetch(PDO::FETCH_OBJ);
 <tr>
 <th>Type</th>
 <th>Amount</th>
-<th>Date</th>
+<th>Total Amount</th>
+<th>Remaining Balance</th>
+<th>Updated Date</th>
 </tr>
 
 <?php
-$sql="SELECT * FROM tblpayment WHERE bookingID=:id";
+$sql="SELECT * FROM tblpayment WHERE bookingID=:id ORDER BY payment_date ASC, id ASC";
 $query=$dbh->prepare($sql);
 $query->bindParam(':id',$bookindid);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 
-$total=0;
+$packageTotal = isset($row->Price) ? (float) $row->Price : 0;
+$cumulativePaid = 0;
 
 foreach($results as $pay){
-$total += $pay->payment;
+$cumulativePaid += (float) $pay->payment;
+$remainingAfter = $packageTotal - $cumulativePaid;
+if ($remainingAfter < 0) {
+    $remainingAfter = 0;
+}
 ?>
 
 <tr>
-<td><?php echo $pay->paymentType;?></td>
-<td><?php echo $pay->payment;?></td>
-<td><?php echo $pay->payment_date;?></td>
+<td><?php echo htmlentities($pay->paymentType);?></td>
+<td><?php echo number_format((float) $pay->payment, 2, '.', '');?></td>
+<td><?php echo number_format($packageTotal, 2, '.', '');?></td>
+<td><?php echo number_format($remainingAfter, 2, '.', '');?></td>
+<td><?php echo htmlentities($pay->payment_date);?></td>
 </tr>
 
 <?php } ?>
 
 <tr>
-<th>Total</th>
-<th><?php echo $total;?></th>
-<th></th>
+<th>Total Paid</th>
+<th colspan="4"><?php echo number_format($cumulativePaid, 2, '.', '');?></th>
 </tr>
 
 </table>

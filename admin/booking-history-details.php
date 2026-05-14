@@ -152,7 +152,7 @@ $sql="SELECT t1.id as bookingid,
         t3.fname,
         t3.email,
         t2.Price,
-        COALESCE(t5.PackageName, t2.titlename) as PackageName,
+        COALESCE(t5.PackageName, t2.titlename) as Plan,
         t1.paymentType
 
         FROM tblbooking t1
@@ -218,7 +218,7 @@ if (empty($packageId)) {
 }
 
 // If package info is missing, load it by packageId
-if (empty($result->PackageName) && !empty($packageId)) {
+if (empty($result->Plan) && !empty($packageId)) {
     $packageStmt = $dbh->prepare("SELECT t5.PackageName FROM tbladdpackage t2
         LEFT JOIN tblpackage t5 ON t2.PackageType=t5.id
         WHERE t2.id = :pid");
@@ -226,7 +226,7 @@ if (empty($result->PackageName) && !empty($packageId)) {
     $packageStmt->execute();
     $packageInfo = $packageStmt->fetch(PDO::FETCH_OBJ);
     if ($packageInfo) {
-        $result->PackageName = $packageInfo->PackageName;
+        $result->Plan = $packageInfo->PackageName;
     }
 }
 /* TOTAL PAYMENT */
@@ -272,8 +272,8 @@ $remaining=$result->Price-$gpayment;
 </tr>
 
 <tr>
-<th>Package</th>
-<td><input class="form-control" value="<?php echo $result->PackageName;?>" readonly></td>
+<th>Plan</th>
+<td><input class="form-control" value="<?php echo $result->Plan;?>" readonly></td>
 </tr>
 
 <tr>
@@ -341,13 +341,16 @@ Back
 
 /* PAYMENT HISTORY */
 
-$sql="SELECT * FROM tblpayment WHERE bookingID=:bookindid";
+$sql="SELECT * FROM tblpayment WHERE bookingID=:bookindid ORDER BY payment_date ASC, id ASC";
 
 $query=$dbh->prepare($sql);
 $query->bindParam(':bookindid',$bookindid,PDO::PARAM_INT);
 $query->execute();
 
 $results=$query->fetchAll(PDO::FETCH_OBJ);
+
+$packageTotal = isset($result->Price) ? (float) $result->Price : 0;
+$cumulativePaid = 0;
 
 if($query->rowCount()>0){
 
@@ -356,7 +359,7 @@ if($query->rowCount()>0){
 <table class="table table-bordered">
 
 <tr>
-<th colspan="3" style="text-align:center;font-size:18px;">
+<th colspan="5" style="text-align:center;font-size:18px;">
 Payment History
 </th>
 </tr>
@@ -364,15 +367,26 @@ Payment History
 <tr>
 <th>Payment Type</th>
 <th>Amount</th>
-<th>Date</th>
+<th>Total Amount</th>
+<th>Remaining Balance</th>
+<th>Updated Date</th>
 </tr>
 
-<?php foreach($results as $row){ ?>
+<?php foreach($results as $row){
+$cumulativePaid += (float) $row->payment;
+$remainingAfter = $packageTotal - $cumulativePaid;
+if ($remainingAfter < 0) {
+    $remainingAfter = 0;
+}
+$updatedDate = $row->payment_date;
+?>
 
 <tr>
-<td><?php echo $row->paymentType;?></td>
-<td><?php echo $row->payment;?></td>
-<td><?php echo $row->payment_date;?></td>
+<td><?php echo htmlentities($row->paymentType);?></td>
+<td><?php echo number_format((float) $row->payment, 2, '.', '');?></td>
+<td><?php echo number_format($packageTotal, 2, '.', '');?></td>
+<td><?php echo number_format($remainingAfter, 2, '.', '');?></td>
+<td><?php echo htmlentities($updatedDate);?></td>
 </tr>
 
 <?php } ?>

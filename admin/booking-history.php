@@ -165,7 +165,7 @@ tr:nth-child(even){
 <th>Name</th>
 <th>Email</th>
 <th>Date</th>
-<th>Package</th>
+<th>Plan</th>
 <th>Status</th>
 <th>Action</th>
 </tr>
@@ -178,7 +178,7 @@ $sql="SELECT t1.id as bookingid,
 t3.fname as Name,
 t3.email,
 t1.booking_date,
-COALESCE(t5.PackageName, t2.titlename) as PackageName,
+COALESCE(t5.PackageName, t2.titlename) as Plan,
 t1.paymentType
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
@@ -199,7 +199,7 @@ foreach($results as $row){
 <td><?php echo $row->Name; ?></td>
 <td><?php echo $row->email; ?></td>
 <td><?php echo $row->booking_date; ?></td>
-<td><?php echo $row->PackageName; ?></td>
+<td><?php echo $row->Plan; ?></td>
 
 <td>
 <?php 
@@ -220,7 +220,7 @@ onclick="openModal(
 '<?php echo $row->Name;?>',
 '<?php echo $row->email;?>',
 '<?php echo $row->booking_date;?>',
-'<?php echo $row->PackageName;?>',
+'<?php echo $row->Plan;?>',
 '<?php echo $row->paymentType;?>'
 )">View</button>
 
@@ -251,7 +251,7 @@ onclick="openModal(
 <p><b>Name:</b> <span id="m_name"></span></p>
 <p><b>Email:</b> <span id="m_email"></span></p>
 <p><b>Date:</b> <span id="m_date"></span></p>
-<p><b>Package:</b> <span id="m_package"></span></p>
+<p><b>Plan:</b> <span id="m_package"></span></p>
 <p><b>Payment:</b> <span id="m_payment"></span></p>
 
 </div>

@@ -96,7 +96,7 @@ if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
         <th>Name</th>
         <th>Email</th>
         <th>bookingdate</th>
-                <th>PackageName</th>
+                <th>Plan</th>
         <th>Title</th>
      
 
@@ -106,7 +106,7 @@ if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
                 </thead>
                <?php
                   $sql="SELECT t1.id as bookingid,t3.fname as Name, t3.email as email,t1.booking_date as bookingdate,t2.titlename as title,t2.PackageDuratiobn as PackageDuratiobn,
-t2.Price as Price,t2.Description as Description,t4.category_name as category_name,t5.PackageName as PackageName FROM tblbooking as t1
+t2.Price as Price,t2.Description as Description,t4.category_name as category_name,t5.PackageName as Plan FROM tblbooking as t1
  LEFT JOIN tbladdpackage as t2
  ON t1.package_id = t2.id
  LEFT JOIN tbluser as t3
@@ -133,7 +133,7 @@ t2.Price as Price,t2.Description as Description,t4.category_name as category_nam
                     <td><?php echo htmlentities($result->Name);?></td>
                     <td><?php echo htmlentities($result->email);?></td>
                     <td><?php echo htmlentities($result->bookingdate);?></td>
-                      <td><?php echo htmlentities($result->PackageName);?></td>
+                      <td><?php echo htmlentities($result->Plan);?></td>
                     <td ><?php echo htmlentities($result->title);?></td>
             
                   

@@ -1,244 +1,242 @@
-<?php  session_start();
+<?php  
+session_start();
 error_reporting(0);
-include  'include/config.php'; 
+include 'include/config.php'; 
+
 if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
-  } else{
+  exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    
-    <title>Admin | Dashboard</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Main CSS-->
-    <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!-- Font-icon css-->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-      body,
-      .app-content {
-        background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
-                    url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
-        background-size: cover;
-        background-position: center;
-        color: #fff;
-      }
+<head>
+  <title>Admin | Dashboard</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      .app-title {
-        background: rgba(0, 0, 0, 0.72);
-        border: 1px solid rgba(255, 102, 0, 0.45);
-        border-radius: 12px;
-        padding: 18px 22px;
-        margin-bottom: 24px;
-        box-shadow: 0 0 25px rgba(0, 0, 0, 0.35);
-      }
+  <!-- Main CSS -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-      .app-title h1,
-      .app-title .breadcrumb-item,
-      .app-title .breadcrumb-item a,
-      .app-title .breadcrumb-item i {
-        color: #fff !important;
-      }
+  <style>
+    body, .app-content {
+      background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.95)),
+                  url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+    }
 
-      .app-title h1 i {
-        color: #ff6600 !important;
-      }
+    .app-title {
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(255,102,0,0.5);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 25px;
+    }
 
-      .widget-small {
-        background: rgba(0, 0, 0, 0.8) !important;
-        border: 1px solid rgba(255, 102, 0, 0.45);
-        border-radius: 14px;
-        box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
 
-      .widget-small:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
-      }
+    .row > div[class*="col-"] {
+      display: flex;
+    }
 
-      .widget-small .icon {
-        background: #ff6600 !important;
-        color: #fff !important;
-        border-radius: 14px 0 0 14px;
-      }
+    .row > div[class*="col-"] > a {
+      width: 100%;
+      display: flex;
+    }
 
-      .widget-small .info h4,
-      .widget-small .info p,
-      .widget-small .info b {
-        color: #fff !important;
-      }
+    .widget-small {
+      background: rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,102,0,0.5);
+      border-radius: 14px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      padding: 15px;
+    }
 
-      .row a {
-        text-decoration: none !important;
-      }
-    </style>
-  </head>
-  <body class="app sidebar-mini rtl">
-    <!-- Navbar-->
-    <?php include 'include/header.php'; ?>
-    <!-- Sidebar menu-->
-    <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-    <?php include 'include/sidebar.php'; ?>
-    <main class="app-content">
-      <div class="app-title">
-        <div>
-          <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
-        </div>
-        <ul class="app-breadcrumb breadcrumb">
-          <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-          <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-        </ul>
-      </div>
-      <div class="row">
-          
-  <div class="col-md-6 col-lg-6">
-          <?php
-                  $sql="SELECT count(id) as totalpackagetype FROM tblcategory;";
-                  $query= $dbh->prepare($sql);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  foreach($results as $result)
-                  {
-                  ?>
-                       <a href="add-package.php">  
-          <div class="widget-small primary coloured-icon"><i class="icon fa fa-files-o fa-3x"></i>
-            <div class="info">
-              <h4>Listed Package Type</h4>
-              <p><b><?php echo $result->totalpackagetype;?></b></p>
-            </div>
-          </div></a>
-            <?php  } ?>
-        </div>
+    .widget-small:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
 
+    .widget-small .icon {
+      background: #ff6600;
+      color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      margin-right: 15px;
+    }
 
-        <div class="col-md-6 col-lg-6">
-          <?php
-                  $sql="SELECT count(id) as totalpost FROM tbladdpackage;";
-                  $query= $dbh->prepare($sql);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  $cnt=1;
-                  if($query -> rowCount() > 0)
-                  {
-                  foreach($results as $result)
-                  {
-                  ?>
+    .widget-small .info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
 
-                   <a href="manage-post.php">  
-          <div class="widget-small primary coloured-icon"><i class="icon fa fa-file fa-3x"></i>
-            <div class="info">
-              <h4>Listed Packages</h4>
-              <p><b><?php echo $result->totalpost;?></b></p>
-            </div>
+    .widget-small h4 {
+      margin: 0;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .widget-small p {
+      margin: 5px 0 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    a {
+      text-decoration: none !important;
+    }
+  </style>
+</head>
+
+<body class="app sidebar-mini rtl">
+
+<?php include 'include/header.php'; ?>
+<?php include 'include/sidebar.php'; ?>
+
+<main class="app-content">
+
+  <div class="app-title">
+    <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
+  </div>
+
+  <div class="row">
+
+    <!-- Package Type -->
+    <div class="col-md-6 col-lg-4">
+      <?php
+      $sql="SELECT count(id) as total FROM tblcategory;";
+      $query= $dbh->prepare($sql);
+      $query->execute();
+      $result = $query->fetch(PDO::FETCH_OBJ);
+      ?>
+      <a href="add-package.php">
+        <div class="widget-small">
+          <i class="icon fa fa-cubes fa-2x"></i>
+          <div class="info">
+            <h4>Package Types</h4>
+            <p><?php echo $result->total; ?></p>
           </div>
-        </a>
-            <?php  $cnt=$cnt+1; } } ?>
         </div>
-      
+      </a>
+    </div>
 
-        <div class="col-md-6 col-lg-6">
-          <?php
-                  $sql="SELECT count(id) as totalbookings FROM tblbooking;";
-                  $query= $dbh->prepare($sql);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  foreach($results as $result)
-                  {
-                  ?>
-                  <a href="booking-history.php"> 
-          <div class="widget-small info coloured-icon"><i class="icon fa fa-users fa-3x"></i>
-            <div class="info">
-              <h4>Total Bookings</h4>
-              <p><b><?php echo $result->totalbookings;?></b></p>
-            </div>
+    <!-- Packages -->
+    <div class="col-md-6 col-lg-4">
+      <?php
+      $sql="SELECT count(id) as total FROM tbladdpackage;";
+      $query= $dbh->prepare($sql);
+      $query->execute();
+      $result = $query->fetch(PDO::FETCH_OBJ);
+      ?>
+      <a href="manage-post.php">
+        <div class="widget-small">
+          <i class="icon fa fa-list fa-2x"></i>
+          <div class="info">
+            <h4>Packages</h4>
+            <p><?php echo $result->total; ?></p>
           </div>
-        </a>
-            <?php  } ?>
         </div>
+      </a>
+    </div>
 
-    <div class="col-md-6 col-lg-6">
-          <?php
-                  $sql="SELECT count(id) as totalbookings FROM tblbooking where  paymentType is null or paymentType=''";
-                  $query= $dbh->prepare($sql);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  foreach($results as $result)
-                  {
-                  ?>
-                  <a href="new-bookings.php"> 
-          <div class="widget-small danger coloured-icon"><i class="icon fa fa-user fa-3x"></i>
-            <div class="info">
-              <h4>New Bookings</h4>
-              <p><b><?php echo $result->totalbookings;?></b></p>
-            </div>
+    <!-- Total Bookings -->
+    <div class="col-md-6 col-lg-4">
+      <?php
+      $sql="SELECT count(id) as total FROM tblbooking;";
+      $query= $dbh->prepare($sql);
+      $query->execute();
+      $result = $query->fetch(PDO::FETCH_OBJ);
+      ?>
+      <a href="booking-history.php">
+        <div class="widget-small">
+          <i class="icon fa fa-users fa-2x"></i>
+          <div class="info">
+            <h4>Total Bookings</h4>
+            <p><?php echo $result->total; ?></p>
           </div>
-        </a>
-            <?php  } ?>
         </div>
+      </a>
+    </div>
 
-
-    <div class="col-md-6 col-lg-6">
-          <?php
-                  $sql="SELECT count(id) as totalbookings FROM tblbooking where paymentType='Partial Payment'";
-                  $query= $dbh->prepare($sql);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  foreach($results as $result)
-                  {
-                  ?>
-                  <a href="partial-payment-bookings.php"> 
-          <div class="widget-small warning coloured-icon"><i class="icon fa fa-user fa-3x"></i>
-            <div class="info">
-              <h4>Partial Payment Bookings</h4>
-              <p><b><?php echo $result->totalbookings;?></b></p>
-            </div>
+    <!-- New Bookings -->
+    <div class="col-md-6 col-lg-4">
+      <?php
+      $sql="SELECT count(id) as total FROM tblbooking WHERE paymentType IS NULL OR paymentType='';";
+      $query= $dbh->prepare($sql);
+      $query->execute();
+      $result = $query->fetch(PDO::FETCH_OBJ);
+      ?>
+      <a href="new-bookings.php">
+        <div class="widget-small">
+          <i class="icon fa fa-user fa-2x"></i>
+          <div class="info">
+            <h4>New Bookings</h4>
+            <p><?php echo $result->total; ?></p>
           </div>
-        </a>
-            <?php  } ?>
         </div>
+      </a>
+    </div>
 
-
-         <div class="col-md-6 col-lg-6">
-          <?php
-                  $sql="SELECT count(id) as totalbookings FROM tblbooking where paymentType='Full Payment'";
-                  $query= $dbh->prepare($sql);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  foreach($results as $result)
-                  {
-                  ?>
-                  <a href="full-payment-bookings.php"> 
-          <div class="widget-small primary coloured-icon"><i class="icon fa fa-user fa-3x"></i>
-            <div class="info">
-              <h4>Full Payment Bookings</h4>
-              <p><b><?php echo $result->totalbookings;?></b></p>
-            </div>
+    <!-- Partial -->
+    <div class="col-md-6 col-lg-4">
+      <?php
+      $sql="SELECT count(id) as total FROM tblbooking WHERE paymentType='Partial Payment';";
+      $query= $dbh->prepare($sql);
+      $query->execute();
+      $result = $query->fetch(PDO::FETCH_OBJ);
+      ?>
+      <a href="partial-payment-bookings.php">
+        <div class="widget-small">
+          <i class="icon fa fa-credit-card fa-2x"></i>
+          <div class="info">
+            <h4>Partial Payments</h4>
+            <p><?php echo $result->total; ?></p>
           </div>
-        </a>
-            <?php  } ?>
         </div>
+      </a>
+    </div>
 
-      
-      </div>
-     
-    </main>
-    <!-- Essential javascripts for application to work-->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/main.js"></script>
-    <!-- The javascript plugin to display page loading on top-->
-    <script src="js/plugins/pace.min.js"></script>
-    <!-- Page specific javascripts-->
-    <!-- Data table plugin-->
-    <script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="js/plugins/dataTables.bootstrap.min.js"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
-    
-  </body>
+    <!-- Full -->
+    <div class="col-md-6 col-lg-4">
+      <?php
+      $sql="SELECT count(id) as total FROM tblbooking WHERE paymentType='Full Payment';";
+      $query= $dbh->prepare($sql);
+      $query->execute();
+      $result = $query->fetch(PDO::FETCH_OBJ);
+      ?>
+      <a href="full-payment-bookings.php">
+        <div class="widget-small">
+          <i class="icon fa fa-check fa-2x"></i>
+          <div class="info">
+            <h4>Full Payments</h4>
+            <p><?php echo $result->total; ?></p>
+          </div>
+        </div>
+      </a>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+
+</body>
 </html>
-<?php } ?>

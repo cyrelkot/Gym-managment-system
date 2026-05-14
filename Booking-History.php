@@ -198,7 +198,7 @@ t2.PackageDuratiobn,
 t2.Price,
 t2.Description,
 t4.category_name,
-t5.PackageName
+t5.PackageName as Plan
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
 LEFT JOIN tblcategory t4 ON t2.category = t4.id
@@ -223,11 +223,11 @@ $cnt=1;
 <tr>
 <th>#</th>
 <th>Date</th>
-<th>Plan</th>
+<th>Title</th>
 <th>Duration</th>
 <th>Price</th>
 <th>Category</th>
-<th>Package</th>
+<th>Plan</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -242,7 +242,7 @@ $cnt=1;
 <td><?php echo $row->PackageDuratiobn; ?></td>
 <td>₱<?php echo $row->Price; ?></td>
 <td><?php echo $row->category_name; ?></td>
-<td><?php echo $row->PackageName; ?></td>
+<td><?php echo $row->Plan; ?></td>
 <td>
 <a href="booking-details.php?bookingid=<?php echo $row->bookingid; ?>">
 <button class="btn-view">View</button>

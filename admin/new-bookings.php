@@ -3,9 +3,22 @@ error_reporting(0);
 include  'include/config.php'; 
 if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
+  exit;
   } else{
-?>
-<!DOCTYPE html>
+
+if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
+    $bookingId = intval($_POST['bookingid']);
+    if ($bookingId > 0) {
+        $dbh->prepare('DELETE FROM tblpayment WHERE bookingID = :id')
+            ->execute([':id' => $bookingId]);
+        $dbh->prepare('DELETE FROM tblbooking WHERE id = :id')
+            ->execute([':id' => $bookingId]);
+    }
+    header('Location: new-bookings.php');
+    exit;
+}
+
+?><!DOCTYPE html>
 <html lang="en">
   <head>
     <meta name="description" content="Vali is a">
@@ -70,6 +83,27 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
         background: #e65c00;
         border-color: #e65c00;
       }
+
+      .btn-danger {
+        background: #c82333;
+        border-color: #bd2130;
+        color: #fff;
+      }
+
+      .btn-danger:hover,
+      .btn-danger:focus {
+        background: #a71d2a;
+        border-color: #a71d2a;
+        color: #fff;
+      }
+
+      .action-cell form {
+        display: inline;
+      }
+
+      .action-cell .btn {
+        margin-right: 4px;
+      }
     </style>
   </head>
   <body class="app sidebar-mini rtl">
@@ -95,16 +129,17 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
         <th>Name</th>
         <th>Email</th>
         <th>bookingdate</th>
-                <th>PackageName</th>
+                <th>Plan</th>
                     <th>Payment Type</th>
 
         <th>Action</th>
                     
                   </tr>
                 </thead>
+                <tbody>
                <?php
                   $sql="SELECT t1.id as bookingid,t3.fname as Name, t3.email as email,t1.booking_date as bookingdate,t1.paymentType as status,t2.titlename as title,t2.PackageDuratiobn as PackageDuratiobn,
-t2.Price as Price,t2.Description as Description,t4.category_name as category_name,COALESCE(t5.PackageName, t2.titlename) as PackageName FROM tblbooking as t1
+t2.Price as Price,t2.Description as Description,t4.category_name as category_name,COALESCE(t5.PackageName, t2.titlename) as Plan FROM tblbooking as t1
  LEFT JOIN tbladdpackage as t2
 ON t1.package_id = t2.id
  LEFT JOIN tbluser as t3
@@ -123,22 +158,25 @@ ON t2.PackageType=t5.id where t1.paymentType is null || t1.paymentType=''";
                   {
                   ?>
 
-                <tbody>
                   <tr>
                     <td><?php echo($cnt);?></td>
                     <td ><?php echo htmlentities($result->bookingid);?></td>
                     <td><?php echo htmlentities($result->Name);?></td>
                     <td><?php echo htmlentities($result->email);?></td>
                     <td><?php echo htmlentities($result->bookingdate);?></td>
-                      <td><?php echo htmlentities($result->PackageName);?></td>
+                      <td><?php echo htmlentities($result->Plan);?></td>
                     <td><?php echo htmlentities($result->status ? $result->status : 'Not Paid'); ?></td>
 
-                     <td>
-                      <a href="booking-history-details.php?bookingid=<?php echo htmlentities($result->bookingid);?>"><button class="btn btn-primary" type="button">Edit</button></a> 
+                     <td class="action-cell">
+                      <a href="booking-history-details.php?bookingid=<?php echo htmlentities($result->bookingid);?>"><button class="btn btn-primary" type="button">Edit</button></a>
+                      <form method="post" onsubmit="return confirm('Delete this booking? This cannot be undone.');">
+                        <input type="hidden" name="bookingid" value="<?php echo htmlentities($result->bookingid); ?>">
+                        <button type="submit" name="delete_booking" value="1" class="btn btn-danger btn-sm">Delete</button>
+                      </form>
                      </td>
                   </tr>
                     <?php  $cnt=$cnt+1; } } ?>
-              
+
                 </tbody>
               </table>
             </div>

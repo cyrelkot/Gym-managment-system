@@ -17,6 +17,85 @@ if ($bookingId <= 0) {
     exit;
 }
 
+/**
+ * Keeps tblpayment in sync with tblbooking.payment so member payment history matches admin edits.
+ */
+function admin_sync_tblpayment_for_booking(PDO $dbh, int $bookingId, float $newPaid, string $paymentType): void
+{
+    $eps = 0.009;
+    $sumStmt = $dbh->prepare('SELECT COALESCE(SUM(payment), 0) AS s, COUNT(*) AS c FROM tblpayment WHERE bookingID = :bid');
+    $sumStmt->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+    $sumStmt->execute();
+    $row = $sumStmt->fetch(PDO::FETCH_OBJ);
+    $sumPaid = (float) $row->s;
+    $rowCount = (int) $row->c;
+
+    $ptype = ($paymentType !== '' && $paymentType !== 'Not paid') ? $paymentType : 'Partial Payment';
+
+    if ($newPaid < $eps) {
+        $del = $dbh->prepare('DELETE FROM tblpayment WHERE bookingID = :bid');
+        $del->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+        $del->execute();
+
+        return;
+    }
+
+    if ($rowCount === 0) {
+        $ins = $dbh->prepare('INSERT INTO tblpayment (bookingID, paymentType, payment, payment_date) VALUES (:bid, :ptype, :pay, NOW())');
+        $ins->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+        $ins->bindParam(':ptype', $ptype, PDO::PARAM_STR);
+        $ins->bindParam(':pay', $newPaid);
+        $ins->execute();
+
+        return;
+    }
+
+    $diff = $newPaid - $sumPaid;
+    if (abs($diff) < $eps) {
+        return;
+    }
+
+    if ($diff > $eps) {
+        $ins = $dbh->prepare('INSERT INTO tblpayment (bookingID, paymentType, payment, payment_date) VALUES (:bid, :ptype, :pay, NOW())');
+        $ins->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+        $ins->bindParam(':ptype', $ptype, PDO::PARAM_STR);
+        $ins->bindParam(':pay', $diff);
+        $ins->execute();
+
+        return;
+    }
+
+    $lastStmt = $dbh->prepare('SELECT id FROM tblpayment WHERE bookingID = :bid ORDER BY payment_date DESC, id DESC LIMIT 1');
+    $lastStmt->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+    $delStmt = $dbh->prepare('DELETE FROM tblpayment WHERE id = :id');
+
+    while (true) {
+        $sumStmt->execute();
+        $sumPaid = (float) $sumStmt->fetch(PDO::FETCH_OBJ)->s;
+        if ($sumPaid <= $newPaid + $eps) {
+            break;
+        }
+        $lastStmt->execute();
+        $last = $lastStmt->fetch(PDO::FETCH_OBJ);
+        if (!$last) {
+            break;
+        }
+        $delStmt->bindParam(':id', $last->id, PDO::PARAM_INT);
+        $delStmt->execute();
+    }
+
+    $sumStmt->execute();
+    $sumPaid = (float) $sumStmt->fetch(PDO::FETCH_OBJ)->s;
+    $shortfall = $newPaid - $sumPaid;
+    if ($shortfall > $eps) {
+        $ins = $dbh->prepare('INSERT INTO tblpayment (bookingID, paymentType, payment, payment_date) VALUES (:bid, :ptype, :pay, NOW())');
+        $ins->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+        $ins->bindParam(':ptype', $ptype, PDO::PARAM_STR);
+        $ins->bindParam(':pay', $shortfall);
+        $ins->execute();
+    }
+}
+
 // Handle update
 if (isset($_POST['update_booking'])) {
     $newBookingDate = isset($_POST['bookingDate']) ? trim($_POST['bookingDate']) : '';
@@ -56,6 +135,7 @@ if (isset($_POST['update_booking'])) {
         $update->bindParam(':bookingId', $bookingId, PDO::PARAM_INT);
 
         if ($update->execute()) {
+            admin_sync_tblpayment_for_booking($dbh, $bookingId, $newPaymentAmount, $newPaymentType);
             $success = 'Booking updated successfully.';
         } else {
             $err = 'Failed to update booking.';
@@ -68,7 +148,7 @@ $sql = "SELECT t1.id as bookingid, t1.booking_date as bookingdate, t1.paymentTyp
         t1.userid as userId, t1.package_id as packageId,
         t3.fname as Name, t3.email as email,
         t2.titlename as title, t2.PackageDuratiobn as PackageDuratiobn, t2.Price as Price,
-        t4.category_name as category_name, t5.PackageName as PackageName
+        t4.category_name as category_name, t5.PackageName as Plan
         FROM tblbooking as t1
         LEFT JOIN tbladdpackage as t2 ON t1.package_id = t2.id
         LEFT JOIN tbluser as t3 ON t1.userid = t3.id
@@ -155,7 +235,7 @@ if ($remainingBalance < 0) {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Package</label>
+                            <label>Plan</label>
                             <select name="packageId" id="packageId" class="form-control" required>
                                 <option value="" data-price="0">-- Select Package --</option>
                                 <?php foreach ($packages as $package) { ?>
