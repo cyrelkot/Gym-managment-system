@@ -6,7 +6,12 @@
       "Bash(grep -r \"css\\\\/\" /c/xampp/htdocs/gym --include=\"*.php\" 2>/dev/null | grep \"href\\\\|link\" | sort -u)",
       "Bash(grep -r \"changePassword\\\\|toggleDesc\\\\|getdistrict\" /c/xampp/htdocs/gym --include=\"*.js\" --include=\"*.php\" 2>/dev/null | head -10)",
       "Bash(find /c/xampp/htdocs/gym -name \"*.css\" -type f | xargs ls -lh)",
-      "Bash(grep -c \"\\\\.html\\(\\\\|innerHTML\\\\|\\\\.ajax\\(\" /c/xampp/htdocs/gym/admin/*.php 2>/dev/null)"
+      "Bash(grep -c \"\\\\.html\\(\\\\|innerHTML\\\\|\\\\.ajax\\(\" /c/xampp/htdocs/gym/admin/*.php 2>/dev/null)",
+      "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW DATABASES; SELECT User, Host FROM mysql.user;\")",
+      "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW TABLES IN gymdb; SHOW GRANTS FOR 'gymapp'@'localhost';\")",
+      "Bash(/c/xampp/mysql/bin/mysql -u root -e \"GRANT ALL PRIVILEGES ON gymdb.* TO 'gymapp'@'localhost'; FLUSH PRIVILEGES;\")",
+      "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW GRANTS FOR 'gymapp'@'localhost';\")",
+      "Bash(/c/xampp/mysql/bin/mysql -u gymapp -p'@AngelYukiNekki123' gymdb -e \"SHOW TABLES;\")"
     ]
   }
 }
