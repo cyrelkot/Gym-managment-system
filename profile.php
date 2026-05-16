@@ -57,14 +57,47 @@ echo "<script> window.location.href = 'profile.php';</script>";
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="css/style.css"/>
 
+<style>
+.navbar{
+    position:relative;
+    display:flex;
+    padding:20px;
+    border-bottom:2px solid #ff6a00;
+    background:#000;
+}
+.navbar .logo{
+    color:#ff6a00;
+    font-weight:bold;
+    font-size:22px;
+}
+.nav-center{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+}
+.nav-center a{
+    color:#fff;
+    margin:0 15px;
+    text-decoration:none;
+}
+.nav-center a:hover{ color:#ff6a00; }
+</style>
 </head>
 <body>
 	<!-- Page Preloder -->
 	
 
-	<!-- Header Section -->
-	<?php include 'include/header.php';?>
-	<!-- Header Section end -->
+	<!-- NAVBAR -->
+	<div class="navbar">
+	    <div class="logo">GYM</div>
+	    <div class="nav-center">
+	        <a href="index.php">Home</a>
+	        <a href="about.php">About</a>
+	        <a href="contact.php">Contact</a>
+	        <a href="booking-history.php">Booking History</a>
+	        <a href="logout.php">Logout</a>
+	    </div>
+	</div>
 
 	
 	                                                                              

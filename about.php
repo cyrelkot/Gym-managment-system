@@ -18,39 +18,32 @@ body{
     color:white;
 }
 
-.header{
+.navbar{
     position:relative;
     display:flex;
-    align-items:center;
-    padding:15px 40px;
-    background:#000;
-    border-bottom:2px solid #ff6600;
+    padding:20px;
+    border-bottom:2px solid #ff6a00;
 }
 
 .logo{
-    font-size:24px;
+    color:#ff6a00;
     font-weight:bold;
-    color:#ff6600;
+    font-size:22px;
 }
 
-.menu{
+.nav-center{
     position:absolute;
     left:50%;
     transform:translateX(-50%);
-    display:flex;
-    gap:30px;
 }
 
-.menu a{
-    color:#ddd;
+.nav-center a{
+    color:#fff;
+    margin:0 15px;
     text-decoration:none;
-    font-weight:500;
-    font-size:16px;
 }
 
-.menu a:hover{
-    color:#ff6600;
-}
+.nav-center a:hover{ color:#ff6a00; }
 
 .hero{
     height:350px;
@@ -124,25 +117,18 @@ body{
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-
-<div class="logo">GYM</div>
-
-<div class="menu">
-    <a href="index.php">Home</a>
-    <a href="about.php">About</a>
-    <a href="contact.php">Contact</a>
-    
-    <!-- 🔥 ADMIN / LOGOUT SWITCH -->
-    <?php if (isset($_SESSION['uid'])) { ?>
-        <a href="logout.php">Logout</a>
-    <?php } else { ?>
-        <a href="admin/login.php">Admin</a>
-    <?php } ?>
-
-</div>
-
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">GYM</div>
+    <div class="nav-center">
+        <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
+        <?php if (isset($_SESSION['uid'])) { ?>
+            <a href="booking-history.php">Booking History</a>
+            <a href="logout.php">Logout</a>
+        <?php } ?>
+    </div>
 </div>
 
 <!-- HERO -->

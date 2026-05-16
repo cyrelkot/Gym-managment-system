@@ -100,39 +100,33 @@ background:rgba(0,0,0,0.75);
 height:100vh;
 }
 
-/* 🔥 HEADER (FIXED & CENTERED MENU) */
-.header{
+/* NAVBAR */
+.navbar{
 position:relative;
 display:flex;
-align-items:center;
-padding:20px 60px;
+padding:20px;
+border-bottom:2px solid #ff6a00;
 }
 
-/* LOGO LEFT */
 .logo{
-position:absolute;
-left:60px;
-font-size:24px;
+color:#ff6a00;
 font-weight:bold;
-color:#ff6600;
+font-size:22px;
 }
 
-/* MENU CENTER */
-.menu{
-margin:0 auto;
-display:flex;
-gap:30px;
+.nav-center{
+position:absolute;
+left:50%;
+transform:translateX(-50%);
 }
 
-.menu a{
-color:white;
+.nav-center a{
+color:#fff;
+margin:0 15px;
 text-decoration:none;
-font-weight:500;
 }
 
-.menu a:hover{
-color:#ff6600;
-}
+.nav-center a:hover{ color:#ff6a00; }
 
 /* MAIN */
 .main{
@@ -261,15 +255,13 @@ text-align:center;
 
 <div class="overlay">
 
-<!-- HEADER -->
-<div class="header">
+<!-- NAVBAR -->
+<div class="navbar">
 <div class="logo">GYM</div>
-
-<div class="menu">
+<div class="nav-center">
 <a href="index.php">Home</a>
 <a href="about.php">About</a>
 <a href="contact.php">Contact</a>
-<a href="admin/">Admin</a>
 </div>
 </div>
 

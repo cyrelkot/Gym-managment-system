@@ -122,22 +122,27 @@ body{
 
 /* NAVBAR */
 .navbar{
+    position:relative;
     display:flex;
-    justify-content:center;
-    gap:40px;
     padding:20px;
-    background:#000;
     border-bottom:2px solid #ff6a00;
-    position:sticky;
-    top:0;
-    z-index:100;
 }
-.navbar a{
+.logo{
+    color:#ff6a00;
+    font-weight:bold;
+    font-size:22px;
+}
+.nav-center{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+}
+.nav-center a{
     color:#fff;
+    margin:0 15px;
     text-decoration:none;
-    font-weight:600;
 }
-.navbar a:hover{ color:#ff6a00; }
+.nav-center a:hover{ color:#ff6a00; }
 
 /* HERO */
 .hero{
@@ -387,13 +392,14 @@ body{
 
 <!-- NAVBAR -->
 <div class="navbar">
-    <a href="index.php">Home</a>
-    <a href="about.php">About</a>
-    <a href="contact.php">Contact</a>
-    <?php if($hasBooking){ ?>
+    <div class="logo">GYM</div>
+    <div class="nav-center">
+        <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
         <a href="booking-history.php">Booking History</a>
-    <?php } ?>
-    <a href="logout.php">Logout</a>
+        <a href="logout.php">Logout</a>
+    </div>
 </div>
 
 <!-- HERO -->

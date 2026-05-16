@@ -38,38 +38,31 @@ if (isset($_POST['submit'])) {
         }
 
         .navbar{
-            display:grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items:center;
-            padding:18px 50px;
-            background:#000;
+            position:relative;
+            display:flex;
+            padding:20px;
             border-bottom:2px solid #ff6a00;
-            position:sticky;
-            top:0;
-            z-index:1000;
         }
 
         .logo{
-            font-size:24px;
-            font-weight:900;
             color:#ff6a00;
+            font-weight:bold;
+            font-size:22px;
         }
 
-        .nav-links{
-            display:flex;
-            justify-content:center;
-            gap:25px;
+        .nav-center{
+            position:absolute;
+            left:50%;
+            transform:translateX(-50%);
         }
 
-        .nav-links a{
+        .nav-center a{
             color:#fff;
+            margin:0 15px;
             text-decoration:none;
-            font-weight:500;
         }
 
-        .nav-links a:hover{
-            color:#ff6a00;
-        }
+        .nav-center a:hover{ color:#ff6a00; }
 
         .hero{
             height:50vh;
@@ -135,16 +128,6 @@ if (isset($_POST['submit'])) {
             color:#777;
         }
 
-        @media(max-width:768px){
-            .navbar{
-                grid-template-columns:1fr;
-                text-align:center;
-            }
-
-            .nav-links{
-                flex-wrap:wrap;
-            }
-        }
     </style>
 </head>
 
@@ -152,25 +135,16 @@ if (isset($_POST['submit'])) {
 
 <!-- NAVBAR -->
 <div class="navbar">
-
     <div class="logo">GYM</div>
-
-    <div class="nav-links">
+    <div class="nav-center">
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
-
-        <!-- 🔥 ADMIN / LOGOUT SWITCH -->
         <?php if (isset($_SESSION['uid'])) { ?>
+            <a href="booking-history.php">Booking History</a>
             <a href="logout.php">Logout</a>
-        <?php } else { ?>
-            <a href="admin/login.php">Admin</a>
         <?php } ?>
-
     </div>
-
-    <div></div>
-
 </div>
 
 <!-- HERO -->

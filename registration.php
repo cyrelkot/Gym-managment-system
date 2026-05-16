@@ -123,53 +123,34 @@ filter:blur(150px);
 z-index:0;
 }
 
-/* HEADER */
-header{
+/* NAVBAR */
+.navbar{
 position:relative;
 z-index:2;
-padding:20px 0;
-border-bottom:1px solid rgba(255,102,0,0.3);
-}
-
-.nav{
-width:85%;
-margin:auto;
 display:flex;
-align-items:center;
-justify-content:space-between;
-position:relative;
+padding:20px;
+border-bottom:2px solid #ff6a00;
 }
 
 .logo{
-font-size:28px;
-font-weight:800;
-color:#ff6600;
-letter-spacing:3px;
-text-transform:uppercase;
+font-size:22px;
+font-weight:bold;
+color:#ff6a00;
 }
 
-/* CENTER MENU */
-.menu{
+.nav-center{
 position:absolute;
 left:50%;
 transform:translateX(-50%);
-display:flex;
-gap:25px;
 }
 
-.menu a{
-color:white;
+.nav-center a{
+color:#fff;
+margin:0 15px;
 text-decoration:none;
-font-weight:500;
 }
 
-.menu a:hover{
-color:#ff6600;
-}
-
-.right-space{
-width:120px;
-}
+.nav-center a:hover{ color:#ff6a00; }
 
 /* FORM */
 .container{
@@ -268,22 +249,14 @@ color:#ffb366;
 
 <body>
 
-<header>
-<div class="nav">
-
+<div class="navbar">
 <div class="logo">GYM</div>
-
-<div class="menu">
+<div class="nav-center">
 <a href="index.php">Home</a>
 <a href="about.php">About</a>
 <a href="contact.php">Contact</a>
-<a href="admin/">Admin</a>
 </div>
-
-<div class="right-space"></div>
-
 </div>
-</header>
 
 <div class="container">
 
