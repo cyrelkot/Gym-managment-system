@@ -22,6 +22,7 @@ if (isset($_POST['login'])) {
 
     if ($admin && $admin['password'] === md5($password)) {
         $_SESSION['adminid'] = $admin['id'];
+        $_SESSION['email'] = $email;
         header('location:index.php');
         exit();
     } else {
