@@ -185,12 +185,11 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-018: jQuery Selector Syntax Error
+### BUG-018: jQuery Selector Syntax Error ✓ FIXED
 
 - **File:** `admin/js/main.js:22`
-- **Description:** A jQuery selector contains a syntax error that causes a JavaScript exception at page load, potentially breaking all jQuery-dependent functionality on admin pages.
-- **Impact:** Admin page interactivity (modals, dynamic tables, etc.) may be partially or fully non-functional.
-- **Fix:** Correct the jQuery selector syntax at line 22.
+- **Description:** Selector was `[data-toggle='treeview.']` — stray dot inside the attribute value caused a syntax error.
+- **Fix:** Changed to `[data-toggle='treeview']`.
 
 ---
 
