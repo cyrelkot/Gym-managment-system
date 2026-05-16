@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2022 at 05:29 AM
--- Server version: 10.4.22-MariaDB
--- PHP Version: 7.4.27
+-- Generation Time: May 16, 2026 at 01:28 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -37,16 +37,21 @@ CREATE TABLE `tbladdpackage` (
   `uploadphoto` varchar(450) DEFAULT NULL,
   `Description` varchar(450) DEFAULT NULL,
   `create_date` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbladdpackage`
 --
 
 INSERT INTO `tbladdpackage` (`id`, `category`, `titlename`, `PackageType`, `PackageDuratiobn`, `Price`, `uploadphoto`, `Description`, `create_date`) VALUES
-(1, '1', 'Free Fitness Gear Package', '1', '3 Month', '600', NULL, 'Free Fitness Gear\nComplimentary OnePass', '2022-03-05 02:55:34'),
-(2, '1', '3 Months Membership Package', '1', '6 Month', '800', NULL, 'Book Six Days Different Trainers Class designed for fast Weight Loss / Weight Gain with combination of Latest Workouts in addition to complimentary access to gym area with personal training.', '2022-03-05 02:56:44'),
-(3, '1', 'hgfhfgdfgdf', '1', '4 Month', '12000', NULL, 'hfdgfhfgh<div><br></div><div>fdgdfg</div>', '2022-05-22 02:34:08');
+(1, '1', 'Beginner Strength', '1', '1 Month', '599', NULL, 'Intro to gym with guided weight training 3x/week, access to all machines, and a starter nutrition guide.', '2026-05-16 06:25:15'),
+(2, '1', 'Power Builder Pro', '2', '3 Months', '2499', NULL, 'Full periodized strength program with personal trainer sessions, body composition tracking, and priority locker access.', '2026-05-16 06:25:15'),
+(3, '2', 'Fat Burn Kickstart', '3', '1 Month', '699', NULL, 'High-intensity interval training 4x/week targeting fat loss, includes diet plan and weekly weigh-in consultations.', '2026-05-16 06:25:15'),
+(4, '2', '90-Day Body Transformation', '4', '3 Months', '1999', NULL, 'Structured 12-week transformation combining HIIT, strength, and nutrition coaching with before/after progress photos.', '2026-05-16 06:25:15'),
+(5, '3', 'Cardio Blast', '5', '1 Month', '599', NULL, 'Daily treadmill, bike, and rowing programs with heart-rate zone training and unlimited group cardio classes.', '2026-05-16 06:25:15'),
+(6, '3', 'Endurance Elite', '6', '6 Months', '3999', NULL, 'Long-term endurance conditioning for runners and cyclists, includes VO2 max testing and custom training calendar.', '2026-05-16 06:25:15'),
+(7, '4', 'Yoga & Flexibility', '7', '1 Month', '799', NULL, 'Daily yoga sessions covering Hatha and Vinyasa styles, improve flexibility, balance, and mental focus.', '2026-05-16 06:25:15'),
+(8, '4', 'Total Wellness Package', '8', '6 Months', '4499', NULL, 'Comprehensive mind-body program with yoga, meditation, mobility drills, and monthly wellness assessments.', '2026-05-16 06:25:15');
 
 -- --------------------------------------------------------
 
@@ -61,14 +66,14 @@ CREATE TABLE `tbladmin` (
   `mobile` varchar(45) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
   `create_date` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbladmin`
 --
 
 INSERT INTO `tbladmin` (`id`, `name`, `email`, `mobile`, `password`, `create_date`) VALUES
-(1, 'admin', 'admin@gmail.com', '99197896857', '5c428d8875d2948607f3e3fe134d71b4', '2022-01-19 11:25:17');
+(1, 'admin', 'admin@gmail.com', '99197896857', '$2y$10$fV56mZhXshqV3xk/zXgSNuWCyldBkJ8aXw.tMkkYU/D05vBfH1xLq', '2022-01-19 11:25:17');
 
 -- --------------------------------------------------------
 
@@ -83,18 +88,7 @@ CREATE TABLE `tblbooking` (
   `booking_date` timestamp NULL DEFAULT current_timestamp(),
   `payment` varchar(45) DEFAULT NULL,
   `paymentType` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tblbooking`
---
-
-INSERT INTO `tblbooking` (`id`, `package_id`, `userid`, `booking_date`, `payment`, `paymentType`) VALUES
-(1, '2', '1', '2022-03-05 03:53:21', '800', 'Partial Payment'),
-(2, '1', '1', '2022-03-05 03:53:28', '600', 'Partial Payment'),
-(3, '2', '5', '2022-03-08 17:44:18', '300', 'Full Payment'),
-(6, '1', '5', '2022-05-22 02:16:14', NULL, NULL),
-(7, '2', '6', '2022-05-22 02:32:45', NULL, 'Full Payment');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -106,15 +100,17 @@ CREATE TABLE `tblcategory` (
   `id` int(11) NOT NULL,
   `category_name` varchar(45) DEFAULT NULL,
   `status` varchar(45) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tblcategory`
 --
 
 INSERT INTO `tblcategory` (`id`, `category_name`, `status`) VALUES
-(1, 'Category1', '0'),
-(2, 'Category2', '0');
+(1, 'Strength Training', '1'),
+(2, 'Weight Loss', '1'),
+(3, 'Cardio & Endurance', '1'),
+(4, 'Yoga & Flexibility', '1');
 
 -- --------------------------------------------------------
 
@@ -126,15 +122,21 @@ CREATE TABLE `tblpackage` (
   `id` int(11) NOT NULL,
   `cate_id` varchar(45) DEFAULT NULL,
   `PackageName` varchar(45) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tblpackage`
 --
 
 INSERT INTO `tblpackage` (`id`, `cate_id`, `PackageName`) VALUES
-(1, '1', 'fdgdfg'),
-(3, '2', 'Package2');
+(1, '1', 'Basic Strength'),
+(2, '1', 'Advanced Strength'),
+(3, '2', 'Fat Burn Starter'),
+(4, '2', 'Transformation Pro'),
+(5, '3', 'Cardio Basics'),
+(6, '3', 'Endurance Elite'),
+(7, '4', 'Beginner Yoga'),
+(8, '4', 'Full Wellness');
 
 -- --------------------------------------------------------
 
@@ -148,19 +150,7 @@ CREATE TABLE `tblpayment` (
   `paymentType` varchar(45) DEFAULT NULL,
   `payment` varchar(45) DEFAULT NULL,
   `payment_date` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `tblpayment`
---
-
-INSERT INTO `tblpayment` (`id`, `bookingID`, `paymentType`, `payment`, `payment_date`) VALUES
-(1, '1', 'Partial Payment', '300', '2022-03-05 03:54:10'),
-(4, '1', 'Full Payment', '500', '2022-05-22 01:01:58'),
-(5, '3', 'Partial Payment', '300', '2022-05-22 01:09:53'),
-(8, '3', 'Full Payment', '500', '2022-05-22 01:19:03'),
-(9, '7', 'Partial Payment', '500', '2022-05-22 02:40:34'),
-(10, '7', 'Full Payment', '300', '2022-05-22 02:41:14');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -175,23 +165,19 @@ CREATE TABLE `tbluser` (
   `email` varchar(45) DEFAULT NULL,
   `mobile` varchar(45) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT 0,
   `state` varchar(45) DEFAULT NULL,
   `city` varchar(45) DEFAULT NULL,
   `address` varchar(200) DEFAULT NULL,
   `create_date` timestamp NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tbluser`
 --
 
-INSERT INTO `tbluser` (`id`, `fname`, `lname`, `email`, `mobile`, `password`, `state`, `city`, `address`, `create_date`) VALUES
-(1, 'atul', 'kumar', 'atul@gmail.com', '8888888888', 'f925916e2754e5e03f75dd58a5733251', 'Uttar Pradesh', 'niuda', 'e-48 new asholk nagar hdd ', '2022-02-16 16:48:25'),
-(2, 'ddd', 'ddf', 'df@gmail.com', '9968556', 'e10adc3949ba59abbe56e057f20f883e', 'fgfg', 'fsdf', NULL, '2022-02-16 17:00:20'),
-(3, 'anuj', 'kumar', 'anuj@gmail.com', '9999999999', 'f925916e2754e5e03f75dd58a5733251', 'up', 'noida', NULL, '2022-03-02 15:37:22'),
-(4, 'sssssss', 'sssssss', 'sssssss', 'sssssss', 'f925916e2754e5e03f75dd58a5733251', 'sssssss', 'sssssss', NULL, '2022-03-05 03:27:28'),
-(5, 'Anuj k', 'kumar', 'anuj.doca@Gmail.com', '1234567890', '202cb962ac59075b964b07152d234b70', 'sghsdg', 'sahgsh', NULL, '2022-03-08 17:43:23'),
-(6, 'John', 'Doe', 'john@test.com', '1425635241', 'f925916e2754e5e03f75dd58a5733251', 'Delhi', 'New Delhi', 'ABC Street XYZ Colony', '2022-05-22 02:31:54');
+INSERT INTO `tbluser` (`id`, `fname`, `lname`, `email`, `mobile`, `password`, `status`, `state`, `city`, `address`, `create_date`) VALUES
+(7, 'angel ', 'yuki', 'angel@gmail.com', '09123456789', '$2y$10$WoveUy5bMRFhZ58q6prHqObKvZ4N3LYQ8kk8B1TmcJenbVEI3bN7u', 1, NULL, 'Ormoc', NULL, '2026-05-16 03:11:21');
 
 --
 -- Indexes for dumped tables
@@ -247,7 +233,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbladdpackage`
 --
 ALTER TABLE `tbladdpackage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbladmin`
@@ -259,19 +245,19 @@ ALTER TABLE `tbladmin`
 -- AUTO_INCREMENT for table `tblbooking`
 --
 ALTER TABLE `tblbooking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tblpackage`
 --
 ALTER TABLE `tblpackage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tblpayment`
@@ -283,7 +269,7 @@ ALTER TABLE `tblpayment`
 -- AUTO_INCREMENT for table `tbluser`
 --
 ALTER TABLE `tbluser`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
