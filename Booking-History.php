@@ -237,14 +237,14 @@ $cnt=1;
 <?php foreach($results as $row){ ?>
 <tr>
 <td><?php echo $cnt++; ?></td>
-<td><?php echo $row->booking_date; ?></td>
-<td><?php echo $row->titlename; ?></td>
-<td><?php echo $row->PackageDuratiobn; ?></td>
-<td>₱<?php echo $row->Price; ?></td>
-<td><?php echo $row->category_name; ?></td>
-<td><?php echo $row->Plan; ?></td>
+<td><?php echo htmlspecialchars($row->booking_date, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->titlename, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->PackageDuratiobn, ENT_QUOTES, 'UTF-8'); ?></td>
+<td>₱<?php echo htmlspecialchars($row->Price, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->category_name, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->Plan, ENT_QUOTES, 'UTF-8'); ?></td>
 <td>
-<a href="booking-details.php?bookingid=<?php echo $row->bookingid; ?>">
+<a href="booking-details.php?bookingid=<?php echo (int)$row->bookingid; ?>">
 <button class="btn-view">View</button>
 </a>
 </td>

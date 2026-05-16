@@ -244,7 +244,7 @@ ORDER BY create_date DESC";
                       <?php if($statusColumnAvailable && isset($result->status) && intval($result->status)===0){ ?>
                         <form method="post" style="display:inline;">
                           <?php echo csrf_field(); ?>
-                          <input type="hidden" name="userid" value="<?php echo $result->id;?>">
+                          <input type="hidden" name="userid" value="<?php echo (int)$result->id;?>">
                           <button type="submit" name="approve" class="btn btn-sm btn-success">Approve</button>
                         </form>
                       <?php } ?>

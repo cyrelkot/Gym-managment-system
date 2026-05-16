@@ -232,7 +232,7 @@ if (!$row) {
 
 <div>
 <span class="label">Description</span><br>
-<?php echo $row->Description;?>
+<?php echo htmlspecialchars($row->Description, ENT_QUOTES, 'UTF-8');?>
 </div>
 
 <br>

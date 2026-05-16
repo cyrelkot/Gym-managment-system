@@ -176,12 +176,12 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-017: Inconsistent Output Escaping Throughout Codebase
+### BUG-017: Inconsistent Output Escaping Throughout Codebase ✓ FIXED
 
 - **Files:** Multiple — `profile.php`, `booking-details.php`, admin pages
 - **Description:** Some output uses `htmlspecialchars()`, some uses `htmlentities()`, and many output points use neither. This inconsistency means some data is protected while other equivalent data is not.
 - **Impact:** Unpredictable XSS exposure depending on which path renders the data.
-- **Fix:** Standardize on `htmlspecialchars($value, ENT_QUOTES, 'UTF-8')` for all HTML output, applied at render time.
+- **Fix:** Standardized all output on `htmlspecialchars($value, ENT_QUOTES, 'UTF-8')` across: `admin/booking-history.php`, `admin/booking-history-details.php`, `admin/edit-post.php`, `admin/report-booking.php` (also converted `htmlentities()` calls), `Booking-History.php`, `booking-details.php`. Integer IDs in URL/hidden inputs cast to `(int)` in `admin/add-package.php`, `admin/report-registration.php`, `admin/booking-history.php`.
 
 ---
 
@@ -193,21 +193,21 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-019: DOM-Based XSS Risk via `data-setbg` Attribute
+### BUG-019: DOM-Based XSS Risk via `data-setbg` Attribute ✓ FIXED
 
 - **File:** `js/main.js:63`
 - **Description:** The JS reads a `data-setbg` attribute value and interpolates it directly into a CSS `background` property string without sanitization. A crafted attribute value could inject CSS expressions or, in older browsers, execute scripts.
 - **Impact:** Potential CSS injection; low XSS risk in modern browsers but violates defense-in-depth.
-- **Fix:** Validate that the `data-setbg` value is a URL before assignment, or use `element.style.backgroundImage = 'url(' + CSS.escape(url) + ')'`.
+- **Fix:** Added `/^[\w.\-/]+$/.test(bg)` validation — only sets `background-image` if the value is a safe relative path (alphanumeric, dots, dashes, slashes). Rejects anything containing parentheses, quotes, or other CSS-dangerous characters.
 
 ---
 
-### BUG-020: Hardcoded Admin Link Visible in Public Header
+### BUG-020: Hardcoded Admin Link Visible in Public Header ✓ FIXED
 
 - **File:** `include/header.php:12`
 - **Description:** The public-facing site header contains a hardcoded link to the admin panel that is visible to all visitors regardless of authentication status.
 - **Impact:** Exposes the admin panel URL, increasing attack surface and aiding reconnaissance.
-- **Fix:** Remove the link or render it only when an admin session is active.
+- **Fix:** Removed the `<li><a href="admin/">Admin</a></li>` link entirely from the public navigation menu.
 
 ---
 
@@ -331,11 +331,11 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output | ✓ FIXED |
 | 010 | High | Security | All forms | No CSRF tokens | ✓ FIXED |
 | 014 | High | Security | config files | No secure session cookie settings | ✓ FIXED |
-| 017 | Medium | Security | Multiple files | Inconsistent output escaping |
-| 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error |
-| 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |
-| 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header |
-| 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND |
+| 017 | Medium | Security | Multiple files | Inconsistent output escaping | ✓ FIXED |
+| 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error | ✓ FIXED |
+| 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg | ✓ FIXED |
+| 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header | ✓ FIXED |
+| 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND | ✓ FIXED |
 | 024 | Low | Code Quality | admin/edit-post.php:133 | Duplicate name attribute on form inputs | ✓ FIXED |
 | 028 | Low | Code Quality | include/footer.php:9 | Typo: "Managaement" | ✓ FIXED |
 | 029 | Low | Code Quality | admin/edit-post.php | Redundant duplicate query | ✓ FIXED |

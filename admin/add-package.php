@@ -311,14 +311,14 @@ foreach($results as $result){
 
 <div class="action-btn">
 
-<a href="edit-package.php?edit=<?php echo $result->pid;?>"
+<a href="edit-package.php?edit=<?php echo (int)$result->pid;?>"
 class="btn btn-warning btn-sm">
 
 <i class="fa fa-edit"></i> Edit
 
 </a>
 
-<a href="add-package.php?del=<?php echo $result->pid;?>"
+<a href="add-package.php?del=<?php echo (int)$result->pid;?>"
 class="btn btn-danger btn-sm"
 onclick="return confirm('Delete this record?')">
 

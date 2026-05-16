@@ -99,14 +99,14 @@ echo "<script>window.location.href='manage-post.php'</script>";
                 <div class="form-group col-md-6">
                   <label class="control-label">Category</label>
                  <select name="category" id="category" class="form-control" onChange="getdistrict(this.value);">
-                  <option value="<?php echo $result->id;?>"><?php echo $result->category_name;?></option>
+                  <option value="<?php echo htmlspecialchars($result->id, ENT_QUOTES, 'UTF-8');?>"><?php echo htmlspecialchars($result->category_name, ENT_QUOTES, 'UTF-8');?></option>
                   <option value="NA">--select--</option>
                   <?php 
                   $stmt = $dbh->prepare("SELECT * FROM tblcategory ORDER BY category_name");
                   $stmt->execute();
                   $countriesList = $stmt->fetchAll();
                   foreach($countriesList as $country){
-                  echo "<option value='".$country['id']."'>".$country['category_name']."</option>";
+                  echo "<option value='".htmlspecialchars($country['id'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($country['category_name'], ENT_QUOTES, 'UTF-8')."</option>";
                   }
                   ?>
                   </select>
@@ -115,26 +115,26 @@ echo "<script>window.location.href='manage-post.php'</script>";
                  <div class="form-group col-md-6">
                   <label class="control-label">Package Type</label>
                    <select name="package" id="package" class="form-control">
-                     <option value="<?php echo $result->id;?>"><?php echo $result->PackageName;?></option>
+                     <option value="<?php echo htmlspecialchars($result->id, ENT_QUOTES, 'UTF-8');?>"><?php echo htmlspecialchars($result->PackageName, ENT_QUOTES, 'UTF-8');?></option>
                   
                  </select>
                 </div>
 
                 <div class="form-group col-md-6">
                   <label class="control-label">Title Name</label>
-                  <input class="form-control" name="titlename" id="titlename" type="text" placeholder="Enter your Title Name" value="<?php echo $result->titlename;?>">
+                  <input class="form-control" name="titlename" id="titlename" type="text" placeholder="Enter your Title Name" value="<?php echo htmlspecialchars($result->titlename, ENT_QUOTES, 'UTF-8');?>">
                 </div>
 
                
 
                  <div class="form-group col-md-6">
                   <label class="control-label">Package Duration</label>
-                  <input class="form-control" type="text" name="packageduratiobn" placeholder="Enter Package Duration" value="<?php echo $result->PackageDuration;?>">
+                  <input class="form-control" type="text" name="packageduratiobn" placeholder="Enter Package Duration" value="<?php echo htmlspecialchars($result->PackageDuration, ENT_QUOTES, 'UTF-8');?>">
                 </div>
 
                  <div class="form-group col-md-6">
                   <label class="control-label">Price</label>
-                  <input class="form-control" type="text" name="Price" id="Price" placeholder="Enter your Price" value="<?php echo $result->Price;?>">
+                  <input class="form-control" type="text" name="Price" id="Price" placeholder="Enter your Price" value="<?php echo htmlspecialchars($result->Price, ENT_QUOTES, 'UTF-8');?>">
                 </div>
                 
                  <!-- <div class="form-group col-md-6">
@@ -144,7 +144,7 @@ echo "<script>window.location.href='manage-post.php'</script>";
 
                   <div class="form-group col-md-6">
                   <label class="control-label">Description</label>
-                  <textarea name="description" id="description" class="form-control" cols="5" rows="10"><?php echo $result->Description;?></textarea> 
+                  <textarea name="description" id="description" class="form-control" cols="5" rows="10"><?php echo htmlspecialchars($result->Description, ENT_QUOTES, 'UTF-8');?></textarea> 
                 </div>
 
                 <div class="form-group col-md-4 align-self-end">

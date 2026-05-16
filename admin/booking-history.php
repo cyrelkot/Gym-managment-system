@@ -199,11 +199,11 @@ foreach($results as $row){
 
 <tr>
 <td><?php echo $cnt++; ?></td>
-<td><?php echo $row->bookingid; ?></td>
-<td><?php echo $row->Name; ?></td>
-<td><?php echo $row->email; ?></td>
-<td><?php echo $row->booking_date; ?></td>
-<td><?php echo $row->Plan; ?></td>
+<td><?php echo (int)$row->bookingid; ?></td>
+<td><?php echo htmlspecialchars($row->Name, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->email, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->booking_date, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->Plan, ENT_QUOTES, 'UTF-8'); ?></td>
 
 <td>
 <?php 
@@ -230,7 +230,7 @@ onclick="openModal(
 
 <form method="post" style="display:inline;">
 <?php echo csrf_field(); ?>
-<input type="hidden" name="bookingid" value="<?php echo $row->bookingid;?>">
+<input type="hidden" name="bookingid" value="<?php echo (int)$row->bookingid;?>">
 <button type="submit" name="delete_booking" class="btn-delete">Delete</button>
 </form>
 </td>

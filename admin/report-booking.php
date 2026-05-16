@@ -185,15 +185,15 @@ where date(booking_date) between :fdate and :tdate";
                   <tr>
                     <td><?php echo($cnt);?></td>
                     <td hidden><?php echo htmlentities($result->bookingid);?></td>
-                    <td><?php echo htmlentities($result->Name);?></td>
-                    <td><?php echo htmlentities($result->email);?></td>
-                    <td><?php echo htmlentities($result->bookingdate);?></td>
-                    <td hidden><?php echo htmlentities($result->title);?></td>
-                    <td><?php echo htmlentities($result->PackageDuratiobn);?></td>
-                    <td><?php echo $result->Price;?></td>
-                    <td hidden><?php echo $result->Description;?></td>
-                    <td><?php echo htmlentities($result->category_name);?></td>
-                    <td><?php echo htmlentities($result->Plan);?></td>
+                    <td><?php echo htmlspecialchars($result->Name, ENT_QUOTES, 'UTF-8');?></td>
+                    <td><?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8');?></td>
+                    <td><?php echo htmlspecialchars($result->bookingdate, ENT_QUOTES, 'UTF-8');?></td>
+                    <td hidden><?php echo htmlspecialchars($result->title, ENT_QUOTES, 'UTF-8');?></td>
+                    <td><?php echo htmlspecialchars($result->PackageDuratiobn, ENT_QUOTES, 'UTF-8');?></td>
+                    <td><?php echo htmlspecialchars($result->Price, ENT_QUOTES, 'UTF-8');?></td>
+                    <td hidden><?php echo htmlspecialchars($result->Description, ENT_QUOTES, 'UTF-8');?></td>
+                    <td><?php echo htmlspecialchars($result->category_name, ENT_QUOTES, 'UTF-8');?></td>
+                    <td><?php echo htmlspecialchars($result->Plan, ENT_QUOTES, 'UTF-8');?></td>
                      
                   </tr>
                     <?php  $cnt=$cnt+1; } } ?>

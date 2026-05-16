@@ -273,12 +273,12 @@ $remaining=$result->Price-$gpayment;
 
 <tr>
 <th>User</th>
-<td><input class="form-control" value="<?php echo $result->fname;?> (<?php echo $result->email;?>)" readonly></td>
+<td><input class="form-control" value="<?php echo htmlspecialchars($result->fname, ENT_QUOTES, 'UTF-8');?> (<?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8');?>)" readonly></td>
 </tr>
 
 <tr>
 <th>Plan</th>
-<td><input class="form-control" value="<?php echo $result->Plan;?>" readonly></td>
+<td><input class="form-control" value="<?php echo htmlspecialchars($result->Plan, ENT_QUOTES, 'UTF-8');?>" readonly></td>
 </tr>
 
 <tr>
