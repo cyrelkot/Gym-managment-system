@@ -233,7 +233,6 @@ body{
     width:100%;
     display:flex;
     flex-direction:column;
-    justify-content:space-between;
     position:relative;
     transition:transform .2s, box-shadow .2s;
 }
@@ -347,8 +346,7 @@ body{
     border:2px solid #ff6a00;
     padding:9px 20px;
     border-radius:8px;
-    font-weight:bold;
-    width:100%;
+    font-weight:bold;   
     display:block;
     text-align:center;
     text-decoration:none;

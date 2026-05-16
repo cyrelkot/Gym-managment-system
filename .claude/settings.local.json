@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(/c/xampp/mysql/bin/mysql.exe -u root --password=\"\" gymdb -e \"SELECT id, category_name FROM tblcategory; SELECT id, cate_id, PackageName FROM tblpackage; SELECT id, titlename, PackageDuratiobn, Price FROM tbladdpackage;\" 2>&1)"
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root --password=\"\" gymdb -e \"SELECT id, category_name FROM tblcategory; SELECT id, cate_id, PackageName FROM tblpackage; SELECT id, titlename, PackageDuratiobn, Price FROM tbladdpackage;\" 2>&1)",
+      "Bash(grep -r \"onclick\\\\|onload\" /c/xampp/htdocs/gym --include=\"*.php\" 2>/dev/null | head -20)",
+      "Bash(grep -r \"css\\\\/\" /c/xampp/htdocs/gym --include=\"*.php\" 2>/dev/null | grep \"href\\\\|link\" | sort -u)",
+      "Bash(grep -r \"changePassword\\\\|toggleDesc\\\\|getdistrict\" /c/xampp/htdocs/gym --include=\"*.js\" --include=\"*.php\" 2>/dev/null | head -10)",
+      "Bash(find /c/xampp/htdocs/gym -name \"*.css\" -type f | xargs ls -lh)",
+      "Bash(grep -c \"\\\\.html\\(\\\\|innerHTML\\\\|\\\\.ajax\\(\" /c/xampp/htdocs/gym/admin/*.php 2>/dev/null)"
     ]
   }
 }
