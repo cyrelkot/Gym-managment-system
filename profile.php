@@ -31,7 +31,7 @@ $query->bindParam(':uid',$uid,PDO::PARAM_STR);
 $query->execute();
 //$msg="<script>toastr.success('Mobile info updated Successfully', {timeOut: 5000})</script>";
 echo "<script>alert('Profile has been updated.');</script>";
-echo "<script> window.location.href =profile.php;</script>";
+echo "<script> window.location.href = 'profile.php';</script>";
 
 }
 

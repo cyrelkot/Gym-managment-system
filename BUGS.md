@@ -319,7 +319,7 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | ID | Severity | Category | File(s) | Description |
 |----|----------|----------|---------|-------------|
 | 001 | Critical | Security | admin/login.php, changepassword.php | MD5 password hashing |
-| 002 | Critical | Logic | changepassword.php, login.php | Session email never set — change password broken |
+| 002 | Critical | Logic | changepassword.php, login.php | Session email never set — change password broken | DONE!
 | 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check |
 | 004 | Critical | Security | tmp_*.php (root) | Debug files exposed in web root |
 | 005 | Critical | Security | include/config.php:6 | Empty DB root password |
