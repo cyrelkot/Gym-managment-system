@@ -214,14 +214,14 @@ if (!$row) {
 <h3>Booking Info</h3>
 
 <div class="grid">
-<div><span class="label">Name</span><br><span class="value"><?php echo $row->fname;?></span></div>
-<div><span class="label">Email</span><br><span class="value"><?php echo $row->email;?></span></div>
-<div><span class="label">Date</span><br><span class="value"><?php echo $row->booking_date;?></span></div>
-<div><span class="label">Category</span><br><span class="value"><?php echo $row->category_name;?></span></div>
-<div><span class="label">Title</span><br><span class="value"><?php echo $row->titlename;?></span></div>
-<div><span class="label">Plan</span><br><span class="value"><?php echo $row->Plan;?></span></div>
-<div><span class="label">Duration</span><br><span class="value"><?php echo $row->PackageDuratiobn;?></span></div>
-<div><span class="label">Price</span><br><span class="value">₱<?php echo $row->Price;?></span></div>
+<div><span class="label">Name</span><br><span class="value"><?php echo htmlspecialchars($row->fname, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Email</span><br><span class="value"><?php echo htmlspecialchars($row->email, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Date</span><br><span class="value"><?php echo htmlspecialchars($row->booking_date, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Category</span><br><span class="value"><?php echo htmlspecialchars($row->category_name, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Title</span><br><span class="value"><?php echo htmlspecialchars($row->titlename, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Plan</span><br><span class="value"><?php echo htmlspecialchars($row->Plan, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Duration</span><br><span class="value"><?php echo htmlspecialchars($row->PackageDuratiobn, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Price</span><br><span class="value">₱<?php echo htmlspecialchars($row->Price, ENT_QUOTES, 'UTF-8');?></span></div>
 </div>
 
 <br>

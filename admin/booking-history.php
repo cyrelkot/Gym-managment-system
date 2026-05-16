@@ -216,12 +216,12 @@ if($row->paymentType == "Full Payment"){
 <td>
 <button class="btn-view"
 onclick="openModal(
-'<?php echo $row->bookingid;?>',
-'<?php echo $row->Name;?>',
-'<?php echo $row->email;?>',
-'<?php echo $row->booking_date;?>',
-'<?php echo $row->Plan;?>',
-'<?php echo $row->paymentType;?>'
+<?php echo json_encode((string)$row->bookingid); ?>,
+<?php echo json_encode($row->Name); ?>,
+<?php echo json_encode($row->email); ?>,
+<?php echo json_encode($row->booking_date); ?>,
+<?php echo json_encode($row->Plan); ?>,
+<?php echo json_encode($row->paymentType); ?>
 )">View</button>
 
 <form method="post" style="display:inline;">

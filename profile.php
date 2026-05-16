@@ -100,26 +100,26 @@ echo "<script> window.location.href = 'profile.php';</script>";
 							foreach($results as $result)
 							{				?>	
 							<div class="col-md-6">
-								<input type="text" name="fname" id="fname" placeholder="First Name" autocomplete="off" value="<?php echo $result->fname;?>">
+								<input type="text" name="fname" id="fname" placeholder="First Name" autocomplete="off" value="<?php echo htmlspecialchars($result->fname, ENT_QUOTES, 'UTF-8');?>">
 							</div>
 							<div class="col-md-6">
-								<input type="text" name="lname" id="lname" placeholder="Last Name" autocomplete="off" value="<?php echo $result->lname;?>">
+								<input type="text" name="lname" id="lname" placeholder="Last Name" autocomplete="off" value="<?php echo htmlspecialchars($result->lname, ENT_QUOTES, 'UTF-8');?>">
 							</div>
 							<div class="col-md-6">
-								<input type="text" name="email" id="email" placeholder="Your Email" autocomplete="off" value="<?php echo $result->email;?>" readonly>
+								<input type="text" name="email" id="email" placeholder="Your Email" autocomplete="off" value="<?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8');?>" readonly>
 							</div>
 							<div class="col-md-6">
-								<input type="text" name="mobile" id="mobile" placeholder="Mobile Number" autocomplete="off" value="<?php echo $result->mobile;?>">
+								<input type="text" name="mobile" id="mobile" placeholder="Mobile Number" autocomplete="off" value="<?php echo htmlspecialchars($result->mobile, ENT_QUOTES, 'UTF-8');?>">
 							</div>
 							<div class="col-md-6">
-								<input type="text" name="state" id="state" placeholder="State" autocomplete="off" value="<?php echo $result->state;?>">
+								<input type="text" name="state" id="state" placeholder="State" autocomplete="off" value="<?php echo htmlspecialchars($result->state, ENT_QUOTES, 'UTF-8');?>">
 							</div>
 							<div class="col-md-6">
-								<input type="text" name="city" id="city" placeholder="City" autocomplete="off" value="<?php echo $result->city;?>">
+								<input type="text" name="city" id="city" placeholder="City" autocomplete="off" value="<?php echo htmlspecialchars($result->city, ENT_QUOTES, 'UTF-8');?>">
 							</div>
 							
 							<div class="col-md-12">
-								<input type="text" name="address" id="address" placeholder="Address" autocomplete="off" value="<?php echo $result->address;?>">
+								<input type="text" name="address" id="address" placeholder="Address" autocomplete="off" value="<?php echo htmlspecialchars($result->address, ENT_QUOTES, 'UTF-8');?>">
 							</div>
 							<div class="col-md-12">
 						<input type="submit" id="submit" name="submit" value="Update" class="site-btn sb-gradient">

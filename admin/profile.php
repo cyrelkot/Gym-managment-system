@@ -74,20 +74,20 @@ echo "<script> window.location.href = 'profile.php';</script>";
               { ?>
                 <div class="form-group col-md-12">
                   <label class="control-label">Name</label>
-                  <input class="form-control" type="text" name="name" id="name" placeholder="Enter your name" value="<?php echo $result->name;?>">
+                  <input class="form-control" type="text" name="name" id="name" placeholder="Enter your name" value="<?php echo htmlspecialchars($result->name, ENT_QUOTES, 'UTF-8');?>">
                 </div>
                 <div class="form-group col-md-12">
                   <label class="control-label">Email</label>
-                  <input class="form-control" type="text" name="email" id="email" placeholder="Enter your email" value="<?php echo $result->email;?>" readonly>
+                  <input class="form-control" type="text" name="email" id="email" placeholder="Enter your email" value="<?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8');?>" readonly>
                 </div>
                  <div class="form-group col-md-12">
                   <label class="control-label">Mobile No</label>
-                  <input class="form-control" type="text" name="mobile" id="mobile" placeholder="Enter your Mobile" value="<?php echo $result->mobile;?>">
+                  <input class="form-control" type="text" name="mobile" id="mobile" placeholder="Enter your Mobile" value="<?php echo htmlspecialchars($result->mobile, ENT_QUOTES, 'UTF-8');?>">
                 </div>
 
                          <div class="form-group col-md-12">
                   <label class="control-label">Regd. Date</label>
-                  <input class="form-control" type="text" name="reg" id="reg"  value="<?php echo $result->create_date;?>" readonly>
+                  <input class="form-control" type="text" name="reg" id="reg"  value="<?php echo htmlspecialchars($result->create_date, ENT_QUOTES, 'UTF-8');?>" readonly>
                 </div>
                  
                 <div class="form-group col-md-4 align-self-end">

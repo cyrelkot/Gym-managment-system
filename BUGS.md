@@ -79,24 +79,19 @@ These issues are significant vulnerabilities or cause broken functionality.
 
 ---
 
-### BUG-007: XSS in JavaScript onclick Handlers
+### BUG-007: XSS in JavaScript onclick Handlers ✓ FIXED
 
 - **File:** `admin/booking-history.php:219-224`
-- **Description:** Unescaped PHP variables are interpolated directly into JavaScript string literals inside `onclick` attributes. An attacker who can influence the underlying data can inject arbitrary JavaScript.
-- **Impact:** Stored XSS — malicious script executes for any admin who views the booking history page.
-- **Fix:** Use `json_encode()` to safely embed PHP values into JavaScript: `onclick="view(<?= json_encode($row['id']) ?>)"`.
+- **Description:** PHP variables interpolated directly into JS string literals inside `onclick` attributes.
+- **Fix:** All six arguments in the `openModal()` call now use `json_encode()`, which handles escaping and quoting — no surrounding single quotes needed.
 
 ---
 
-### BUG-008: Reflected/Stored XSS in Profile and Booking Detail Pages
+### BUG-008: Reflected/Stored XSS in Profile and Booking Detail Pages ✓ FIXED
 
-- **Files:**
-  - `admin/profile.php:76, 80, 84, 89`
-  - `profile.php:102-121`
-  - `booking-details.php:210-217`
-- **Description:** User-controlled data retrieved from the database is output into HTML without escaping. If any data was stored without sanitization, it will execute as HTML/JS.
-- **Impact:** Stored XSS — attacker who can register with a crafted name/email can execute scripts in admin and user sessions.
-- **Fix:** Wrap all database output in `htmlspecialchars($value, ENT_QUOTES, 'UTF-8')`.
+- **Files:** `admin/profile.php`, `profile.php`, `booking-details.php`
+- **Description:** DB values output into HTML attributes and content without escaping.
+- **Fix:** Wrapped all DB output in `htmlspecialchars($value, ENT_QUOTES, 'UTF-8')` across all three files (4 fields in admin/profile.php, 7 fields in profile.php, 8 fields in booking-details.php).
 
 ---
 
@@ -345,8 +340,8 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root | ✓ FIXED |
 | 005 | Critical | Security | include/config.php:6 | Empty DB root password | ⚠ PARTIAL |
 | 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser | ✓ FIXED |
-| 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers |
-| 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output |
+| 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers | ✓ FIXED |
+| 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output | ✓ FIXED |
 | 010 | High | Security | All forms | No CSRF tokens |
 | 014 | High | Security | config files | No secure session cookie settings |
 | 017 | Medium | Security | Multiple files | Inconsistent output escaping |
