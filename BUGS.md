@@ -42,12 +42,11 @@ These issues represent immediate security vulnerabilities or complete feature br
 
 ---
 
-### BUG-004: Temporary Debug Files Exposed in Web Root
+### BUG-004: Temporary Debug Files Exposed in Web Root ✓ FIXED
 
-- **Files:** All `tmp_*.php` files in project root (5 files)
-- **Description:** Temporary debug/test PHP files are publicly accessible in the web root. These files may execute arbitrary code, expose configuration, or reveal application internals.
-- **Impact:** Information disclosure, potential remote code execution depending on file contents.
-- **Fix:** Delete all `tmp_*.php` files immediately. Add `tmp_*.php` to `.gitignore`.
+- **Files:** `tmp_count_users.php`, `tmp_show_schema.php`, `tmp_booking_check.php`, `tmp_booking_schema.php`, `tmp_booking_join_test.php`
+- **Description:** Debug PHP files were publicly accessible in the web root.
+- **Fix:** Deleted all 5 files. Created `.gitignore` with `tmp_*.php` to prevent recurrence.
 
 ---
 
@@ -342,7 +341,7 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 
 | 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check | ✓ FIXED |
-| 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root |
+| 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root | ✓ FIXED |
 | 005 | Critical | Security | include/config.php:6 | Empty DB root password |
 | 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser |
 | 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers |
