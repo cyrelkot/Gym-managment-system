@@ -116,7 +116,7 @@ t2.Price as Price,t2.Description as Description,t4.category_name as category_nam
  ON t2.category = t4.id
  LEFT JOIN tblpackage as t5
  ON t2.PackageType = t5.id
- WHERE LOWER(IFNULL(t1.paymentType, '')) LIKE '%partial%'";
+ WHERE t1.paymentType = 'Partial Payment'";
                   $query= $dbh->prepare($sql);
                   $query-> execute();
                   $results = $query -> fetchAll(PDO::FETCH_OBJ);

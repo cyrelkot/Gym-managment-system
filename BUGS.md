@@ -233,12 +233,11 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-023: Fuzzy `LIKE '%partial%'` Match Instead of Exact Status Check
+### BUG-023: Fuzzy `LIKE '%partial%'` Match Instead of Exact Status Check ✓ FIXED
 
 - **File:** `admin/partial-payment-bookings.php:119`
-- **Description:** The query filters bookings by payment status using `LIKE '%partial%'` instead of an exact equality match (`= 'partial'` or `= 'ParcialPayment'`). This could accidentally match unintended status values.
-- **Impact:** Wrong bookings may appear in the partial payment list; data may be inconsistent with other filters.
-- **Fix:** Use an exact equality check: `WHERE payment_status = 'partial'` (after standardizing the status string — see BUG-026).
+- **Description:** Query used `LIKE '%partial%'` instead of an exact match, risking false positives.
+- **Fix:** Changed to `WHERE t1.paymentType = 'Partial Payment'` — the canonical value confirmed across `booking-details.php`, `edit-booking.php`, and `admin/index.php`.
 
 ---
 
@@ -363,7 +362,6 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |
 | 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header |
 | 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND |
-| 023 | Medium | Logic | admin/partial-payment-bookings.php:119 | LIKE fuzzy match on payment status |
 | 024 | Low | Code Quality | admin/add-post.php:165 | Duplicate name attribute on form inputs |
 | 025 | Low | Logic | admin/add-post.php | Typo: packageduratiobn field name |
 | 026 | Low | Logic | admin/booking-history-details.php:34 | Typo: ParcialPayment status value |
@@ -392,3 +390,5 @@ DONE:
 | 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
 
 | 022 | Medium | Logic | admin/full-payment-bookings.php | No cascade delete on booking deletion |
+
+| 023 | Medium | Logic | admin/partial-payment-bookings.php:119 | LIKE fuzzy match on payment status |
