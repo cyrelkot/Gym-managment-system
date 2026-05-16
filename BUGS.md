@@ -170,12 +170,11 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-016: Password Forced to Exactly 8 Characters
+### BUG-016: Password Forced to Exactly 8 Characters ✓ FIXED
 
-- **File:** `registration.php:25` and corresponding HTML form (`maxlength="8"`)
-- **Description:** The backend validates that the password length is exactly 8 characters (`strlen($password) == 8`), and the form's `maxlength` attribute enforces a maximum of 8. Passwords of 9+ characters are rejected with no clear error.
-- **Impact:** Forces users into weak, fixed-length passwords. Violates modern security guidelines (NIST recommends allowing up to 64+ characters).
-- **Fix:** Change validation to `strlen($password) >= 8` and remove or increase `maxlength`.
+- **File:** `registration.php:25`
+- **Description:** Backend used `strlen($password) != 8` and HTML had `maxlength="8"`, blocking passwords longer than 8 chars.
+- **Fix:** Changed to `strlen($password) < 8`, updated regex from `{8}` to `{8,}`, removed `maxlength="8"` from both password inputs, updated hint text.
 
 ---
 
@@ -360,7 +359,6 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 010 | High | Security | All forms | No CSRF tokens |
 
 | 014 | High | Security | config files | No secure session cookie settings |
-| 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
 | 017 | Medium | Security | Multiple files | Inconsistent output escaping |
 | 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error |
 | 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |
@@ -392,3 +390,5 @@ DONE:
 | 013 | High | Logic | admin/include/sidebar.php | Admin nav links use .html instead of .php |
 
 | 015 | Medium | Logic | registration.php | No duplicate email check |
+
+| 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |

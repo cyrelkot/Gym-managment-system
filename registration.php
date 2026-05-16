@@ -16,14 +16,14 @@ $city = $_POST['city'];
 $password = $_POST['password'];
 $repeat = $_POST['RepeatPassword'];
 
-$pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8}$/";
+$pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/";
 
 /* VALIDATION */
 if($password != $repeat){
     $error = "Password does not match!";
 }
-else if(strlen($password) != 8){
-    $error = "Password must be EXACTLY 8 characters!";
+else if(strlen($password) < 8){
+    $error = "Password must be at least 8 characters!";
 }
 else if(!preg_match($pattern, $password)){
     $error = "Must include uppercase, lowercase, number & symbol!";
@@ -301,15 +301,15 @@ color:#ffb366;
 
 <input type="text" name="city" placeholder="City" required>
 
-<small>8 chars: Uppercase + lowercase + number + symbol</small>
+<small>Min 8 chars: Uppercase + lowercase + number + symbol</small>
 
 <div class="pass-wrapper">
-<input type="password" id="password" name="password" placeholder="Password" maxlength="8" required>
+<input type="password" id="password" name="password" placeholder="Password" required>
 <span onclick="togglePass('password')">👁</span>
 </div>
 
 <div class="pass-wrapper">
-<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" maxlength="8" required>
+<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" required>
 <span onclick="togglePass('repeat')">👁</span>
 </div>
 
