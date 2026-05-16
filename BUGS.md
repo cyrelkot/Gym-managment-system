@@ -50,14 +50,18 @@ These issues represent immediate security vulnerabilities or complete feature br
 
 ---
 
-### BUG-005: Empty Root Password on Database Connection
+### BUG-005: Empty Root Password on Database Connection ✓ PARTIALLY FIXED
 
-- **Files:**
-  - `include/config.php:6`
-  - `admin/include/config.php:5`
-- **Description:** The database connection is established with `root` user and an empty password (`""`). This is the XAMPP default and is insecure for any non-local environment.
-- **Impact:** Any process on the server can connect to MySQL without credentials.
-- **Fix:** Create a dedicated database user with a strong password and minimal required privileges.
+- **Files:** `include/config.php`, `admin/include/config.php`
+- **Description:** DB connection used hardcoded `root` with empty password.
+- **Code fix:** Both config files now read credentials from environment variables (`DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`) with XAMPP defaults as fallback. Both config files added to `.gitignore` so credentials are never committed.
+- **Manual step still required:** In MySQL, create a dedicated user with a strong password and grant only the necessary privileges:
+  ```sql
+  CREATE USER 'gymapp'@'localhost' IDENTIFIED BY 'strong-password-here';
+  GRANT SELECT, INSERT, UPDATE, DELETE ON gymdb.* TO 'gymapp'@'localhost';
+  FLUSH PRIVILEGES;
+  ```
+  Then set `DB_USER` and `DB_PASS` environment variables (or update the local config directly).
 
 ---
 
@@ -342,7 +346,7 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 | 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check | ✓ FIXED |
 | 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root | ✓ FIXED |
-| 005 | Critical | Security | include/config.php:6 | Empty DB root password |
+| 005 | Critical | Security | include/config.php:6 | Empty DB root password | ⚠ PARTIAL |
 | 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser |
 | 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers |
 | 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output |
