@@ -12,6 +12,7 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
 $msg='';
 $errormsg='';
 
+
 // ADD PACKAGE
 if(isset($_POST['submit'])){
 
@@ -52,6 +53,7 @@ $errormsg="Something went wrong";
 }
 }
 
+
 // DELETE
 if(isset($_GET['del'])){
 $uid=intval($_GET['del']);
@@ -78,7 +80,8 @@ echo "<script>window.location.href='add-package.php'</script>";
 
 <link rel="stylesheet" href="css/main.css">
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
 
@@ -98,6 +101,7 @@ color:#fff;
 
 .app-content{
 margin-left:230px;
+padding:20px;
 }
 
 .tile{
@@ -108,6 +112,8 @@ border: 1px solid rgba(255, 102, 0, 0.45);
 border-radius: 14px;
 box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
 color:#fff;
+padding:20px;
+margin-bottom:20px;
 }
 
 h3,
@@ -141,8 +147,7 @@ background:#ff6600;
 border-color:#ff6600;
 }
 
-.btn-primary:hover,
-.btn-primary:focus{
+.btn-primary:hover{
 background:#e65c00;
 border-color:#e65c00;
 }
@@ -150,6 +155,12 @@ border-color:#e65c00;
 .btn-danger{
 background:#c0392b;
 border-color:#c0392b;
+}
+
+.btn-warning{
+background:#f39c12;
+border-color:#f39c12;
+color:#fff;
 }
 
 .table-bordered,
@@ -160,6 +171,11 @@ border:1px solid rgba(255,255,255,0.12) !important;
 
 thead{
 background:rgba(255, 102, 0, 0.12);
+}
+
+.action-btn{
+display:flex;
+gap:5px;
 }
 
 </style>
@@ -173,7 +189,7 @@ background:rgba(255, 102, 0, 0.12);
 
 <main class="app-content">
 
-<h3>Add Package</h3>
+<h3><i class="fa fa-cubes"></i> Add Package</h3>
 <hr>
 
 <div class="row">
@@ -194,16 +210,30 @@ background:rgba(255, 102, 0, 0.12);
 
 <div class="form-group">
 <label>Add Category</label>
-<input class="form-control" type="text" name="category" required>
+
+<input class="form-control"
+type="text"
+name="category"
+placeholder="Enter Category"
+required>
 </div>
 
 <div class="form-group">
 <label>Add Package</label>
-<input class="form-control" type="text" name="addPackage" required>
+
+<input class="form-control"
+type="text"
+name="addPackage"
+placeholder="Enter Package"
+required>
 </div>
 
-<button class="btn btn-primary" type="submit" name="submit">
-Submit
+<button class="btn btn-primary"
+type="submit"
+name="submit">
+
+<i class="fa fa-plus"></i> Submit
+
 </button>
 
 </form>
@@ -223,7 +253,9 @@ Submit
 
 <div class="tile">
 
-<table class="table table-bordered">
+<h4 class="mb-3">Manage Packages</h4>
+
+<table class="table table-bordered table-hover">
 
 <thead>
 
@@ -231,7 +263,7 @@ Submit
 <th>#</th>
 <th>Category</th>
 <th>Package</th>
-<th>Action</th>
+<th width="180">Action</th>
 </tr>
 
 </thead>
@@ -240,9 +272,12 @@ Submit
 
 <?php
 
-$sql="SELECT tblpackage.id as pid,tblpackage.PackageName,tblcategory.category_name 
+$sql="SELECT tblpackage.id as pid,
+tblpackage.PackageName,
+tblcategory.category_name 
 FROM tblpackage
-JOIN tblcategory ON tblcategory.id=tblpackage.cate_id";
+JOIN tblcategory 
+ON tblcategory.id=tblpackage.cate_id";
 
 $query=$dbh->prepare($sql);
 $query->execute();
@@ -261,17 +296,34 @@ foreach($results as $result){
 
 <td><?php echo $cnt;?></td>
 
-<td><?php echo htmlentities($result->category_name);?></td>
+<td>
+<?php echo htmlentities($result->category_name);?>
+</td>
 
-<td><?php echo htmlentities($result->PackageName);?></td>
+<td>
+<?php echo htmlentities($result->PackageName);?>
+</td>
 
 <td>
 
-<a href="add-package.php?del=<?php echo $result->pid;?>"
-class="btn btn-danger"
-onclick="return confirm('Delete this record?')">
-Delete
+<div class="action-btn">
+
+<a href="edit-package.php?edit=<?php echo $result->pid;?>"
+class="btn btn-warning btn-sm">
+
+<i class="fa fa-edit"></i> Edit
+
 </a>
+
+<a href="add-package.php?del=<?php echo $result->pid;?>"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete this record?')">
+
+<i class="fa fa-trash"></i> Delete
+
+</a>
+
+</div>
 
 </td>
 
@@ -299,5 +351,4 @@ $cnt++;
 <script src="js/main.js"></script>
 
 </body>
-
 </html>
