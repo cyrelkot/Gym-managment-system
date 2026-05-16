@@ -5,6 +5,7 @@ include('include/config.php');
 
 if(strlen($_SESSION['adminid'])==0){
 header('location:logout.php');
+exit;
 }else{
 
 $bookindid=$_GET['bookingid'];

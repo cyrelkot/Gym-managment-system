@@ -3,6 +3,7 @@ error_reporting(0);
 include  'include/config.php'; 
 if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
+  exit;
   } else{
 
 if (isset($_POST['delete_package']) && isset($_POST['packageid'])) {

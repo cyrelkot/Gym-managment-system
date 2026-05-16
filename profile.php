@@ -5,6 +5,7 @@ require_once('include/config.php');
 if(strlen( $_SESSION["uid"])==0)
     {   
 header('location:login.php');
+exit;
 }
 else{
 
