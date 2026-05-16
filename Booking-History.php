@@ -168,6 +168,8 @@ tr:nth-child(even){
 
     <div class="nav-center">
         <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
         <a href="booking-history.php">Booking History</a>
         <a href="logout.php">Logout</a>
     </div>

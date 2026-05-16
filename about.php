@@ -133,7 +133,7 @@ body{
     <a href="index.php">Home</a>
     <a href="about.php">About</a>
     <a href="contact.php">Contact</a>
-
+    
     <!-- 🔥 ADMIN / LOGOUT SWITCH -->
     <?php if (isset($_SESSION['uid'])) { ?>
         <a href="logout.php">Logout</a>
