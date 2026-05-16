@@ -137,12 +137,11 @@ These issues are significant vulnerabilities or cause broken functionality.
 
 ---
 
-### BUG-013: Broken Admin Sidebar Navigation Links
+### BUG-013: Broken Admin Sidebar Navigation Links ✓ FIXED
 
-- **File:** `include/sidebar.php`
-- **Description:** Navigation links in the admin sidebar point to `.html` file extensions (e.g., `dashboard.html`) instead of `.php`. These pages do not exist with that extension.
-- **Impact:** All admin sidebar navigation links result in 404 errors. Admin panel is non-navigable via sidebar.
-- **Fix:** Update all `.html` references in `sidebar.php` to `.php`.
+- **File:** `admin/include/sidebar.php`
+- **Description:** Navigation links in the admin sidebar point to `.html` file extensions instead of `.php`.
+- **Fix:** All links in `admin/include/sidebar.php` already use `.php` extensions — already resolved.
 
 ---
 
@@ -361,7 +360,6 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 | 010 | High | Security | All forms | No CSRF tokens |
 
-| 013 | High | Logic | include/sidebar.php | Admin nav links use .html instead of .php |
 | 014 | High | Security | config files | No secure session cookie settings |
 | 015 | Medium | Logic | registration.php | No duplicate email check |
 | 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
@@ -392,3 +390,5 @@ DONE:
 | 011 | High | Logic | profile.php:6-8 | Missing exit after header() redirect |
 
 | 012 | High | Logic | admin/login.php:24, admin/change-password.php:13 | Admin session email never set — change password broken |
+
+| 013 | High | Logic | admin/include/sidebar.php | Admin nav links use .html instead of .php |
