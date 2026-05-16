@@ -38,6 +38,7 @@ if (!empty($email) && !empty($password)) {
 
                         $_SESSION['uid'] = $user['id'];
                         $_SESSION['fname'] = $user['fname'];
+                        $_SESSION['email'] = $email;
 
                         header("location:index.php");
                         exit;

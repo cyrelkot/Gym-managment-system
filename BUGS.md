@@ -1,0 +1,353 @@
+# BUGS.md — Gym Management System Bug Report
+
+**Analysis Date:** 2026-05-16
+**Scope:** All PHP, JS, and config files in `C:/xampp/htdocs/gym`
+**Total Issues:** 33
+
+---
+
+## CRITICAL
+
+These issues represent immediate security vulnerabilities or complete feature breakage.
+
+---
+
+### BUG-001: MD5 Password Hashing (Insecure)
+- **Files:**
+  - `admin/login.php:23`
+  - `admin/change-password.php:12`
+  - `changepassword.php:13-14`
+- **Description:** Passwords are hashed with MD5, which is cryptographically broken and trivially reversible via rainbow tables. No salt is used.
+- **Impact:** Full credential compromise if database is breached.
+- **Fix:** Replace with `password_hash($password, PASSWORD_BCRYPT)` and verify with `password_verify()`.
+
+---
+
+### BUG-002: Broken Change Password Feature — Session Email Never Set
+- **Files:**
+  - `changepassword.php:15`
+  - `login.php` (missing assignment)
+- **Description:** `changepassword.php` reads `$_SESSION['email']` to identify the user, but the login flow never assigns `$_SESSION['email']` after a successful login. The feature is non-functional for all users.
+- **Impact:** No user can change their password. The query silently targets no row.
+- **Fix:** Set `$_SESSION['email'] = $email;` in `login.php` after successful authentication.
+
+---
+
+### BUG-003: Insecure Direct Object Reference (IDOR) on Booking Details
+- **File:** `booking-details.php:188`
+- **Description:** The booking details page fetches a booking by ID from the query string (`$_GET['bookingid']`) without verifying that the booking belongs to the currently logged-in user. Any authenticated user can view any other user's booking by manipulating the URL.
+- **Impact:** Full disclosure of other users' booking data (names, packages, payment info).
+- **Fix:** Add a WHERE clause to the query: `AND uid = :uid` using the session user ID.
+
+---
+
+### BUG-004: Temporary Debug Files Exposed in Web Root
+- **Files:** All `tmp_*.php` files in project root (5 files)
+- **Description:** Temporary debug/test PHP files are publicly accessible in the web root. These files may execute arbitrary code, expose configuration, or reveal application internals.
+- **Impact:** Information disclosure, potential remote code execution depending on file contents.
+- **Fix:** Delete all `tmp_*.php` files immediately. Add `tmp_*.php` to `.gitignore`.
+
+---
+
+### BUG-005: Empty Root Password on Database Connection
+- **Files:**
+  - `include/config.php:6`
+  - `admin/include/config.php:5`
+- **Description:** The database connection is established with `root` user and an empty password (`""`). This is the XAMPP default and is insecure for any non-local environment.
+- **Impact:** Any process on the server can connect to MySQL without credentials.
+- **Fix:** Create a dedicated database user with a strong password and minimal required privileges.
+
+---
+
+### BUG-006: Database Error Messages Exposed to Users
+- **File:** `include/config.php:15`
+- **Description:** PDO is configured to throw exceptions (`PDO::ERRMODE_EXCEPTION`) and errors are not caught at the config level. Unhandled PDO exceptions propagate stack traces and SQL query fragments to the browser.
+- **Impact:** Leaks table names, column names, SQL structure, and server paths to any user who triggers a DB error.
+- **Fix:** Wrap DB operations in try/catch blocks and display a generic error page; log details server-side only.
+
+---
+
+## HIGH
+
+These issues are significant vulnerabilities or cause broken functionality.
+
+---
+
+### BUG-007: XSS in JavaScript onclick Handlers
+- **File:** `admin/booking-history.php:219-224`
+- **Description:** Unescaped PHP variables are interpolated directly into JavaScript string literals inside `onclick` attributes. An attacker who can influence the underlying data can inject arbitrary JavaScript.
+- **Impact:** Stored XSS — malicious script executes for any admin who views the booking history page.
+- **Fix:** Use `json_encode()` to safely embed PHP values into JavaScript: `onclick="view(<?= json_encode($row['id']) ?>)"`.
+
+---
+
+### BUG-008: Reflected/Stored XSS in Profile and Booking Detail Pages
+- **Files:**
+  - `admin/profile.php:76, 80, 84, 89`
+  - `profile.php:102-121`
+  - `booking-details.php:210-217`
+- **Description:** User-controlled data retrieved from the database is output into HTML without escaping. If any data was stored without sanitization, it will execute as HTML/JS.
+- **Impact:** Stored XSS — attacker who can register with a crafted name/email can execute scripts in admin and user sessions.
+- **Fix:** Wrap all database output in `htmlspecialchars($value, ENT_QUOTES, 'UTF-8')`.
+
+---
+
+### BUG-009: Broken JavaScript Redirect — Missing Quotes Around URL
+- **Files:**
+  - `profile.php:34`
+  - `admin/profile.php:28`
+- **Description:** A JavaScript redirect uses `window.location = /some/path` without quotes around the URL string, causing a JS syntax or reference error. The redirect never executes.
+- **Impact:** Post-form-submission redirect is broken; users are left on a blank or error state.
+- **Fix:** Change to `window.location = '/some/path';` (with quotes).
+
+---
+
+### BUG-010: CSRF — No Tokens on Any Forms
+- **Files:** `registration.php`, `booking.php`, `profile.php`, `changepassword.php`, and all admin form pages
+- **Description:** No CSRF tokens are present on any form in the application. An attacker can craft a malicious page that silently submits forms on behalf of a logged-in user.
+- **Impact:** Account takeover (password change), unauthorized bookings, profile data modification.
+- **Fix:** Generate a per-session token, embed it in all forms as a hidden field, and validate it on every POST request.
+
+---
+
+### BUG-011: Missing `exit` After `header()` Redirect
+- **File:** `profile.php:6-8`
+- **Description:** `header('Location: ...')` is called to redirect unauthenticated users, but there is no `exit;` or `die;` immediately after. PHP continues executing the rest of the page.
+- **Impact:** Page logic (including DB queries and data rendering) executes for unauthenticated users. May expose data in HTTP response body before redirect.
+- **Fix:** Add `exit;` on the line immediately after every `header('Location: ...')` call.
+
+---
+
+### BUG-012: Session Variable `$_SESSION['email']` Used But Never Set (Duplicate Root Cause of BUG-002)
+- **File:** `changepassword.php:15`
+- **Description:** Same root cause as BUG-002. Documented separately because the missing session assignment affects all pages that rely on `$_SESSION['email']` for user identification.
+- **Impact:** All user-identifying logic based on this session key silently fails.
+- **Fix:** See BUG-002.
+
+---
+
+### BUG-013: Broken Admin Sidebar Navigation Links
+- **File:** `include/sidebar.php`
+- **Description:** Navigation links in the admin sidebar point to `.html` file extensions (e.g., `dashboard.html`) instead of `.php`. These pages do not exist with that extension.
+- **Impact:** All admin sidebar navigation links result in 404 errors. Admin panel is non-navigable via sidebar.
+- **Fix:** Update all `.html` references in `sidebar.php` to `.php`.
+
+---
+
+### BUG-014: No Secure Session Cookie Settings
+- **Files:**
+  - `include/config.php`
+  - `admin/include/config.php`
+- **Description:** Session is started without configuring `HttpOnly`, `Secure`, or `SameSite` cookie attributes. Sessions are also not regenerated after login.
+- **Impact:** Session cookies are accessible to JavaScript (XSS session hijack), transmitted over HTTP (network interception), and vulnerable to CSRF.
+- **Fix:** Call `session_set_cookie_params(['httponly' => true, 'secure' => true, 'samesite' => 'Strict'])` before `session_start()`, and call `session_regenerate_id(true)` after login.
+
+---
+
+## MEDIUM
+
+These issues are functional bugs, data integrity problems, or lower-severity security weaknesses.
+
+---
+
+### BUG-015: No Duplicate Email Check on Registration
+- **File:** `registration.php` (no specific line — missing code)
+- **Description:** The registration form does not check whether the submitted email address already exists before attempting an INSERT. If the `email` column has a UNIQUE constraint, PHP crashes with an unhandled PDO exception (see BUG-006). If not, duplicate accounts are silently created.
+- **Impact:** Application crashes on duplicate registration, or duplicate accounts corrupt user data.
+- **Fix:** Add a `SELECT COUNT(*)` check before INSERT and return a user-friendly error message.
+
+---
+
+### BUG-016: Password Forced to Exactly 8 Characters
+- **File:** `registration.php:25` and corresponding HTML form (`maxlength="8"`)
+- **Description:** The backend validates that the password length is exactly 8 characters (`strlen($password) == 8`), and the form's `maxlength` attribute enforces a maximum of 8. Passwords of 9+ characters are rejected with no clear error.
+- **Impact:** Forces users into weak, fixed-length passwords. Violates modern security guidelines (NIST recommends allowing up to 64+ characters).
+- **Fix:** Change validation to `strlen($password) >= 8` and remove or increase `maxlength`.
+
+---
+
+### BUG-017: Inconsistent Output Escaping Throughout Codebase
+- **Files:** Multiple — `profile.php`, `booking-details.php`, admin pages
+- **Description:** Some output uses `htmlspecialchars()`, some uses `htmlentities()`, and many output points use neither. This inconsistency means some data is protected while other equivalent data is not.
+- **Impact:** Unpredictable XSS exposure depending on which path renders the data.
+- **Fix:** Standardize on `htmlspecialchars($value, ENT_QUOTES, 'UTF-8')` for all HTML output, applied at render time.
+
+---
+
+### BUG-018: jQuery Selector Syntax Error
+- **File:** `admin/js/main.js:22`
+- **Description:** A jQuery selector contains a syntax error that causes a JavaScript exception at page load, potentially breaking all jQuery-dependent functionality on admin pages.
+- **Impact:** Admin page interactivity (modals, dynamic tables, etc.) may be partially or fully non-functional.
+- **Fix:** Correct the jQuery selector syntax at line 22.
+
+---
+
+### BUG-019: DOM-Based XSS Risk via `data-setbg` Attribute
+- **File:** `js/main.js:63`
+- **Description:** The JS reads a `data-setbg` attribute value and interpolates it directly into a CSS `background` property string without sanitization. A crafted attribute value could inject CSS expressions or, in older browsers, execute scripts.
+- **Impact:** Potential CSS injection; low XSS risk in modern browsers but violates defense-in-depth.
+- **Fix:** Validate that the `data-setbg` value is a URL before assignment, or use `element.style.backgroundImage = 'url(' + CSS.escape(url) + ')'`.
+
+---
+
+### BUG-020: Hardcoded Admin Link Visible in Public Header
+- **File:** `include/header.php:12`
+- **Description:** The public-facing site header contains a hardcoded link to the admin panel that is visible to all visitors regardless of authentication status.
+- **Impact:** Exposes the admin panel URL, increasing attack surface and aiding reconnaissance.
+- **Fix:** Remove the link or render it only when an admin session is active.
+
+---
+
+### BUG-021: Use of Deprecated `PDO::MYSQL_ATTR_INIT_COMMAND`
+- **Files:**
+  - `include/config.php`
+  - `admin/include/config.php`
+- **Description:** The PDO connection uses `PDO::MYSQL_ATTR_INIT_COMMAND` to set charset, which is deprecated in favor of the `charset` DSN parameter.
+- **Impact:** May produce deprecation warnings in newer PHP versions; charset may not be applied reliably.
+- **Fix:** Set charset in the DSN string: `mysql:host=...;dbname=...;charset=utf8mb4`.
+
+---
+
+### BUG-022: No Cascade Delete on Booking Deletion
+- **File:** `full-payment-bookings.php` (and related admin booking management pages)
+- **Description:** Deleting a booking record does not delete associated payment records or related data. Foreign key relationships are not enforced at the database level.
+- **Impact:** Orphaned payment records remain in the database after booking deletion, causing data integrity issues and potential display errors.
+- **Fix:** Add `ON DELETE CASCADE` to foreign key constraints, or explicitly delete related records in the same transaction.
+
+---
+
+### BUG-023: Fuzzy `LIKE '%partial%'` Match Instead of Exact Status Check
+- **File:** `admin/partial-payment-bookings.php:119`
+- **Description:** The query filters bookings by payment status using `LIKE '%partial%'` instead of an exact equality match (`= 'partial'` or `= 'ParcialPayment'`). This could accidentally match unintended status values.
+- **Impact:** Wrong bookings may appear in the partial payment list; data may be inconsistent with other filters.
+- **Fix:** Use an exact equality check: `WHERE payment_status = 'partial'` (after standardizing the status string — see BUG-026).
+
+---
+
+## LOW
+
+These issues are minor bugs, typos, or code quality problems with limited functional impact.
+
+---
+
+### BUG-024: Duplicate `name` Attribute on Form Inputs
+- **Files:**
+  - `admin/add-post.php:165`
+  - `admin/edit-post.php:126`
+- **Description:** A form contains two `<input>` elements with the same `name` attribute. The browser will submit only the last value; the first is silently discarded.
+- **Impact:** One field's value is always lost on form submit.
+- **Fix:** Give each input a unique `name` attribute.
+
+---
+
+### BUG-025: Typo in Field Name — `packageduratiobn`
+- **File:** `admin/add-post.php` (form field name) vs. PHP variable in handler
+- **Description:** A form field is named `packageduratiobn` (extra `b`) which does not match the PHP variable name used to read it. The value is never received by the server.
+- **Impact:** Package duration is never saved when adding a new post/package.
+- **Fix:** Correct the typo in the `name` attribute to match the PHP variable.
+
+---
+
+### BUG-026: Typo in Payment Status Value — `ParcialPayment`
+- **File:** `admin/booking-history-details.php:34`
+- **Description:** The payment status string `ParcialPayment` is a misspelling of `PartialPayment`. This value is stored or compared inconsistently across the application.
+- **Impact:** Payment status checks and filters may fail to match records correctly (see also BUG-023).
+- **Fix:** Standardize to a consistent value (e.g., `partial`) across all code and existing database records.
+
+---
+
+### BUG-027: Typo in Query Parameter Name — `bookindid`
+- **Files:**
+  - `booking-details.php:188`
+  - `admin/booking-history-details.php:260`
+- **Description:** The URL parameter is read as `$_GET['bookindid']` (extra `d`) instead of `$_GET['bookingid']`. If the link generating this URL uses the correct spelling, this page will always receive `null`.
+- **Impact:** Booking detail pages may always load with no booking ID, causing a DB error or blank page.
+- **Fix:** Correct the typo to `$_GET['bookingid']` and verify consistency with all links that generate this URL.
+
+---
+
+### BUG-028: Typo in Footer — "Managaement"
+- **File:** `include/footer.php:9`
+- **Description:** The footer contains the misspelled text "Managaement" (extra `a`).
+- **Impact:** Cosmetic — visible to all site visitors.
+- **Fix:** Correct to "Management".
+
+---
+
+### BUG-029: Redundant Duplicate Query Execution
+- **File:** `admin/edit-post.php:28-29`
+- **Description:** The same SQL query is executed twice consecutively with no logic between the calls. The result of the first execution is discarded.
+- **Impact:** Unnecessary database load; one query result is wasted.
+- **Fix:** Remove the duplicate query call.
+
+---
+
+### BUG-030: `error_reporting(0)` Silences All PHP Errors
+- **File:** `admin/index.php:3`
+- **Description:** `error_reporting(0)` is set at the top of this file, suppressing all PHP errors, warnings, and notices. This hides bugs during development and production debugging.
+- **Impact:** Errors are silently swallowed; broken functionality may go undetected.
+- **Fix:** Remove `error_reporting(0)`. In production, set `display_errors = Off` and `log_errors = On` in `php.ini` instead.
+
+---
+
+### BUG-031: Hardcoded "Welcome: Admin" in Admin Header
+- **File:** `admin/include/header.php:48`
+- **Description:** The admin header displays the static string "Welcome: Admin" regardless of which admin account is logged in.
+- **Impact:** All admins see the same generic greeting; no personalization. Misleading if multiple admin accounts exist.
+- **Fix:** Display the logged-in admin's actual username from the session.
+
+---
+
+### BUG-032: `ob_start()` Without Matching `ob_end_clean()` / `ob_end_flush()`
+- **File:** `include/config.php:2`
+- **Description:** Output buffering is started with `ob_start()` at the top of the config file but there is no matching `ob_end_clean()` or `ob_end_flush()` call. PHP will flush the buffer at script end, but this is implicit and may interact unexpectedly with other buffering.
+- **Impact:** May cause unexpected output ordering or suppress deliberate output in edge cases.
+- **Fix:** Either remove `ob_start()` if not needed, or ensure it is properly paired with a flush/clean call.
+
+---
+
+### BUG-033: `PDO::PARAM_STR` Used for Integer User ID
+- **File:** `profile.php:30`
+- **Description:** A PDO parameter binding for a numeric user ID column uses `PDO::PARAM_STR` instead of `PDO::PARAM_INT`.
+- **Impact:** MySQL will implicitly cast the value; functionally works in most cases but bypasses type safety and may cause index scan inefficiency on large tables.
+- **Fix:** Change to `PDO::PARAM_INT` for integer column bindings.
+
+---
+
+## Summary Table
+
+| ID | Severity | Category | File(s) | Description |
+|----|----------|----------|---------|-------------|
+| 001 | Critical | Security | admin/login.php, changepassword.php | MD5 password hashing |
+| 002 | Critical | Logic | changepassword.php, login.php | Session email never set — change password broken |
+| 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check |
+| 004 | Critical | Security | tmp_*.php (root) | Debug files exposed in web root |
+| 005 | Critical | Security | include/config.php:6 | Empty DB root password |
+| 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser |
+| 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers |
+| 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output |
+| 009 | High | Logic | profile.php:34, admin/profile.php:28 | Broken JS redirect — missing URL quotes |
+| 010 | High | Security | All forms | No CSRF tokens |
+| 011 | High | Logic | profile.php:6-8 | Missing exit after header() redirect |
+| 012 | High | Logic | changepassword.php:15 | Session email never set (see 002) |
+| 013 | High | Logic | include/sidebar.php | Admin nav links use .html instead of .php |
+| 014 | High | Security | config files | No secure session cookie settings |
+| 015 | Medium | Logic | registration.php | No duplicate email check |
+| 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
+| 017 | Medium | Security | Multiple files | Inconsistent output escaping |
+| 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error |
+| 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |
+| 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header |
+| 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND |
+| 022 | Medium | Logic | full-payment-bookings.php | No cascade delete on booking deletion |
+| 023 | Medium | Logic | admin/partial-payment-bookings.php:119 | LIKE fuzzy match on payment status |
+| 024 | Low | Code Quality | admin/add-post.php:165 | Duplicate name attribute on form inputs |
+| 025 | Low | Logic | admin/add-post.php | Typo: packageduratiobn field name |
+| 026 | Low | Logic | admin/booking-history-details.php:34 | Typo: ParcialPayment status value |
+| 027 | Low | Logic | booking-details.php:188 | Typo: bookindid URL parameter |
+| 028 | Low | Code Quality | include/footer.php:9 | Typo: "Managaement" |
+| 029 | Low | Code Quality | admin/edit-post.php:28-29 | Redundant duplicate query |
+| 030 | Low | Code Quality | admin/index.php:3 | error_reporting(0) hides all errors |
+| 031 | Low | Code Quality | admin/include/header.php:48 | Hardcoded "Welcome: Admin" text |
+| 032 | Low | Code Quality | include/config.php:2 | ob_start() without matching ob_end |
+| 033 | Low | Code Quality | profile.php:30 | PDO::PARAM_STR used for integer UID |
