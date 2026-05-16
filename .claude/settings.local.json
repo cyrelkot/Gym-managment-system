@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(/c/xampp/mysql/bin/mysql.exe -u root --password=\"\" gymdb -e \"SELECT id, category_name FROM tblcategory; SELECT id, cate_id, PackageName FROM tblpackage; SELECT id, titlename, PackageDuratiobn, Price FROM tbladdpackage;\" 2>&1)"
+    ]
+  }
+}
