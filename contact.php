@@ -143,6 +143,8 @@ if (isset($_POST['submit'])) {
         <?php if (isset($_SESSION['uid'])) { ?>
             <a href="booking-history.php">Booking History</a>
             <a href="logout.php">Logout</a>
+        <?php } else { ?>
+            <a href="admin/">Admin</a>
         <?php } ?>
     </div>
 </div>
