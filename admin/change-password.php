@@ -8,26 +8,31 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
 // Code for change password 
 if(isset($_POST['submit']))
   {
-$password=md5($_POST['password']);
-$newpassword=md5($_POST['newpassword']);
-$email=$_SESSION['email'];
-$sql ="SELECT password FROM tbladmin WHERE email=:email and password=:password";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':email', $email, PDO::PARAM_STR);
-$query-> bindParam(':password', $password, PDO::PARAM_STR);
-$query-> execute();
-$results = $query -> fetchAll(PDO::FETCH_OBJ);
-if($query -> rowCount() > 0)
-{
-$con="update tbladmin set password=:newpassword where email=:email";
-$chngpwd1 = $dbh->prepare($con);
-$chngpwd1-> bindParam(':email', $email, PDO::PARAM_STR);
-$chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
-$chngpwd1->execute();
-$msg="Your Password succesfully changed";
-}
-else {
-$error="Your current password is not valid."; 
+$currentPassword = $_POST['password'];
+$newpassword     = $_POST['newpassword'];
+$email           = $_SESSION['email'];
+
+$sql = "SELECT password FROM tbladmin WHERE email = :email LIMIT 1";
+$query = $dbh->prepare($sql);
+$query->bindParam(':email', $email, PDO::PARAM_STR);
+$query->execute();
+$admin = $query->fetch(PDO::FETCH_ASSOC);
+
+$passwordOk = $admin && (
+    password_verify($currentPassword, $admin['password']) ||
+    $admin['password'] === md5($currentPassword)
+);
+
+if ($passwordOk) {
+    $newHash = password_hash($newpassword, PASSWORD_BCRYPT);
+    $con = "UPDATE tbladmin SET password = :newpassword WHERE email = :email";
+    $chngpwd1 = $dbh->prepare($con);
+    $chngpwd1->bindParam(':email',       $email,   PDO::PARAM_STR);
+    $chngpwd1->bindParam(':newpassword', $newHash, PDO::PARAM_STR);
+    $chngpwd1->execute();
+    $msg = "Your Password succesfully changed";
+} else {
+    $error = "Your current password is not valid.";
 }
 }
 ?>

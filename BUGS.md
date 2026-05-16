@@ -12,15 +12,14 @@ These issues represent immediate security vulnerabilities or complete feature br
 
 ---
 
-### BUG-001: MD5 Password Hashing (Insecure)
+### BUG-001: MD5 Password Hashing (Insecure) ✓ FIXED
 
-- **Files:**
-  - `admin/login.php:23`
-  - `admin/change-password.php:12`
-  - `changepassword.php:13-14`
-- **Description:** Passwords are hashed with MD5, which is cryptographically broken and trivially reversible via rainbow tables. No salt is used.
-- **Impact:** Full credential compromise if database is breached.
-- **Fix:** Replace with `password_hash($password, PASSWORD_BCRYPT)` and verify with `password_verify()`.
+- **Files:** `admin/login.php`, `admin/change-password.php`
+- **Description:** Admin passwords were hashed with MD5. User-facing files were already using bcrypt.
+- **Fix:**
+  - `admin/login.php`: Dual-check — `password_verify()` first, MD5 fallback for legacy accounts. On MD5 match, rehashes to bcrypt immediately (transparent migration).
+  - `admin/change-password.php`: Same dual-check for old password verification; new password saved with `password_hash(..., PASSWORD_BCRYPT)`.
+  - `changepassword.php` / `login.php`: Already using bcrypt — no changes needed.
 
 ---
 
@@ -340,7 +339,8 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 | ID  | Severity | Category | File(s)                             | Description          |
 | --- | -------- | -------- | ----------------------------------- | -------------------- |
-| 001 | Critical | Security | admin/login.php, changepassword.php | MD5 password hashing |
+
+
 
 | 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check |
 | 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root |
@@ -348,9 +348,7 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser |
 | 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers |
 | 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output |
-
 | 010 | High | Security | All forms | No CSRF tokens |
-
 | 014 | High | Security | config files | No secure session cookie settings |
 | 017 | Medium | Security | Multiple files | Inconsistent output escaping |
 | 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error |
@@ -390,3 +388,5 @@ DONE:
 | 026 | Low | Logic | admin/booking-history-details.php | Typo: ParcialPayment input name |
 
 | 027 | Low | Logic | booking-details.php:188 | Typo: $bookindid variable name |
+
+| 001 | Critical | Security | admin/login.php, admin/change-password.php | MD5 password hashing |

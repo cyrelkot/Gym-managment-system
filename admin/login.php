@@ -20,7 +20,22 @@ if (isset($_POST['login'])) {
     $query->execute();
     $admin = $query->fetch(PDO::FETCH_ASSOC);
 
-    if ($admin && $admin['password'] === md5($password)) {
+    $passwordOk = false;
+    if ($admin) {
+        if (password_verify($password, $admin['password'])) {
+            $passwordOk = true;
+        } elseif ($admin['password'] === md5($password)) {
+            // Legacy MD5 account — rehash to bcrypt on login
+            $newHash = password_hash($password, PASSWORD_BCRYPT);
+            $upd = $dbh->prepare("UPDATE tbladmin SET password = :hash WHERE id = :id");
+            $upd->bindParam(':hash', $newHash, PDO::PARAM_STR);
+            $upd->bindParam(':id',   $admin['id'], PDO::PARAM_INT);
+            $upd->execute();
+            $passwordOk = true;
+        }
+    }
+
+    if ($passwordOk) {
         $_SESSION['adminid'] = $admin['id'];
         $_SESSION['email'] = $email;
         header('location:index.php');
