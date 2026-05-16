@@ -23,7 +23,7 @@ These issues represent immediate security vulnerabilities or complete feature br
 
 ---
 
-### BUG-002: Broken Change Password Feature — Session Email Never Set
+### BUG-002: Broken Change Password Feature — Session Email Never Set ✓ FIXED
 
 - **Files:**
   - `changepassword.php:15`
@@ -50,18 +50,14 @@ These issues represent immediate security vulnerabilities or complete feature br
 
 ---
 
-### BUG-005: Empty Root Password on Database Connection ✓ PARTIALLY FIXED
+### BUG-005: Empty Root Password on Database Connection ✓ FIXED
 
 - **Files:** `include/config.php`, `admin/include/config.php`
 - **Description:** DB connection used hardcoded `root` with empty password.
-- **Code fix:** Both config files now read credentials from environment variables (`DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`) with XAMPP defaults as fallback. Both config files added to `.gitignore` so credentials are never committed.
-- **Manual step still required:** In MySQL, create a dedicated user with a strong password and grant only the necessary privileges:
-  ```sql
-  CREATE USER 'gymapp'@'localhost' IDENTIFIED BY 'strong-password-here';
-  GRANT SELECT, INSERT, UPDATE, DELETE ON gymdb.* TO 'gymapp'@'localhost';
-  FLUSH PRIVILEGES;
-  ```
-  Then set `DB_USER` and `DB_PASS` environment variables (or update the local config directly).
+- **Fix:**
+  - Both config files now read credentials from environment variables (`DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`) with fallback defaults.
+  - Created dedicated MySQL user `gymapp`@`localhost` with only `SELECT, INSERT, UPDATE, DELETE` on `gymdb.*` — no `DROP`, `CREATE`, `ALTER`, or access to other databases.
+  - Both config files added to `.gitignore` so credentials are never committed.
 
 ---
 
@@ -95,7 +91,7 @@ These issues are significant vulnerabilities or cause broken functionality.
 
 ---
 
-### BUG-009: Broken JavaScript Redirect — Missing Quotes Around URL
+### BUG-009: Broken JavaScript Redirect — Missing Quotes Around URL ✓ FIXED
 
 - **Files:**
   - `profile.php:34`
@@ -211,7 +207,7 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-021: Use of Deprecated `PDO::MYSQL_ATTR_INIT_COMMAND`
+### BUG-021: Use of Deprecated `PDO::MYSQL_ATTR_INIT_COMMAND` ✓ FIXED
 
 - **Files:**
   - `include/config.php`
@@ -320,69 +316,38 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 ## Summary Table
 
-| ID  | Severity | Category | File(s) | Description |
-| --- | -------- | -------- | ------- | ----------- |
-
-| 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check | ✓ FIXED |
-| 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root | ✓ FIXED |
-| 005 | Critical | Security | include/config.php:6 | Empty DB root password | ⚠ PARTIAL |
-| 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser | ✓ FIXED |
-| 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers | ✓ FIXED |
-| 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output | ✓ FIXED |
-| 010 | High | Security | All forms | No CSRF tokens | ✓ FIXED |
-| 014 | High | Security | config files | No secure session cookie settings | ✓ FIXED |
-| 017 | Medium | Security | Multiple files | Inconsistent output escaping | ✓ FIXED |
-| 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error | ✓ FIXED |
-| 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg | ✓ FIXED |
-| 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header | ✓ FIXED |
-| 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND | ✓ FIXED |
-| 024 | Low | Code Quality | admin/edit-post.php:133 | Duplicate name attribute on form inputs | ✓ FIXED |
-| 028 | Low | Code Quality | include/footer.php:9 | Typo: "Managaement" | ✓ FIXED |
-| 029 | Low | Code Quality | admin/edit-post.php | Redundant duplicate query | ✓ FIXED |
-| 030 | Low | Code Quality | admin/index.php:3 | error_reporting(0) hides all errors | ✓ FIXED |
-| 031 | Low | Code Quality | admin/include/header.php:48 | Hardcoded "Welcome: Admin" text | ✓ FIXED |
-| 032 | Low | Code Quality | include/config.php:2 | ob_start() without matching ob_end | ✓ FIXED |
-| 033 | Low | Code Quality | profile.php:34 | PDO::PARAM_STR used for integer UID | ✓ FIXED |
-
-DONE:
-
-| 009 | High | Logic | profile.php:34, admin/profile.php:28 | Broken JS redirect — missing URL quotes |
-
-| 002 | Critical | Logic | changepassword.php, login.php | Session email never set — change password broken |
-
-| 011 | High | Logic | profile.php:6-8 | Missing exit after header() redirect |
-
-| 012 | High | Logic | admin/login.php:24, admin/change-password.php:13 | Admin session email never set — change password broken |
-
-| 013 | High | Logic | admin/include/sidebar.php | Admin nav links use .html instead of .php |
-
-| 015 | Medium | Logic | registration.php | No duplicate email check |
-
-| 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
-
-| 022 | Medium | Logic | admin/full-payment-bookings.php | No cascade delete on booking deletion |
-
-| 023 | Medium | Logic | admin/partial-payment-bookings.php:119 | LIKE fuzzy match on payment status |
-
-| 025 | Low | Logic | admin/add-post.php:166 | Typo: packageduratiobn field name |
-
-| 026 | Low | Logic | admin/booking-history-details.php | Typo: ParcialPayment input name |
-
-| 027 | Low | Logic | booking-details.php:188 | Typo: $bookindid variable name |
-
-| 001 | Critical | Security | admin/login.php, admin/change-password.php | MD5 password hashing |
-
-PARTIAL NEED MANUAL STEP:
-
-### BUG-005: Empty Root Password on Database Connection ✓ PARTIALLY FIXED
-
-- **Files:** `include/config.php`, `admin/include/config.php`
-- **Description:** DB connection used hardcoded `root` with empty password.
-- **Code fix:** Both config files now read credentials from environment variables (`DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`) with XAMPP defaults as fallback. Both config files added to `.gitignore` so credentials are never committed.
-- **Manual step still required:** In MySQL, create a dedicated user with a strong password and grant only the necessary privileges:
-  ```sql
-  CREATE USER 'gymapp'@'localhost' IDENTIFIED BY 'strong-password-here';
-  GRANT SELECT, INSERT, UPDATE, DELETE ON gymdb.* TO 'gymapp'@'localhost';
-  FLUSH PRIVILEGES;
-  ```
-  Then set `DB_USER` and `DB_PASS` environment variables (or update the local config directly).
+| ID  | Severity | Category     | File(s)                                                    | Description                                            | Status  |
+|-----|----------|--------------|------------------------------------------------------------|--------------------------------------------------------|---------|
+| 001 | Critical | Security     | admin/login.php, admin/change-password.php                 | MD5 password hashing                                   | ✓ FIXED |
+| 002 | Critical | Logic        | changepassword.php, login.php                              | Session email never set — change password broken       | ✓ FIXED |
+| 003 | Critical | Security     | booking-details.php:188                                    | IDOR — no booking ownership check                      | ✓ FIXED |
+| 004 | Critical | Security     | tmp_*.php (root)                                           | Debug files exposed in web root                        | ✓ FIXED |
+| 005 | Critical | Security     | include/config.php, admin/include/config.php               | Empty DB root password                                 | ✓ FIXED |
+| 006 | Critical | Security     | include/config.php:15, admin/include/config.php:14         | DB errors exposed to browser                           | ✓ FIXED |
+| 007 | High     | Security     | admin/booking-history.php:219                              | XSS in JS onclick handlers                             | ✓ FIXED |
+| 008 | High     | Security     | admin/profile.php, profile.php, booking-details.php        | XSS — unescaped DB output                              | ✓ FIXED |
+| 009 | High     | Logic        | profile.php:34, admin/profile.php:28                       | Broken JS redirect — missing URL quotes                | ✓ FIXED |
+| 010 | High     | Security     | All forms                                                  | No CSRF tokens                                         | ✓ FIXED |
+| 011 | High     | Logic        | profile.php:6-8                                            | Missing exit after header() redirect                   | ✓ FIXED |
+| 012 | High     | Logic        | admin/login.php:24, admin/change-password.php:13           | Admin session email never set — change password broken | ✓ FIXED |
+| 013 | High     | Logic        | admin/include/sidebar.php                                  | Admin nav links use .html instead of .php              | ✓ FIXED |
+| 014 | High     | Security     | .htaccess, login.php, admin/login.php                      | No secure session cookie settings                      | ✓ FIXED |
+| 015 | Medium   | Logic        | registration.php                                           | No duplicate email check                               | ✓ FIXED |
+| 016 | Medium   | Logic        | registration.php:25                                        | Password forced to exactly 8 chars                     | ✓ FIXED |
+| 017 | Medium   | Security     | Multiple files                                             | Inconsistent output escaping                           | ✓ FIXED |
+| 018 | Medium   | Code Quality | admin/js/main.js:22                                        | jQuery selector syntax error                           | ✓ FIXED |
+| 019 | Medium   | Security     | js/main.js:63                                              | DOM-based XSS via data-setbg                           | ✓ FIXED |
+| 020 | Medium   | Security     | include/header.php:12                                      | Hardcoded admin link in public header                  | ✓ FIXED |
+| 021 | Medium   | Code Quality | include/config.php, admin/include/config.php               | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND                | ✓ FIXED |
+| 022 | Medium   | Logic        | admin/full-payment-bookings.php                            | No cascade delete on booking deletion                  | ✓ FIXED |
+| 023 | Medium   | Logic        | admin/partial-payment-bookings.php:119                     | LIKE fuzzy match on payment status                     | ✓ FIXED |
+| 024 | Low      | Code Quality | admin/edit-post.php:133                                    | Duplicate name attribute on form inputs                | ✓ FIXED |
+| 025 | Low      | Logic        | admin/add-post.php:166                                     | Typo: packageduratiobn field name                      | ✓ FIXED |
+| 026 | Low      | Logic        | admin/booking-history-details.php                          | Typo: ParcialPayment input name                        | ✓ FIXED |
+| 027 | Low      | Logic        | booking-details.php                                        | Typo: $bookindid variable name                         | ✓ FIXED |
+| 028 | Low      | Code Quality | include/footer.php:9                                       | Typo: "Managaement"                                    | ✓ FIXED |
+| 029 | Low      | Code Quality | admin/edit-post.php                                        | Redundant duplicate query                              | ✓ FIXED |
+| 030 | Low      | Code Quality | admin/index.php:3                                          | error_reporting(0) hides all errors                    | ✓ FIXED |
+| 031 | Low      | Code Quality | admin/include/header.php:48                                | Hardcoded "Welcome: Admin" text                        | ✓ FIXED |
+| 032 | Low      | Code Quality | include/config.php                                         | ob_start() without matching ob_end                     | ✓ FIXED |
+| 033 | Low      | Code Quality | profile.php:34                                             | PDO::PARAM_STR used for integer UID                    | ✓ FIXED |
