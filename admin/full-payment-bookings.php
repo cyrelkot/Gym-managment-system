@@ -9,6 +9,9 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
 // Handle booking delete
 if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
     $bookingId = intval($_POST['bookingid']);
+    $delPayment = $dbh->prepare("DELETE FROM tblpayment WHERE bookingID = :bookingId");
+    $delPayment->bindParam(':bookingId', $bookingId, PDO::PARAM_INT);
+    $delPayment->execute();
     $del = $dbh->prepare("DELETE FROM tblbooking WHERE id = :bookingId");
     $del->bindParam(':bookingId', $bookingId, PDO::PARAM_INT);
     $del->execute();

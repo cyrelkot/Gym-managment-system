@@ -225,12 +225,11 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-022: No Cascade Delete on Booking Deletion
+### BUG-022: No Cascade Delete on Booking Deletion ✓ FIXED
 
-- **File:** `full-payment-bookings.php` (and related admin booking management pages)
-- **Description:** Deleting a booking record does not delete associated payment records or related data. Foreign key relationships are not enforced at the database level.
-- **Impact:** Orphaned payment records remain in the database after booking deletion, causing data integrity issues and potential display errors.
-- **Fix:** Add `ON DELETE CASCADE` to foreign key constraints, or explicitly delete related records in the same transaction.
+- **File:** `admin/full-payment-bookings.php`
+- **Description:** Delete handler only removed from `tblbooking`, leaving orphaned rows in `tblpayment`.
+- **Fix:** Added `DELETE FROM tblpayment WHERE bookingID = :bookingId` before the `tblbooking` delete, matching the pattern already used in `new-bookings.php` and `booking-history.php`.
 
 ---
 
@@ -364,7 +363,6 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |
 | 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header |
 | 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND |
-| 022 | Medium | Logic | full-payment-bookings.php | No cascade delete on booking deletion |
 | 023 | Medium | Logic | admin/partial-payment-bookings.php:119 | LIKE fuzzy match on payment status |
 | 024 | Low | Code Quality | admin/add-post.php:165 | Duplicate name attribute on form inputs |
 | 025 | Low | Logic | admin/add-post.php | Typo: packageduratiobn field name |
@@ -392,3 +390,5 @@ DONE:
 | 015 | Medium | Logic | registration.php | No duplicate email check |
 
 | 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
+
+| 022 | Medium | Logic | admin/full-payment-bookings.php | No cascade delete on booking deletion |
