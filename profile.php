@@ -31,7 +31,7 @@ $query->bindParam(':mobile',$mobile,PDO::PARAM_STR);
 $query->bindParam(':city',$city,PDO::PARAM_STR);
 $query->bindParam(':state',$state,PDO::PARAM_STR);
 $query->bindParam(':Address',$address,PDO::PARAM_STR);
-$query->bindParam(':uid',$uid,PDO::PARAM_STR);
+$query->bindParam(':uid',$uid,PDO::PARAM_INT);
 $query->execute();
 //$msg="<script>toastr.success('Mobile info updated Successfully', {timeOut: 5000})</script>";
 echo "<script>alert('Profile has been updated.');</script>";

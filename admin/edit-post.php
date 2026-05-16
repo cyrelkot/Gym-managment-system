@@ -31,9 +31,8 @@ $query->bindParam(':packageduratiobn',$packageduratiobn,PDO::PARAM_STR);
 $query->bindParam(':Price',$Price,PDO::PARAM_STR);
 $query->bindParam(':description',$description,PDO::PARAM_STR);
 $query->bindParam(':pid',$pid,PDO::PARAM_STR);
-$query -> execute();
 $query->execute();
-// Mesage after updation
+// Message after updation
 echo "<script>alert('Record Updated successfully');</script>";
 // Code for redirection
 echo "<script>window.location.href='manage-post.php'</script>";
@@ -129,8 +128,8 @@ echo "<script>window.location.href='manage-post.php'</script>";
                
 
                  <div class="form-group col-md-6">
-                  <label class="control-label">Package Duratiobn</label>
-                  <input class="form-control" type="text" name="packageduration" name="packageduration" placeholder="Enter Package Duration" value="<?php echo $result->PackageDuration;?>">
+                  <label class="control-label">Package Duration</label>
+                  <input class="form-control" type="text" name="packageduratiobn" placeholder="Enter Package Duration" value="<?php echo $result->PackageDuration;?>">
                 </div>
 
                  <div class="form-group col-md-6">

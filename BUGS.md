@@ -245,14 +245,11 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 ---
 
-### BUG-024: Duplicate `name` Attribute on Form Inputs
+### BUG-024: Duplicate `name` Attribute on Form Inputs ✓ FIXED
 
-- **Files:**
-  - `admin/add-post.php:165`
-  - `admin/edit-post.php:126`
-- **Description:** A form contains two `<input>` elements with the same `name` attribute. The browser will submit only the last value; the first is silently discarded.
-- **Impact:** One field's value is always lost on form submit.
-- **Fix:** Give each input a unique `name` attribute.
+- **Files:** `admin/add-post.php` (fixed as BUG-025), `admin/edit-post.php:133`
+- **Description:** `edit-post.php:133` had `name="packageduration" name="packageduration"` (duplicate attr) AND the name didn't match the PHP handler which reads `$_POST['packageduratiobn']` — so package duration was never saved on edit.
+- **Fix:** Removed duplicate attribute; renamed to `packageduratiobn` to match the handler; fixed label typo "Duratiobn" → "Duration".
 
 ---
 
@@ -280,57 +277,45 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 ---
 
-### BUG-028: Typo in Footer — "Managaement"
+### BUG-028: Typo in Footer — "Managaement" ✓ FIXED
 
 - **File:** `include/footer.php:9`
-- **Description:** The footer contains the misspelled text "Managaement" (extra `a`).
-- **Impact:** Cosmetic — visible to all site visitors.
-- **Fix:** Correct to "Management".
+- **Fix:** "Managaement" → "Management".
 
 ---
 
-### BUG-029: Redundant Duplicate Query Execution
+### BUG-029: Redundant Duplicate Query Execution ✓ FIXED
 
-- **File:** `admin/edit-post.php:28-29`
-- **Description:** The same SQL query is executed twice consecutively with no logic between the calls. The result of the first execution is discarded.
-- **Impact:** Unnecessary database load; one query result is wasted.
-- **Fix:** Remove the duplicate query call.
+- **File:** `admin/edit-post.php`
+- **Fix:** Removed the second `$query->execute()` call (was executing the UPDATE twice).
 
 ---
 
-### BUG-030: `error_reporting(0)` Silences All PHP Errors
+### BUG-030: `error_reporting(0)` Silences All PHP Errors ✓ FIXED
 
 - **File:** `admin/index.php:3`
-- **Description:** `error_reporting(0)` is set at the top of this file, suppressing all PHP errors, warnings, and notices. This hides bugs during development and production debugging.
-- **Impact:** Errors are silently swallowed; broken functionality may go undetected.
-- **Fix:** Remove `error_reporting(0)`. In production, set `display_errors = Off` and `log_errors = On` in `php.ini` instead.
+- **Fix:** Removed `error_reporting(0)` — errors now follow the server's php.ini configuration.
 
 ---
 
-### BUG-031: Hardcoded "Welcome: Admin" in Admin Header
+### BUG-031: Hardcoded "Welcome: Admin" in Admin Header ✓ FIXED
 
 - **File:** `admin/include/header.php:48`
-- **Description:** The admin header displays the static string "Welcome: Admin" regardless of which admin account is logged in.
-- **Impact:** All admins see the same generic greeting; no personalization. Misleading if multiple admin accounts exist.
-- **Fix:** Display the logged-in admin's actual username from the session.
+- **Fix:** Replaced static "Admin" with `$_SESSION['email']` (with `htmlspecialchars` and `?? 'Admin'` fallback).
 
 ---
 
-### BUG-032: `ob_start()` Without Matching `ob_end_clean()` / `ob_end_flush()`
+### BUG-032: `ob_start()` Without Matching `ob_end_clean()` / `ob_end_flush()` ✓ FIXED
 
-- **File:** `include/config.php:2`
-- **Description:** Output buffering is started with `ob_start()` at the top of the config file but there is no matching `ob_end_clean()` or `ob_end_flush()` call. PHP will flush the buffer at script end, but this is implicit and may interact unexpectedly with other buffering.
-- **Impact:** May cause unexpected output ordering or suppress deliberate output in edge cases.
-- **Fix:** Either remove `ob_start()` if not needed, or ensure it is properly paired with a flush/clean call.
+- **File:** `include/config.php`
+- **Fix:** Removed `ob_start()` — was unmatched and unnecessary now that header() redirects all have `exit` immediately after.
 
 ---
 
-### BUG-033: `PDO::PARAM_STR` Used for Integer User ID
+### BUG-033: `PDO::PARAM_STR` Used for Integer User ID ✓ FIXED
 
-- **File:** `profile.php:30`
-- **Description:** A PDO parameter binding for a numeric user ID column uses `PDO::PARAM_STR` instead of `PDO::PARAM_INT`.
-- **Impact:** MySQL will implicitly cast the value; functionally works in most cases but bypasses type safety and may cause index scan inefficiency on large tables.
-- **Fix:** Change to `PDO::PARAM_INT` for integer column bindings.
+- **File:** `profile.php:34`
+- **Fix:** Changed `bindParam(':uid', $uid, PDO::PARAM_STR)` → `PDO::PARAM_INT`.
 
 ---
 
@@ -352,13 +337,13 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |
 | 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header |
 | 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND |
-| 024 | Low | Code Quality | admin/add-post.php:165 | Duplicate name attribute on form inputs |
-| 028 | Low | Code Quality | include/footer.php:9 | Typo: "Managaement" |
-| 029 | Low | Code Quality | admin/edit-post.php:28-29 | Redundant duplicate query |
-| 030 | Low | Code Quality | admin/index.php:3 | error_reporting(0) hides all errors |
-| 031 | Low | Code Quality | admin/include/header.php:48 | Hardcoded "Welcome: Admin" text |
-| 032 | Low | Code Quality | include/config.php:2 | ob_start() without matching ob_end |
-| 033 | Low | Code Quality | profile.php:30 | PDO::PARAM_STR used for integer UID |
+| 024 | Low | Code Quality | admin/edit-post.php:133 | Duplicate name attribute on form inputs | ✓ FIXED |
+| 028 | Low | Code Quality | include/footer.php:9 | Typo: "Managaement" | ✓ FIXED |
+| 029 | Low | Code Quality | admin/edit-post.php | Redundant duplicate query | ✓ FIXED |
+| 030 | Low | Code Quality | admin/index.php:3 | error_reporting(0) hides all errors | ✓ FIXED |
+| 031 | Low | Code Quality | admin/include/header.php:48 | Hardcoded "Welcome: Admin" text | ✓ FIXED |
+| 032 | Low | Code Quality | include/config.php:2 | ob_start() without matching ob_end | ✓ FIXED |
+| 033 | Low | Code Quality | profile.php:34 | PDO::PARAM_STR used for integer UID | ✓ FIXED |
 
 DONE:
 

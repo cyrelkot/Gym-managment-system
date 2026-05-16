@@ -1,5 +1,4 @@
 <?php
-ob_start();
 //DB Connection — override via environment variables in production
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_USER', getenv('DB_USER') ?: 'root');
