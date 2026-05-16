@@ -14,18 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
     die('Invalid request. Please go back and try again.');
 }
 
-if (isset($_POST['update_payment_type']) && isset($_POST['paymentType'])) {
-    $newType = trim($_POST['paymentType']);
-    if (in_array($newType, ['Partial Payment', 'Full Payment'], true)) {
-        $upd = $dbh->prepare("UPDATE tblbooking SET paymentType = :paymentType WHERE id = :bookingid AND userid = :uid");
-        $upd->bindParam(':paymentType', $newType, PDO::PARAM_STR);
-        $upd->bindParam(':bookingid', $_POST['bookingid'], PDO::PARAM_INT);
-        $upd->bindParam(':uid', $uid, PDO::PARAM_INT);
-        $upd->execute();
-    }
-    header('Location: booking-details.php?bookingid=' . urlencode($_POST['bookingid']));
-    exit;
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -239,18 +228,6 @@ if (!$row) {
 
 <br>
 
-<!-- PAYMENT UPDATE -->
-<form method="post">
-<?php echo csrf_field(); ?>
-<input type="hidden" name="bookingid" value="<?php echo $bookingid;?>">
-
-<select name="paymentType">
-<option value="Partial Payment">Partial Payment</option>
-<option value="Full Payment">Full Payment</option>
-</select>
-
-<button class="btn" name="update_payment_type">Update</button>
-</form>
 
 </div>
 
