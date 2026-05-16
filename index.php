@@ -32,6 +32,10 @@ if($checkBooking->rowCount() > 0){
 }
 
 /* BOOKING */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if(isset($_POST['submit'])){
 
     if(!$approved){
@@ -511,6 +515,7 @@ body{
                             <a href="booking-history.php" class="btn-book-outline">View My Booking</a>
                         <?php } else { ?>
                             <form method="post">
+                                <?php echo csrf_field(); ?>
                                 <input type="hidden" name="pid" value="<?php echo (int)$result->id; ?>">
                                 <input type="submit" name="submit" class="btn-book" value="Book Now">
                             </form>

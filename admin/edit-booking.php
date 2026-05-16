@@ -96,6 +96,10 @@ function admin_sync_tblpayment_for_booking(PDO $dbh, int $bookingId, float $newP
     }
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 // Handle update
 if (isset($_POST['update_booking'])) {
     $newBookingDate = isset($_POST['bookingDate']) ? trim($_POST['bookingDate']) : '';
@@ -219,6 +223,7 @@ if ($remainingBalance < 0) {
                         <div class="alert alert-success"><?php echo htmlentities($success); ?></div>
                     <?php } ?>
                     <form method="post">
+                        <?php echo csrf_field(); ?>
                         <div class="form-group">
                             <label>Booking Date</label>
                             <input type="date" name="bookingDate" class="form-control" value="<?php echo htmlentities(date('Y-m-d', strtotime($booking->bookingdate))); ?>" required>

@@ -9,6 +9,9 @@ exit;
 }
 else{
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
 
 if(isset($_POST['submit']))
 {
@@ -86,6 +89,7 @@ echo "<script> window.location.href = 'profile.php';</script>";
 				</div>
 				<div class="col-lg-8">
 					<form class="singup-form contact-form" method="post">
+<?php echo csrf_field(); ?>
 						<div class="row">
 							<?php 
 							$uid=$_SESSION['uid'];

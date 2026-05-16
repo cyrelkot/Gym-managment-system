@@ -1,0 +1,5 @@
+# Session cookie security
+php_value session.cookie_httponly 1
+php_value session.cookie_samesite Strict
+# Enable cookie_secure only when running HTTPS in production:
+# php_value session.cookie_secure 1

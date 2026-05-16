@@ -9,6 +9,9 @@ exit;
 }
 else{
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
 
 if(isset($_POST['submit']))
 {
@@ -60,7 +63,8 @@ echo "<script> window.location.href = 'profile.php';</script>";
             <h3 class="tile-title">Profile</h3>
             <div class="tile-body">
               <form class="row" method="post">
-                  <?php 
+                <?php echo csrf_field(); ?>
+                  <?php
               $adminid=$_SESSION['adminid'];
               $sql ="SELECT id, name,email,mobile,create_date from tbladmin where id=:adminid ";
               $query= $dbh -> prepare($sql);

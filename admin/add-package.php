@@ -12,6 +12,9 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
 $msg='';
 $errormsg='';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
 
 // ADD PACKAGE
 if(isset($_POST['submit'])){
@@ -207,7 +210,7 @@ gap:5px;
 <?php } ?>
 
 <form method="post">
-
+<?php echo csrf_field(); ?>
 <div class="form-group">
 <label>Add Category</label>
 

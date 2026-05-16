@@ -1,10 +1,15 @@
 <?php
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 require_once('include/config.php');
 
 $error = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
 
 if(isset($_POST['submit'])){
 
@@ -291,7 +296,7 @@ color:#ffb366;
 <?php } ?>
 
 <form method="post">
-
+<?php echo csrf_field(); ?>
 <input type="text" name="fname" placeholder="First Name" required>
 <input type="text" name="lname" placeholder="Last Name" required>
 <input type="email" name="email" placeholder="Email Address" required>

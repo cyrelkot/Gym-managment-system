@@ -6,6 +6,10 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   exit;
   } else{
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if (isset($_POST['delete_package']) && isset($_POST['packageid'])) {
     $packageId = intval($_POST['packageid']);
 
@@ -151,6 +155,7 @@ if (isset($_POST['delete_package']) && isset($_POST['packageid'])) {
                   <td>
                     <a href="edit-post.php?pid=<?php echo htmlentities($result->packageid);?>" class="btn btn-success btn-sm">Edit</a>
                     <form method="post" style="display:inline; margin-left: 5px;">
+                      <?php echo csrf_field(); ?>
                       <input type="hidden" name="packageid" value="<?php echo htmlentities($result->packageid); ?>">
                       <button type="submit" name="delete_package" class="btn btn-danger btn-sm" onclick="return confirm('Delete this package?');">Delete</button>
                     </form>

@@ -10,6 +10,10 @@ if(strlen($_SESSION["uid"])==0){
 
 $uid=$_SESSION['uid'];
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if (isset($_POST['update_payment_type']) && isset($_POST['paymentType'])) {
     $newType = trim($_POST['paymentType']);
     if (in_array($newType, ['Partial Payment', 'Full Payment'], true)) {
@@ -235,6 +239,7 @@ if (!$row) {
 
 <!-- PAYMENT UPDATE -->
 <form method="post">
+<?php echo csrf_field(); ?>
 <input type="hidden" name="bookingid" value="<?php echo $bookingid;?>">
 
 <select name="paymentType">

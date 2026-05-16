@@ -5,6 +5,10 @@ require_once('include/config.php');
 
 $msg = "";
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if (isset($_POST['submit'])) {
 
 $email = trim($_POST['email']);
@@ -36,6 +40,7 @@ if (!empty($email) && !empty($password)) {
                         $msg = "Your account is pending admin approval.";
                     } else {
 
+                        session_regenerate_id(true);
                         $_SESSION['uid'] = $user['id'];
                         $_SESSION['fname'] = $user['fname'];
                         $_SESSION['email'] = $email;
@@ -285,6 +290,7 @@ text-align:center;
 <?php } ?>
 
 <form method="post">
+<?php echo csrf_field(); ?>
 
 <div class="input-group">
 <i class="fa fa-envelope left-icon"></i>

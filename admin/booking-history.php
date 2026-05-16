@@ -8,6 +8,10 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 /* DELETE */
 if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
     $bookingId = intval($_POST['bookingid']);
@@ -225,6 +229,7 @@ onclick="openModal(
 )">View</button>
 
 <form method="post" style="display:inline;">
+<?php echo csrf_field(); ?>
 <input type="hidden" name="bookingid" value="<?php echo $row->bookingid;?>">
 <button type="submit" name="delete_booking" class="btn-delete">Delete</button>
 </form>

@@ -8,6 +8,10 @@ header('location:logout.php');
 exit;
 }else{
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 $bookindid=$_GET['bookingid'];
 
 // Ensure the booking has a package set (for new/partial bookings)
@@ -257,7 +261,7 @@ $remaining=$result->Price-$gpayment;
 ?>
 
 <form method="post">
-
+<?php echo csrf_field(); ?>
 <input type="hidden" name="bookingiid" value="<?php echo $bookindid;?>">
 
 <table class="table table-bordered">

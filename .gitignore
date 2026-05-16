@@ -1,3 +1,4 @@
 tmp_*.php
 include/config.php
 admin/include/config.php
+.env

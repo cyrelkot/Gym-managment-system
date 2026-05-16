@@ -5,6 +5,10 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
   exit;
   } else{
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -106,6 +110,7 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
                       <h3 class="tile-title">Booking Report</h3>
             <div class="tile-body">
               <form class="row" method="post">
+               <?php echo csrf_field(); ?>
                <div class="form-group col-md-6">
                   <label class="control-label">From Date</label>
                   <input class="form-control" type="date" name="fdate" id="fdate" placeholder="Enter From Date">

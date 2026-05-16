@@ -6,6 +6,11 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   exit;
   } else{
 include  'include/config.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if(isset($_POST['Submit'])){
 
 $category = $_POST['category'];
@@ -132,6 +137,7 @@ $errormsg= "Data not insert successfully";
           <?php } ?>
             <div class="tile-body">
               <form class="row" method="post">
+                <?php echo csrf_field(); ?>
                 <div class="form-group col-md-6">
                   <label class="control-label">Category</label>
                  <select name="category" id="category" class="form-control" onChange="getdistrict(this.value);">

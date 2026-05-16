@@ -106,12 +106,15 @@ These issues are significant vulnerabilities or cause broken functionality.
 
 ---
 
-### BUG-010: CSRF — No Tokens on Any Forms
+### BUG-010: CSRF — No Tokens on Any Forms ✓ FIXED
 
-- **Files:** `registration.php`, `booking.php`, `profile.php`, `changepassword.php`, and all admin form pages
-- **Description:** No CSRF tokens are present on any form in the application. An attacker can craft a malicious page that silently submits forms on behalf of a logged-in user.
-- **Impact:** Account takeover (password change), unauthorized bookings, profile data modification.
-- **Fix:** Generate a per-session token, embed it in all forms as a hidden field, and validate it on every POST request.
+- **Files:** All 20 POST form files
+- **Description:** No CSRF tokens on any form — attacker could forge requests from a logged-in session.
+- **Fix:**
+  - Added `csrf_token()`, `csrf_field()`, `csrf_verify()` helpers to both `include/config.php` and `admin/include/config.php`
+  - Added `<?php echo csrf_field(); ?>` inside every POST `<form>` tag across all 20 files
+  - Added `if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) { die(...); }` guard at the top of every POST handler
+  - Added `session_start()` to `registration.php` (was missing, required for session-based token)
 
 ---
 
@@ -140,14 +143,14 @@ These issues are significant vulnerabilities or cause broken functionality.
 
 ---
 
-### BUG-014: No Secure Session Cookie Settings
+### BUG-014: No Secure Session Cookie Settings ✓ FIXED
 
-- **Files:**
-  - `include/config.php`
-  - `admin/include/config.php`
-- **Description:** Session is started without configuring `HttpOnly`, `Secure`, or `SameSite` cookie attributes. Sessions are also not regenerated after login.
-- **Impact:** Session cookies are accessible to JavaScript (XSS session hijack), transmitted over HTTP (network interception), and vulnerable to CSRF.
-- **Fix:** Call `session_set_cookie_params(['httponly' => true, 'secure' => true, 'samesite' => 'Strict'])` before `session_start()`, and call `session_regenerate_id(true)` after login.
+- **Files:** `.htaccess` (new), `login.php`, `admin/login.php`
+- **Description:** Session cookies lacked HttpOnly and SameSite attributes; session ID not regenerated after login.
+- **Fix:**
+  - Created `.htaccess` with `php_value session.cookie_httponly 1` and `php_value session.cookie_samesite Strict` — applies globally before any PHP runs
+  - Added `session_regenerate_id(true)` after successful login in both `login.php` and `admin/login.php`
+  - `cookie_secure` left commented in `.htaccess` — enable only when running HTTPS in production
 
 ---
 
@@ -342,8 +345,8 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser | ✓ FIXED |
 | 007 | High | Security | admin/booking-history.php:219 | XSS in JS onclick handlers | ✓ FIXED |
 | 008 | High | Security | admin/profile.php, profile.php, booking-details.php | XSS — unescaped DB output | ✓ FIXED |
-| 010 | High | Security | All forms | No CSRF tokens |
-| 014 | High | Security | config files | No secure session cookie settings |
+| 010 | High | Security | All forms | No CSRF tokens | ✓ FIXED |
+| 014 | High | Security | config files | No secure session cookie settings | ✓ FIXED |
 | 017 | Medium | Security | Multiple files | Inconsistent output escaping |
 | 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error |
 | 019 | Medium | Security | js/main.js:63 | DOM-based XSS via data-setbg |

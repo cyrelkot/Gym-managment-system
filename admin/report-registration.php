@@ -19,6 +19,10 @@ try {
     $errormsg = "Warning: unable to ensure approval column exists. Approvals may not work. (" . htmlspecialchars($e->getMessage()) . ")";
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if (isset($_POST['approve']) && isset($_POST['userid'])) {
     $uid = intval($_POST['userid']);
     $sql = "UPDATE tbluser SET status=1 WHERE id=:uid";
@@ -141,6 +145,7 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
                       <h3 class="tile-title">Registration Report</h3>
             <div class="tile-body">
               <form class="row" method="post">
+               <?php echo csrf_field(); ?>
                <div class="form-group col-md-6">
                   <label class="control-label">From Date</label>
                   <input class="form-control" type="date" name="fdate" id="fdate" placeholder="Enter From Date">
@@ -238,6 +243,7 @@ ORDER BY create_date DESC";
                     <td>
                       <?php if($statusColumnAvailable && isset($result->status) && intval($result->status)===0){ ?>
                         <form method="post" style="display:inline;">
+                          <?php echo csrf_field(); ?>
                           <input type="hidden" name="userid" value="<?php echo $result->id;?>">
                           <button type="submit" name="approve" class="btn btn-sm btn-success">Approve</button>
                         </form>

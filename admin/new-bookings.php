@@ -8,6 +8,10 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 // DELETE BOOKING
 if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
 
@@ -236,7 +240,7 @@ Edit
 </a>
 
 <form method="POST">
-
+<?php echo csrf_field(); ?>
 <input type="hidden"
 name="bookingid"
 value="<?php echo htmlentities($result->bookingid); ?>">

@@ -5,7 +5,12 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
   exit;
   } else{
-// Code for change password 
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
+// Code for change password
 if(isset($_POST['submit']))
   {
 $currentPassword = $_POST['password'];
@@ -67,6 +72,7 @@ if ($passwordOk) {
             
             <div class="tile-body">
               <form class="row" method="post">
+                <?php echo csrf_field(); ?>
                 <div class="form-group col-md-12">
                   <label class="control-label">Old Password</label>
                 <input type="password" name="password" id="password" placeholder="Old Password" class="form-control" autocomplete="off">

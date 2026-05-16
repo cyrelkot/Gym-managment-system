@@ -10,6 +10,10 @@ if (isset($_SESSION['adminid']) && strlen($_SESSION['adminid']) > 0) {
 
 $errmsg = '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
+    die('Invalid request. Please go back and try again.');
+}
+
 if (isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
@@ -36,6 +40,7 @@ if (isset($_POST['login'])) {
     }
 
     if ($passwordOk) {
+        session_regenerate_id(true);
         $_SESSION['adminid'] = $admin['id'];
         $_SESSION['email'] = $email;
         header('location:index.php');
@@ -177,7 +182,7 @@ if (isset($_POST['login'])) {
     <?php } ?>
 
     <form method="post">
-
+      <?php echo csrf_field(); ?>
       <div class="form-group">
         <label>Email</label>
         <input type="email" name="email" class="form-control" placeholder="Enter email" required>
