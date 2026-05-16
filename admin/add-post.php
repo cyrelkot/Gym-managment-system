@@ -163,7 +163,7 @@ $errormsg= "Data not insert successfully";
 
                  <div class="form-group col-md-6">
                   <label class="control-label">Package Duration</label>
-                  <input class="form-control" type="text" name="packageduratiobn" name="packageduratiobn" placeholder="Enter Package Duratiobn">
+                  <input class="form-control" type="text" name="packageduratiobn" placeholder="Enter Package Duration">
                 </div>
 
                  <div class="form-group col-md-6">

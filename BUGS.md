@@ -258,32 +258,27 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 ---
 
-### BUG-025: Typo in Field Name — `packageduratiobn`
+### BUG-025: Typo in Field Name — `packageduratiobn` ✓ FIXED
 
-- **File:** `admin/add-post.php` (form field name) vs. PHP variable in handler
-- **Description:** A form field is named `packageduratiobn` (extra `b`) which does not match the PHP variable name used to read it. The value is never received by the server.
-- **Impact:** Package duration is never saved when adding a new post/package.
-- **Fix:** Correct the typo in the `name` attribute to match the PHP variable.
-
----
-
-### BUG-026: Typo in Payment Status Value — `ParcialPayment`
-
-- **File:** `admin/booking-history-details.php:34`
-- **Description:** The payment status string `ParcialPayment` is a misspelling of `PartialPayment`. This value is stored or compared inconsistently across the application.
-- **Impact:** Payment status checks and filters may fail to match records correctly (see also BUG-023).
-- **Fix:** Standardize to a consistent value (e.g., `partial`) across all code and existing database records.
+- **File:** `admin/add-post.php:166`
+- **Description:** Input had duplicate `name` attributes (`name="packageduratiobn" name="packageduratiobn"`) and placeholder said "Duratiobn".
+- **Fix:** Removed duplicate `name` attribute; fixed placeholder to "Enter Package Duration".
 
 ---
 
-### BUG-027: Typo in Query Parameter Name — `bookindid`
+### BUG-026: Typo in Input Name — `ParcialPayment` ✓ FIXED
 
-- **Files:**
-  - `booking-details.php:188`
-  - `admin/booking-history-details.php:260`
-- **Description:** The URL parameter is read as `$_GET['bookindid']` (extra `d`) instead of `$_GET['bookingid']`. If the link generating this URL uses the correct spelling, this page will always receive `null`.
-- **Impact:** Booking detail pages may always load with no booking ID, causing a DB error or blank page.
-- **Fix:** Correct the typo to `$_GET['bookingid']` and verify consistency with all links that generate this URL.
+- **File:** `admin/booking-history-details.php`
+- **Description:** Payment amount input used `ParcialPayment` as `name`, `id`, POST key, and JS selector throughout.
+- **Fix:** Renamed all occurrences to `PartialPayment` via replace_all.
+
+---
+
+### BUG-027: Typo in Variable Name — `$bookindid` ✓ FIXED
+
+- **File:** `booking-details.php`
+- **Description:** PHP variable was named `$bookindid` (extra `d`) throughout the file. The `$_GET` key was already correct (`bookingid`).
+- **Fix:** Renamed all occurrences of `$bookindid` → `$bookingid` via replace_all in `booking-details.php`.
 
 ---
 
@@ -363,9 +358,6 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 020 | Medium | Security | include/header.php:12 | Hardcoded admin link in public header |
 | 021 | Medium | Code Quality | config files | Deprecated PDO::MYSQL_ATTR_INIT_COMMAND |
 | 024 | Low | Code Quality | admin/add-post.php:165 | Duplicate name attribute on form inputs |
-| 025 | Low | Logic | admin/add-post.php | Typo: packageduratiobn field name |
-| 026 | Low | Logic | admin/booking-history-details.php:34 | Typo: ParcialPayment status value |
-| 027 | Low | Logic | booking-details.php:188 | Typo: bookindid URL parameter |
 | 028 | Low | Code Quality | include/footer.php:9 | Typo: "Managaement" |
 | 029 | Low | Code Quality | admin/edit-post.php:28-29 | Redundant duplicate query |
 | 030 | Low | Code Quality | admin/index.php:3 | error_reporting(0) hides all errors |
@@ -392,3 +384,9 @@ DONE:
 | 022 | Medium | Logic | admin/full-payment-bookings.php | No cascade delete on booking deletion |
 
 | 023 | Medium | Logic | admin/partial-payment-bookings.php:119 | LIKE fuzzy match on payment status |
+
+| 025 | Low | Logic | admin/add-post.php:166 | Typo: packageduratiobn field name |
+
+| 026 | Low | Logic | admin/booking-history-details.php | Typo: ParcialPayment input name |
+
+| 027 | Low | Logic | booking-details.php:188 | Typo: $bookindid variable name |

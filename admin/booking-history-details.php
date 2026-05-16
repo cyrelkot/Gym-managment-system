@@ -32,7 +32,7 @@ if(isset($_POST['submit']))
 
 $bookingiid=$_POST['bookingiid'];
 $Paymenttype=$_POST['Paymenttype'];
-$paymentAmount=$_POST['ParcialPayment'];
+$paymentAmount=$_POST['PartialPayment'];
 
 $paymentAmount=floatval($paymentAmount);
 
@@ -304,8 +304,8 @@ $remaining=$result->Price-$gpayment;
 <td>
 
 <input type="number"
-name="ParcialPayment"
-id="ParcialPayment"
+name="PartialPayment"
+id="PartialPayment"
 class="form-control"
 value="<?php echo $lastpayment;?>">
 
@@ -420,12 +420,12 @@ var type=$("#Payment").val();
 
 if(type=="Full Payment"){
 
-$("#ParcialPayment").val(remaining);
-$("#ParcialPayment").prop("readonly",true);
+$("#PartialPayment").val(remaining);
+$("#PartialPayment").prop("readonly",true);
 
 }else{
 
-$("#ParcialPayment").prop("readonly",false);
+$("#PartialPayment").prop("readonly",false);
 
 }
 

@@ -185,7 +185,7 @@ tr:nth-child(even){
 <div class="container">
 
 <?php
-$bookindid=$_GET['bookingid'];
+$bookingid=$_GET['bookingid'];
 
 $sql="SELECT t1.*, t2.titlename,t2.PackageDuratiobn,t2.Price,t2.Description,
 t4.category_name,t5.PackageName as Plan,t3.fname,t3.email
@@ -197,7 +197,7 @@ LEFT JOIN tblpackage t5 ON t2.PackageType=t5.id
 WHERE t1.id=:id";
 
 $query=$dbh->prepare($sql);
-$query->bindParam(':id',$bookindid);
+$query->bindParam(':id',$bookingid);
 $query->execute();
 $row=$query->fetch(PDO::FETCH_OBJ);
 ?>
@@ -228,7 +228,7 @@ $row=$query->fetch(PDO::FETCH_OBJ);
 
 <!-- PAYMENT UPDATE -->
 <form method="post">
-<input type="hidden" name="bookingid" value="<?php echo $bookindid;?>">
+<input type="hidden" name="bookingid" value="<?php echo $bookingid;?>">
 
 <select name="paymentType">
 <option value="Partial Payment">Partial Payment</option>
@@ -256,7 +256,7 @@ $row=$query->fetch(PDO::FETCH_OBJ);
 <?php
 $sql="SELECT * FROM tblpayment WHERE bookingID=:id ORDER BY payment_date ASC, id ASC";
 $query=$dbh->prepare($sql);
-$query->bindParam(':id',$bookindid);
+$query->bindParam(':id',$bookingid);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 
