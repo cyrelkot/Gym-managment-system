@@ -34,12 +34,11 @@ These issues represent immediate security vulnerabilities or complete feature br
 
 ---
 
-### BUG-003: Insecure Direct Object Reference (IDOR) on Booking Details
+### BUG-003: Insecure Direct Object Reference (IDOR) on Booking Details ✓ FIXED
 
 - **File:** `booking-details.php:188`
-- **Description:** The booking details page fetches a booking by ID from the query string (`$_GET['bookingid']`) without verifying that the booking belongs to the currently logged-in user. Any authenticated user can view any other user's booking by manipulating the URL.
-- **Impact:** Full disclosure of other users' booking data (names, packages, payment info).
-- **Fix:** Add a WHERE clause to the query: `AND uid = :uid` using the session user ID.
+- **Description:** Booking fetched by ID only — no ownership check against session user.
+- **Fix:** Added `AND t1.userid = :uid` to the SELECT query and `AND userid = :uid` to the UPDATE query. If the booking doesn't belong to the logged-in user, redirects to `booking-history.php`.
 
 ---
 
@@ -342,7 +341,7 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 
 
 
-| 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check |
+| 003 | Critical | Security | booking-details.php:188 | IDOR — no booking ownership check | ✓ FIXED |
 | 004 | Critical | Security | tmp\_\*.php (root) | Debug files exposed in web root |
 | 005 | Critical | Security | include/config.php:6 | Empty DB root password |
 | 006 | Critical | Security | include/config.php:15 | DB errors exposed to browser |
