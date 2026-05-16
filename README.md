@@ -24,5 +24,3 @@ Password: Test@12345
 Username: john@test.com
 Password: Test@123
 or Register a new user
-
-TEST!
