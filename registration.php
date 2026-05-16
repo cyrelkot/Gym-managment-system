@@ -33,6 +33,15 @@ else if(!preg_match('/^[0-9]{1,12}$/', $mobile)){
 }
 else{
 
+$checkSql = "SELECT COUNT(*) FROM tbluser WHERE email = :email";
+$checkQuery = $dbh->prepare($checkSql);
+$checkQuery->bindParam(':email', $email, PDO::PARAM_STR);
+$checkQuery->execute();
+if ($checkQuery->fetchColumn() > 0) {
+    $error = "An account with that email already exists.";
+}
+else {
+
 $status = 0;
 $hash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -59,7 +68,8 @@ echo "<script>window.location='login.php'</script>";
 exit();
 }
 
-}
+} // end duplicate-email else
+} // end validation else
 }
 ?>
 

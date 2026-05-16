@@ -162,12 +162,11 @@ These issues are functional bugs, data integrity problems, or lower-severity sec
 
 ---
 
-### BUG-015: No Duplicate Email Check on Registration
+### BUG-015: No Duplicate Email Check on Registration ✓ FIXED
 
-- **File:** `registration.php` (no specific line — missing code)
-- **Description:** The registration form does not check whether the submitted email address already exists before attempting an INSERT. If the `email` column has a UNIQUE constraint, PHP crashes with an unhandled PDO exception (see BUG-006). If not, duplicate accounts are silently created.
-- **Impact:** Application crashes on duplicate registration, or duplicate accounts corrupt user data.
-- **Fix:** Add a `SELECT COUNT(*)` check before INSERT and return a user-friendly error message.
+- **File:** `registration.php`
+- **Description:** No check for existing email before INSERT — caused crash (UNIQUE constraint) or silent duplicate accounts.
+- **Fix:** Added `SELECT COUNT(*) FROM tbluser WHERE email = :email` before INSERT; shows "An account with that email already exists." on conflict.
 
 ---
 
@@ -361,7 +360,6 @@ These issues are minor bugs, typos, or code quality problems with limited functi
 | 010 | High | Security | All forms | No CSRF tokens |
 
 | 014 | High | Security | config files | No secure session cookie settings |
-| 015 | Medium | Logic | registration.php | No duplicate email check |
 | 016 | Medium | Logic | registration.php:25 | Password forced to exactly 8 chars |
 | 017 | Medium | Security | Multiple files | Inconsistent output escaping |
 | 018 | Medium | Code Quality | admin/js/main.js:22 | jQuery selector syntax error |
@@ -392,3 +390,5 @@ DONE:
 | 012 | High | Logic | admin/login.php:24, admin/change-password.php:13 | Admin session email never set — change password broken |
 
 | 013 | High | Logic | admin/include/sidebar.php | Admin nav links use .html instead of .php |
+
+| 015 | Medium | Logic | registration.php | No duplicate email check |
