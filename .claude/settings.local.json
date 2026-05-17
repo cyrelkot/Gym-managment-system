@@ -16,7 +16,8 @@
       "Bash(grep -l \"dashboard\\\\|analytics\\\\|stats\\\\|revenue\\\\|income\" /c/xampp/htdocs/gym/admin/*.php -i)",
       "Bash(find /c/xampp/htdocs/gym -name \"*.php\" -path \"*package*\" -o -name \"*package*.php\" 2>/dev/null | head -20)",
       "Bash(find /c/xampp/htdocs/gym/admin -maxdepth 1 -name \"*.php\" -type f 2>/dev/null | sort)",
-      "Bash(ls -la /c/xampp/htdocs/gym/admin/ 2>/dev/null | grep -E \"\\\\.php$|^d\")"
+      "Bash(ls -la /c/xampp/htdocs/gym/admin/ 2>/dev/null | grep -E \"\\\\.php$|^d\")",
+      "Bash(ls -la /c/xampp/htdocs/gym/admin/ | grep -E \"\\\\.php$\")"
     ]
   }
 }
