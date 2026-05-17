@@ -11,7 +11,12 @@
       "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW TABLES IN gymdb; SHOW GRANTS FOR 'gymapp'@'localhost';\")",
       "Bash(/c/xampp/mysql/bin/mysql -u root -e \"GRANT ALL PRIVILEGES ON gymdb.* TO 'gymapp'@'localhost'; FLUSH PRIVILEGES;\")",
       "Bash(/c/xampp/mysql/bin/mysql -u root -e \"SHOW GRANTS FOR 'gymapp'@'localhost';\")",
-      "Bash(/c/xampp/mysql/bin/mysql -u gymapp -p'@AngelYukiNekki123' gymdb -e \"SHOW TABLES;\")"
+      "Bash(/c/xampp/mysql/bin/mysql -u gymapp -p'@AngelYukiNekki123' gymdb -e \"SHOW TABLES;\")",
+      "Bash(find /c/xampp/htdocs/gym -type f -name \"*.php\" | xargs grep -l \"trainer\\\\|staff\\\\|instructor\" -i)",
+      "Bash(grep -l \"dashboard\\\\|analytics\\\\|stats\\\\|revenue\\\\|income\" /c/xampp/htdocs/gym/admin/*.php -i)",
+      "Bash(find /c/xampp/htdocs/gym -name \"*.php\" -path \"*package*\" -o -name \"*package*.php\" 2>/dev/null | head -20)",
+      "Bash(find /c/xampp/htdocs/gym/admin -maxdepth 1 -name \"*.php\" -type f 2>/dev/null | sort)",
+      "Bash(ls -la /c/xampp/htdocs/gym/admin/ 2>/dev/null | grep -E \"\\\\.php$|^d\")"
     ]
   }
 }

@@ -56,13 +56,11 @@ if(isset($_POST['submit'])){
 }
 
 /* FETCH PACKAGES WITH ENRICHED DATA */
-$sql = "SELECT t1.id, t1.titlename, t1.PackageDuratiobn, t1.Price, t1.Description,
+$sql = "SELECT t1.id, t1.titlename, t1.PackageDuration, t1.Price, t1.Description,
     COALESCE(t2.category_name, 'General') AS category_name,
-    COALESCE(t3.PackageName, '') AS PackageName,
     (SELECT COUNT(*) FROM tblbooking WHERE package_id = t1.id) AS booking_count
 FROM tbladdpackage t1
 LEFT JOIN tblcategory t2 ON t1.category = t2.id
-LEFT JOIN tblpackage t3 ON t1.PackageType = t3.id
 ORDER BY booking_count DESC, CAST(t1.Price AS DECIMAL) ASC";
 $query = $dbh->prepare($sql);
 $query->execute();
@@ -474,11 +472,6 @@ body{
                         <!-- TITLE -->
                         <h4><?php echo htmlspecialchars($result->titlename); ?></h4>
 
-                        <!-- PACKAGE TYPE -->
-                        <?php if($result->PackageName){ ?>
-                            <div class="pkg-type"><?php echo htmlspecialchars($result->PackageName); ?></div>
-                        <?php } ?>
-
                         <!-- PRICE -->
                         <div class="price">
                             &#8369;<?php echo number_format((float)$result->Price, 2); ?>
@@ -492,7 +485,7 @@ body{
                                 <line x1="8" y1="2" x2="8" y2="6"/>
                                 <line x1="3" y1="10" x2="21" y2="10"/>
                             </svg>
-                            <?php echo htmlspecialchars($result->PackageDuratiobn); ?>
+                            <?php echo htmlspecialchars($result->PackageDuration); ?>
                         </div>
 
                         <!-- DESCRIPTION -->

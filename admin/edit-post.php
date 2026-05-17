@@ -1,186 +1,172 @@
 <?php session_start();
 error_reporting(0);
-include  'include/config.php'; 
+include 'include/config.php';
 if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
-  header('location:logout.php');
-  exit;
-  } else{
+    header('location:logout.php');
+    exit;
+}
 
-$pid=$_GET['pid'];
+$pid = intval($_GET['pid'] ?? 0);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
     die('Invalid request. Please go back and try again.');
 }
 
-if(isset($_POST['Submit'])){
-$category = $_POST['category'];
-$titlename = $_POST['titlename'];
-$package = $_POST['package'];
-$packageduratiobn = $_POST['packageduratiobn'];
-$Price = $_POST['Price'];
-$photo = $_POST['photo'];
-$description = $_POST['description'];
-$sql="update tbladdpackage set category=:category,titlename=:titlename,PackageType=:package,
-packageduratiobn=:packageduratiobn,Price=:Price,description=:description where id=:pid";
+if (isset($_POST['Submit'])) {
+    $category    = $_POST['category'];
+    $titlename   = $_POST['titlename'];
+    $duration    = $_POST['duration'];
+    $Price       = $_POST['Price'];
+    $description = $_POST['description'];
 
-$query = $dbh -> prepare($sql);
-$query->bindParam(':category',$category,PDO::PARAM_STR);
-$query->bindParam(':titlename',$titlename,PDO::PARAM_STR);
-$query->bindParam(':package',$package,PDO::PARAM_STR);
-$query->bindParam(':packageduratiobn',$packageduratiobn,PDO::PARAM_STR);
-$query->bindParam(':Price',$Price,PDO::PARAM_STR);
-$query->bindParam(':description',$description,PDO::PARAM_STR);
-$query->bindParam(':pid',$pid,PDO::PARAM_STR);
-$query->execute();
-// Message after updation
-echo "<script>alert('Record Updated successfully');</script>";
-// Code for redirection
-echo "<script>window.location.href='manage-post.php'</script>";
+    $sql = "UPDATE tbladdpackage
+            SET category=:category, titlename=:titlename, PackageDuration=:duration,
+                Price=:Price, Description=:description
+            WHERE id=:pid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':category',    $category,    PDO::PARAM_STR);
+    $query->bindParam(':titlename',   $titlename,   PDO::PARAM_STR);
+    $query->bindParam(':duration',    $duration,    PDO::PARAM_STR);
+    $query->bindParam(':Price',       $Price,       PDO::PARAM_STR);
+    $query->bindParam(':description', $description, PDO::PARAM_STR);
+    $query->bindParam(':pid',         $pid,         PDO::PARAM_INT);
+    $query->execute();
+
+    echo "<script>alert('Package updated successfully.');</script>";
+    echo "<script>window.location.href='manage-post.php';</script>";
 }
+
+// Fetch existing record
+$sql = "SELECT t1.*, t2.category_name
+        FROM tbladdpackage t1
+        LEFT JOIN tblcategory t2 ON t1.category = t2.id
+        WHERE t1.id = :pid";
+$query = $dbh->prepare($sql);
+$query->bindParam(':pid', $pid, PDO::PARAM_INT);
+$query->execute();
+$result = $query->fetch(PDO::FETCH_OBJ);
+
+if (!$result) {
+    echo "<script>alert('Package not found.');</script>";
+    echo "<script>window.location.href='manage-post.php';</script>";
+    exit;
+}
+
+$durations = ['1 Month', '3 Months', '6 Months', '12 Months'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta name="description" content="Vali is a">
-   <title>Form Samples - Vali Admin</title>
+<head>
+    <title>Admin | Edit Package</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="css/main.css">
-    <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  </head>
-  <body class="app sidebar-mini rtl">
-    <!-- Navbar-->
-   <?php include 'include/header.php'; ?>
-    <!-- Sidebar menu-->
+    <style>
+        body, .app-content {
+            background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
+                        url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+        }
+        .tile {
+            background: rgba(0,0,0,0.80);
+            border: 1px solid rgba(255,102,0,0.45);
+            border-radius: 14px;
+            box-shadow: 0 0 22px rgba(0,0,0,0.35);
+            color: #fff;
+        }
+        h3, label, .tile-body, .tile-body * { color: #fff; }
+        hr { border-top: 1px solid rgba(255,102,0,0.35); }
+        .form-control { background: #1a1a1a; border: 1px solid #333; color: #fff; }
+        .form-control:focus {
+            background: #1a1a1a;
+            border-color: #ff6600;
+            box-shadow: 0 0 5px rgba(255,102,0,0.35);
+            color: #fff;
+        }
+        select.form-control option { background: #1a1a1a; color: #fff; }
+        .btn-primary { background: #ff6600; border-color: #ff6600; }
+        .btn-primary:hover { background: #e65c00; border-color: #e65c00; }
+    </style>
+</head>
+<body class="app sidebar-mini rtl">
+    <?php include 'include/header.php'; ?>
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <?php include 'include/sidebar.php'; ?>
     <main class="app-content">
-      
-      <div class="row">
-        
-        <div class="col-md-12">
-          <div class="tile">
-             <!---Success Message--->  
-          <?php if($msg){ ?>
-          <div class="alert alert-success" role="alert">
-          <strong>Well done!</strong> <?php echo htmlentities($msg);?>
-          </div>
-          <?php } ?>
+        <h3>Edit Package</h3>
+        <hr/>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="tile">
+                    <div class="tile-body">
+                        <form class="row" method="post">
+                            <?php echo csrf_field(); ?>
 
-          <!---Error Message--->
-          <?php if($errormsg){ ?>
-          <div class="alert alert-danger" role="alert">
-          <strong>Oh snap!</strong> <?php echo htmlentities($errormsg);?></div>
-          <?php } ?>
-            <h3 class="tile-title">Update Post</h3>
-               <?php
-                   include  'include/config.php';
-                  $sql="SELECT * FROM tbladdpackage as t1
-                    join tblcategory as t2
-                    on t1.category=t2.id
-                    join tblpackage as t3
-                    on t1.PackageType=t3.id where t1.id=:pid";
-                  $query= $dbh->prepare($sql);
-                  $query->bindParam(':pid',$pid, PDO::PARAM_STR);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  $cnt=1;
-                  if($query -> rowCount() > 0)
-                  {
-                  foreach($results as $result)
-                  {
-                  ?>
-            <div class="tile-body">
-              <form class="row" method="post">
-                <?php echo csrf_field(); ?>
-                <div class="form-group col-md-6">
-                  <label class="control-label">Category</label>
-                 <select name="category" id="category" class="form-control" onChange="getdistrict(this.value);">
-                  <option value="<?php echo htmlspecialchars($result->id, ENT_QUOTES, 'UTF-8');?>"><?php echo htmlspecialchars($result->category_name, ENT_QUOTES, 'UTF-8');?></option>
-                  <option value="NA">--select--</option>
-                  <?php 
-                  $stmt = $dbh->prepare("SELECT * FROM tblcategory ORDER BY category_name");
-                  $stmt->execute();
-                  $countriesList = $stmt->fetchAll();
-                  foreach($countriesList as $country){
-                  echo "<option value='".htmlspecialchars($country['id'], ENT_QUOTES, 'UTF-8')."'>".htmlspecialchars($country['category_name'], ENT_QUOTES, 'UTF-8')."</option>";
-                  }
-                  ?>
-                  </select>
-                 </select>
-                </div>
-                 <div class="form-group col-md-6">
-                  <label class="control-label">Package Type</label>
-                   <select name="package" id="package" class="form-control">
-                     <option value="<?php echo htmlspecialchars($result->id, ENT_QUOTES, 'UTF-8');?>"><?php echo htmlspecialchars($result->PackageName, ENT_QUOTES, 'UTF-8');?></option>
-                  
-                 </select>
-                </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Category</label>
+                                <select name="category" class="form-control" required>
+                                    <option value="">-- Select Category --</option>
+                                    <?php
+                                    $stmt = $dbh->prepare("SELECT * FROM tblcategory ORDER BY category_name");
+                                    $stmt->execute();
+                                    foreach ($stmt->fetchAll() as $cat) {
+                                        $sel = ($cat['id'] == $result->category) ? 'selected' : '';
+                                        echo "<option value='" . (int)$cat['id'] . "' $sel>" . htmlspecialchars($cat['category_name']) . "</option>";
+                                    }
+                                    ?>
+                                </select>
+                            </div>
 
-                <div class="form-group col-md-6">
-                  <label class="control-label">Title Name</label>
-                  <input class="form-control" name="titlename" id="titlename" type="text" placeholder="Enter your Title Name" value="<?php echo htmlspecialchars($result->titlename, ENT_QUOTES, 'UTF-8');?>">
-                </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Title Name</label>
+                                <input class="form-control" name="titlename" type="text"
+                                       value="<?php echo htmlspecialchars($result->titlename, ENT_QUOTES); ?>" required>
+                            </div>
 
-               
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Package Duration</label>
+                                <select name="duration" class="form-control" required>
+                                    <option value="">-- Select Duration --</option>
+                                    <?php foreach ($durations as $d) {
+                                        $sel = ($result->PackageDuration === $d) ? 'selected' : '';
+                                        echo "<option value='$d' $sel>$d</option>";
+                                    } ?>
+                                </select>
+                            </div>
 
-                 <div class="form-group col-md-6">
-                  <label class="control-label">Package Duration</label>
-                  <input class="form-control" type="text" name="packageduratiobn" placeholder="Enter Package Duration" value="<?php echo htmlspecialchars($result->PackageDuration, ENT_QUOTES, 'UTF-8');?>">
-                </div>
+                            <div class="form-group col-md-6">
+                                <label class="control-label">Price</label>
+                                <input class="form-control" type="number" name="Price" min="0" step="0.01"
+                                       value="<?php echo htmlspecialchars($result->Price, ENT_QUOTES); ?>" required>
+                            </div>
 
-                 <div class="form-group col-md-6">
-                  <label class="control-label">Price</label>
-                  <input class="form-control" type="text" name="Price" id="Price" placeholder="Enter your Price" value="<?php echo htmlspecialchars($result->Price, ENT_QUOTES, 'UTF-8');?>">
-                </div>
-                
-                 <!-- <div class="form-group col-md-6">
-                  <label class="control-label">File</label>
-                  <input class="form-control" type="file" name="photo" id="photo">
-                </div> -->
+                            <div class="form-group col-md-12">
+                                <label class="control-label">Description</label>
+                                <textarea name="description" id="description" class="form-control" rows="6"><?php
+                                    echo htmlspecialchars($result->Description, ENT_QUOTES);
+                                ?></textarea>
+                            </div>
 
-                  <div class="form-group col-md-6">
-                  <label class="control-label">Description</label>
-                  <textarea name="description" id="description" class="form-control" cols="5" rows="10"><?php echo htmlspecialchars($result->Description, ENT_QUOTES, 'UTF-8');?></textarea> 
+                            <div class="form-group col-md-4 align-self-end">
+                                <input type="submit" name="Submit" class="btn btn-primary" value="Update">
+                                <a href="manage-post.php" class="btn btn-default" style="margin-left:8px;">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <div class="form-group col-md-4 align-self-end">
-                  <input type="Submit" name="Submit" id="Submit" class="btn btn-primary" value="Submit">
-                </div>
-              </form>
             </div>
-             <?php  $cnt=$cnt+1; } } ?>
-          </div>
         </div>
-      </div>
     </main>
-    <!-- Essential javascripts for application to work-->
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
     <script src="js/plugins/pace.min.js"></script>
-  <script src="//js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
-<script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-      
-  </body>
+    <script src="//js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+    <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
+</body>
 </html>
-
-<!-- Script -->
- <script>
-function getdistrict(val) {
-$.ajax({
-type: "POST",
-url: "ajaxfile.php",
-data:'category='+val,
-success: function(data){
-$("#package").html(data);
-}
-});
-}
-</script>
-<?php }?>

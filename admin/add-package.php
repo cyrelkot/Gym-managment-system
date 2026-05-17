@@ -1,357 +1,173 @@
-<?php 
+<?php
 session_start();
 error_reporting(E_ALL);
-include 'include/config.php'; 
+include 'include/config.php';
 
-// SESSION CHECK
 if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
     header('location:logout.php');
     exit();
 }
 
-$msg='';
-$errormsg='';
+$msg = '';
+$errormsg = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
     die('Invalid request. Please go back and try again.');
 }
 
-// ADD PACKAGE
-if(isset($_POST['submit'])){
+// ADD CATEGORY
+if (isset($_POST['submit'])) {
+    $categoryName = trim($_POST['category']);
 
-$AddPackage=$_POST['addPackage'];
-$categoryName=$_POST['category'];
+    $check = $dbh->prepare("SELECT id FROM tblcategory WHERE category_name = :catname");
+    $check->bindParam(':catname', $categoryName, PDO::PARAM_STR);
+    $check->execute();
 
-// check category
-$stmt = $dbh->prepare("SELECT id FROM tblcategory WHERE category_name=:catname");
-$stmt->bindParam(':catname',$categoryName,PDO::PARAM_STR);
-$stmt->execute();
-$catResult = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($check->rowCount() > 0) {
+        $errormsg = "Category already exists.";
+    } else {
+        $ins = $dbh->prepare("INSERT INTO tblcategory (category_name) VALUES (:catname)");
+        $ins->bindParam(':catname', $categoryName, PDO::PARAM_STR);
+        $ins->execute();
 
-if($catResult){
-$categoryId = $catResult['id'];
-}
-else{
-$ins = $dbh->prepare("INSERT INTO tblcategory(category_name) VALUES(:catname)");
-$ins->bindParam(':catname',$categoryName,PDO::PARAM_STR);
-$ins->execute();
-$categoryId = $dbh->lastInsertId();
-}
-
-// insert package
-$sql="INSERT INTO tblpackage(PackageName,cate_id) VALUES(:Package,:category)";
-$query=$dbh->prepare($sql);
-
-$query->bindParam(':Package',$AddPackage,PDO::PARAM_STR);
-$query->bindParam(':category',$categoryId,PDO::PARAM_INT);
-
-$query->execute();
-
-if($dbh->lastInsertId()){
-echo "<script>alert('Package Added Successfully');</script>";
-echo "<script>window.location.href='add-package.php'</script>";
-}
-else{
-$errormsg="Something went wrong";
-}
+        if ($dbh->lastInsertId()) {
+            $msg = "Category added successfully.";
+        } else {
+            $errormsg = "Something went wrong. Please try again.";
+        }
+    }
 }
 
+// DELETE CATEGORY
+if (isset($_GET['del'])) {
+    $uid = intval($_GET['del']);
+    $sql = "DELETE FROM tblcategory WHERE id = :id";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':id', $uid, PDO::PARAM_INT);
+    $query->execute();
 
-// DELETE
-if(isset($_GET['del'])){
-$uid=intval($_GET['del']);
-
-$sql="DELETE FROM tblpackage WHERE id=:id";
-$query=$dbh->prepare($sql);
-$query->bindParam(':id',$uid,PDO::PARAM_INT);
-$query->execute();
-
-echo "<script>alert('Record deleted');</script>";
-echo "<script>window.location.href='add-package.php'</script>";
+    echo "<script>alert('Category deleted.');</script>";
+    echo "<script>window.location.href='add-package.php'</script>";
+    exit;
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-<title>Admin | Add Package</title>
-
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-
-<link rel="stylesheet" href="css/main.css">
-
-<link rel="stylesheet"
-href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-<style>
-
-.app-sidebar{
-position:fixed;
-z-index:1000;
-}
-
-.app-content,
-body {
-background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
-            url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
-background-size: cover;
-background-position: center;
-color:#fff;
-}
-
-.app-content{
-margin-left:230px;
-padding:20px;
-}
-
-.tile{
-position:relative;
-z-index:1;
-background: rgba(0, 0, 0, 0.80);
-border: 1px solid rgba(255, 102, 0, 0.45);
-border-radius: 14px;
-box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
-color:#fff;
-padding:20px;
-margin-bottom:20px;
-}
-
-h3,
-label,
-.tile-title,
-.table,
-.table th,
-.table td{
-color:#fff !important;
-}
-
-hr{
-border-top:1px solid rgba(255, 102, 0, 0.35);
-}
-
-.form-control{
-background:#1a1a1a;
-border:1px solid #333;
-color:#fff;
-}
-
-.form-control:focus{
-background:#1a1a1a;
-border-color:#ff6600;
-box-shadow:0 0 5px rgba(255,102,0,0.35);
-color:#fff;
-}
-
-.btn-primary{
-background:#ff6600;
-border-color:#ff6600;
-}
-
-.btn-primary:hover{
-background:#e65c00;
-border-color:#e65c00;
-}
-
-.btn-danger{
-background:#c0392b;
-border-color:#c0392b;
-}
-
-.btn-warning{
-background:#f39c12;
-border-color:#f39c12;
-color:#fff;
-}
-
-.table-bordered,
-.table-bordered th,
-.table-bordered td{
-border:1px solid rgba(255,255,255,0.12) !important;
-}
-
-thead{
-background:rgba(255, 102, 0, 0.12);
-}
-
-.action-btn{
-display:flex;
-gap:5px;
-}
-
-</style>
-
+    <title>Admin | Manage Categories</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .app-sidebar { position: fixed; z-index: 1000; }
+        .app-content, body {
+            background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
+                        url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+        }
+        .app-content { margin-left: 230px; padding: 20px; }
+        .tile {
+            position: relative; z-index: 1;
+            background: rgba(0,0,0,0.80);
+            border: 1px solid rgba(255,102,0,0.45);
+            border-radius: 14px;
+            box-shadow: 0 0 22px rgba(0,0,0,0.35);
+            color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        h3, h4, label, .table, .table th, .table td { color: #fff !important; }
+        hr { border-top: 1px solid rgba(255,102,0,0.35); }
+        .form-control { background: #1a1a1a; border: 1px solid #333; color: #fff; }
+        .form-control:focus {
+            background: #1a1a1a; border-color: #ff6600;
+            box-shadow: 0 0 5px rgba(255,102,0,0.35); color: #fff;
+        }
+        .btn-primary { background: #ff6600; border-color: #ff6600; }
+        .btn-primary:hover { background: #e65c00; border-color: #e65c00; }
+        .btn-danger { background: #c0392b; border-color: #c0392b; }
+        .table-bordered, .table-bordered th, .table-bordered td {
+            border: 1px solid rgba(255,255,255,0.12) !important;
+        }
+        thead { background: rgba(255,102,0,0.12); }
+    </style>
 </head>
-
 <body class="app sidebar-mini rtl">
+    <?php include 'include/header.php'; ?>
+    <?php include 'include/sidebar.php'; ?>
 
-<?php include 'include/header.php'; ?>
-<?php include 'include/sidebar.php'; ?>
+    <main class="app-content">
+        <h3><i class="fa fa-tags"></i> Manage Categories</h3>
+        <hr>
 
-<main class="app-content">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="tile">
+                    <?php if ($msg) { ?>
+                    <div class="alert alert-success"><?php echo htmlentities($msg); ?></div>
+                    <?php } ?>
+                    <?php if ($errormsg) { ?>
+                    <div class="alert alert-danger"><?php echo htmlentities($errormsg); ?></div>
+                    <?php } ?>
 
-<h3><i class="fa fa-cubes"></i> Add Package</h3>
-<hr>
+                    <form method="post">
+                        <?php echo csrf_field(); ?>
+                        <div class="form-group">
+                            <label>Category Name</label>
+                            <input class="form-control" type="text" name="category" placeholder="Enter category name" required>
+                        </div>
+                        <button class="btn btn-primary" type="submit" name="submit">
+                            <i class="fa fa-plus"></i> Add Category
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-<div class="row">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="tile">
+                    <h4>All Categories</h4>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Category Name</th>
+                                <th width="120">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $query = $dbh->prepare("SELECT * FROM tblcategory ORDER BY category_name");
+                        $query->execute();
+                        $cats = $query->fetchAll(PDO::FETCH_OBJ);
+                        $cnt = 1;
+                        foreach ($cats as $cat) {
+                        ?>
+                            <tr>
+                                <td><?php echo $cnt; ?></td>
+                                <td><?php echo htmlentities($cat->category_name); ?></td>
+                                <td>
+                                    <a href="add-package.php?del=<?php echo (int)$cat->id; ?>"
+                                       class="btn btn-danger btn-sm"
+                                       onclick="return confirm('Delete this category?')">
+                                        <i class="fa fa-trash"></i> Delete
+                                    </a>
+                                </td>
+                            </tr>
+                        <?php $cnt++; } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
 
-<div class="col-md-6">
-
-<div class="tile">
-
-<?php if($msg){ ?>
-<div class="alert alert-success"><?php echo $msg; ?></div>
-<?php } ?>
-
-<?php if($errormsg){ ?>
-<div class="alert alert-danger"><?php echo $errormsg; ?></div>
-<?php } ?>
-
-<form method="post">
-<?php echo csrf_field(); ?>
-<div class="form-group">
-<label>Add Category</label>
-
-<input class="form-control"
-type="text"
-name="category"
-placeholder="Enter Category"
-required>
-</div>
-
-<div class="form-group">
-<label>Add Package</label>
-
-<input class="form-control"
-type="text"
-name="addPackage"
-placeholder="Enter Package"
-required>
-</div>
-
-<button class="btn btn-primary"
-type="submit"
-name="submit">
-
-<i class="fa fa-plus"></i> Submit
-
-</button>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- TABLE -->
-
-<div class="row">
-
-<div class="col-md-12">
-
-<div class="tile">
-
-<h4 class="mb-3">Manage Packages</h4>
-
-<table class="table table-bordered table-hover">
-
-<thead>
-
-<tr>
-<th>#</th>
-<th>Category</th>
-<th>Package</th>
-<th width="180">Action</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<?php
-
-$sql="SELECT tblpackage.id as pid,
-tblpackage.PackageName,
-tblcategory.category_name 
-FROM tblpackage
-JOIN tblcategory 
-ON tblcategory.id=tblpackage.cate_id";
-
-$query=$dbh->prepare($sql);
-$query->execute();
-
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-
-$cnt=1;
-
-if($query->rowCount()>0){
-
-foreach($results as $result){
-
-?>
-
-<tr>
-
-<td><?php echo $cnt;?></td>
-
-<td>
-<?php echo htmlentities($result->category_name);?>
-</td>
-
-<td>
-<?php echo htmlentities($result->PackageName);?>
-</td>
-
-<td>
-
-<div class="action-btn">
-
-<a href="edit-package.php?edit=<?php echo (int)$result->pid;?>"
-class="btn btn-warning btn-sm">
-
-<i class="fa fa-edit"></i> Edit
-
-</a>
-
-<a href="add-package.php?del=<?php echo (int)$result->pid;?>"
-class="btn btn-danger btn-sm"
-onclick="return confirm('Delete this record?')">
-
-<i class="fa fa-trash"></i> Delete
-
-</a>
-
-</div>
-
-</td>
-
-</tr>
-
-<?php 
-$cnt++;
-}} ?>
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</div>
-
-</main>
-
-
-<script src="js/jquery-3.2.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/main.js"></script>
-
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
