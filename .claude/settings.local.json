@@ -17,7 +17,13 @@
       "Bash(find /c/xampp/htdocs/gym -name \"*.php\" -path \"*package*\" -o -name \"*package*.php\" 2>/dev/null | head -20)",
       "Bash(find /c/xampp/htdocs/gym/admin -maxdepth 1 -name \"*.php\" -type f 2>/dev/null | sort)",
       "Bash(ls -la /c/xampp/htdocs/gym/admin/ 2>/dev/null | grep -E \"\\\\.php$|^d\")",
-      "Bash(ls -la /c/xampp/htdocs/gym/admin/ | grep -E \"\\\\.php$\")"
+      "Bash(ls -la /c/xampp/htdocs/gym/admin/ | grep -E \"\\\\.php$\")",
+      "Bash(for file:*)",
+      "Bash(do echo:*)",
+      "Read(//<style/,/</**)",
+      "Bash(done)",
+      "Bash(ls -la /c/xampp/htdocs/gym/*.css 2>/dev/null || echo \"No CSS files in root\")",
+      "Bash(find /c/xampp/htdocs/gym -name \"*.css\" -type f | xargs wc -l | tail -1)"
     ]
   }
 }

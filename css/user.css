@@ -1,0 +1,996 @@
+/* =============================================
+   GLOBAL / SHARED STYLES
+   ============================================= */
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #000;
+  color: #fff;
+}
+
+.navbar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  background: #000;
+  border-bottom: 2px solid #ff6a00;
+}
+
+.logo {
+  color: #ff6a00;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.nav-center a {
+  color: #fff;
+  margin: 0 15px;
+  text-decoration: none;
+}
+
+.nav-center a:hover {
+  color: #ff6a00;
+}
+
+.footer {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+}
+
+/* =============================================
+   INDEX / PACKAGES PAGE
+   ============================================= */
+
+body.index-page .hero {
+  height: 55vh;
+  background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+body.index-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+body.index-page .hero-content {
+  position: relative;
+  text-align: center;
+}
+
+body.index-page .hero h1 {
+  font-size: 55px;
+  color: #ff6a00;
+}
+
+.section {
+  padding: 60px 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.section-title-bar {
+  width: 50px;
+  height: 3px;
+  background: #ff6a00;
+  margin: 8px auto 30px;
+  border-radius: 2px;
+}
+
+.approval-banner {
+  background: #1a1200;
+  border: 1px solid #ff6a00;
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin: 0 auto 30px;
+  max-width: 900px;
+  color: #ffcc66;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.approval-banner svg {
+  flex-shrink: 0;
+}
+
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 35px;
+}
+
+.tab {
+  background: #111;
+  color: #ccc;
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 8px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  border-color: #ff6a00;
+  color: #ff6a00;
+}
+
+.tab.active {
+  background: #ff6a00;
+  color: #000;
+  border-color: #ff6a00;
+}
+
+#plans-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin: 0;
+}
+
+@media (max-width: 1199px) {
+  #plans-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 767px) {
+  #plans-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  #plans-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plan-card {
+  display: flex;
+}
+
+.pricing-item {
+  background: #111;
+  border: 1px solid #222;
+  border-top: 3px solid #ff6a00;
+  padding: 25px;
+  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.pricing-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(255, 106, 0, 0.25);
+}
+
+.pricing-item.featured {
+  border-top: 3px solid #ff6a00;
+  box-shadow:
+    0 0 0 2px #ff6a00,
+    0 6px 30px rgba(255, 106, 0, 0.4);
+}
+
+.pricing-item h4 {
+  color: #ff6a00;
+  margin-bottom: 4px;
+}
+
+.badge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-popular {
+  background: #ff6a00;
+  color: #000;
+}
+.badge-value {
+  background: #00cc66;
+  color: #000;
+}
+.badge-premium {
+  background: #c0a060;
+  color: #000;
+}
+.badge-rec {
+  background: #4da6ff;
+  color: #000;
+}
+
+.cat-tag {
+  display: inline-block;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  color: #aaa;
+  border-radius: 10px;
+  font-size: 11px;
+  padding: 2px 9px;
+  margin-bottom: 8px;
+}
+
+.pkg-type {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.price span {
+  font-size: 14px;
+  color: #aaa;
+  font-weight: normal;
+}
+
+.duration {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #bbb;
+  margin: 6px 0;
+}
+
+.duration svg {
+  flex-shrink: 0;
+}
+
+.desc-clamp {
+  font-size: 13px;
+  color: #ccc;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 8px 0 4px;
+}
+
+.read-more {
+  font-size: 12px;
+  color: #ff6a00;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.enroll-count {
+  font-size: 12px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.btn-container {
+  margin-top: auto;
+}
+
+.btn-book {
+  background: #ff6a00;
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.btn-book:hover {
+  background: #e05a00;
+}
+
+.btn-book-outline {
+  background: transparent;
+  color: #ff6a00;
+  border: 2px solid #ff6a00;
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.btn-book-outline:hover {
+  background: #ff6a00;
+  color: #000;
+  text-decoration: none;
+}
+
+.btn-book-disabled {
+  background: #2a2a2a;
+  color: #555;
+  border: 1px solid #333;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: bold;
+  width: 100%;
+  font-size: 14px;
+  cursor: not-allowed;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #555;
+}
+
+.empty-state svg {
+  margin-bottom: 20px;
+  opacity: 0.4;
+}
+
+/* =============================================
+   LOGIN PAGE
+   ============================================= */
+
+body.login-page {
+  box-sizing: border-box;
+  background: url("https://images.unsplash.com/photo-1540497077202-7c8a3999166f")
+    center/cover no-repeat;
+  height: 100vh;
+}
+
+body.login-page * {
+  box-sizing: border-box;
+}
+
+body.login-page .overlay {
+  background: rgba(0, 0, 0, 0.75);
+  height: 100vh;
+}
+
+body.login-page .main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 85vh;
+  padding: 0 80px;
+}
+
+body.login-page .hero-text {
+  max-width: 500px;
+}
+
+body.login-page .hero-text h1 {
+  font-size: 48px;
+}
+
+body.login-page .hero-text span {
+  color: #ff6600;
+}
+
+body.login-page .hero-text p {
+  color: #ccc;
+  margin-top: 10px;
+}
+
+body.login-page .login-card {
+  width: 350px;
+  background: rgba(0, 0, 0, 0.85);
+  padding: 35px;
+  border-radius: 10px;
+}
+
+body.login-page .login-card h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ff6600;
+}
+
+body.login-page .input-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+body.login-page .left-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  pointer-events: none;
+}
+
+body.login-page .login-card input {
+  width: 100%;
+  padding: 12px 45px;
+  border: none;
+  border-radius: 6px;
+  background: #1f1f1f;
+  color: white;
+  outline: none;
+}
+
+body.login-page .toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #aaa;
+  z-index: 999;
+}
+
+body.login-page .toggle-password i {
+  pointer-events: none;
+}
+
+body.login-page .btn-login {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #ff6600;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+body.login-page .btn-login:hover {
+  background: #e65c00;
+}
+
+body.login-page .register {
+  text-align: center;
+  margin-top: 10px;
+}
+
+body.login-page .register a {
+  color: #ff6600;
+  text-decoration: none;
+}
+
+body.login-page .error {
+  background: #ff4d4d;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+/* =============================================
+   REGISTRATION PAGE
+   ============================================= */
+
+body.reg-page {
+  font-family: "Montserrat", sans-serif;
+  background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80")
+    no-repeat center center/cover;
+  height: 100vh;
+  overflow: hidden;
+}
+
+body.reg-page::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 0;
+}
+
+body.reg-page::after {
+  content: "";
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: 600px;
+  height: 600px;
+  background: rgba(255, 102, 0, 0.12);
+  filter: blur(150px);
+  z-index: 0;
+}
+
+body.reg-page .navbar {
+  position: relative;
+  z-index: 2;
+}
+
+body.reg-page .container {
+  position: relative;
+  z-index: 2;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body.reg-page .form-box {
+  width: 420px;
+  background: rgba(20, 20, 20, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 102, 0, 0.3);
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(255, 102, 0, 0.2);
+}
+
+body.reg-page h3 {
+  text-align: center;
+  color: #ff6600;
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+body.reg-page input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 102, 0, 0.2);
+  background: #111;
+  color: white;
+  outline: none;
+}
+
+body.reg-page input:focus {
+  border: 1px solid #ff6600;
+  box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
+}
+
+body.reg-page .pass-wrapper {
+  position: relative;
+}
+
+body.reg-page .pass-wrapper span {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  cursor: pointer;
+  color: #ff6600;
+}
+
+body.reg-page button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #ff6600;
+  color: black;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+body.reg-page button:hover {
+  background: #ff7a1a;
+  transform: scale(1.03);
+}
+
+body.reg-page .error {
+  background: rgba(255, 0, 0, 0.8);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+body.reg-page small {
+  display: block;
+  text-align: center;
+  margin-bottom: 10px;
+  color: #ffb366;
+}
+
+/* =============================================
+   BOOKING DETAILS PAGE
+   ============================================= */
+
+body.booking-details-page .hero {
+  height: 280px;
+  background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+body.booking-details-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+body.booking-details-page .hero h1 {
+  position: relative;
+  color: #ff6a00;
+}
+
+body.booking-details-page .container {
+  padding: 30px;
+}
+
+body.booking-details-page .card {
+  background: #111;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+body.booking-details-page .grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+body.booking-details-page .label {
+  color: #aaa;
+  font-size: 13px;
+}
+
+body.booking-details-page .value {
+  font-weight: bold;
+}
+
+body.booking-details-page .btn {
+  background: #ff6a00;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  color: #000;
+  cursor: pointer;
+}
+
+body.booking-details-page .btn:hover {
+  background: #ff8c1a;
+}
+
+body.booking-details-page select {
+  padding: 6px;
+  border-radius: 5px;
+}
+
+body.booking-details-page table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+body.booking-details-page th,
+body.booking-details-page td {
+  padding: 10px;
+}
+
+body.booking-details-page th {
+  background: #1a1a1a;
+  color: #ff6a00;
+}
+
+body.booking-details-page tr:nth-child(even) {
+  background: #0f0f0f;
+}
+
+/* =============================================
+   BOOKING HISTORY PAGE
+   ============================================= */
+
+body.booking-history-page .hero {
+  height: 300px;
+  background: url("https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1600&q=80")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+body.booking-history-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+body.booking-history-page .hero-content {
+  position: relative;
+}
+
+body.booking-history-page .hero h1 {
+  color: #ff6a00;
+  font-size: 40px;
+}
+
+body.booking-history-page .container {
+  padding: 30px;
+}
+
+body.booking-history-page .card {
+  background: #111;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+}
+
+body.booking-history-page table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+body.booking-history-page th,
+body.booking-history-page td {
+  padding: 12px;
+}
+
+body.booking-history-page th {
+  background: #1a1a1a;
+  color: #ff6a00;
+}
+
+body.booking-history-page tr:nth-child(even) {
+  background: #0f0f0f;
+}
+
+body.booking-history-page .btn-view {
+  background: #ff6a00;
+  border: none;
+  padding: 6px 12px;
+  color: #000;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+body.booking-history-page .btn-view:hover {
+  background: #ff8c1a;
+}
+
+body.booking-history-page .alert {
+  background: #222;
+  padding: 15px;
+  border-left: 4px solid #ff6a00;
+  margin-bottom: 20px;
+}
+
+/* =============================================
+   ABOUT PAGE
+   ============================================= */
+
+body.about-page {
+  background: #0f0f0f;
+}
+
+body.about-page .hero {
+  height: 350px;
+  background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+body.about-page .hero h1 {
+  font-size: 40px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 20px 40px;
+  border-radius: 10px;
+}
+
+body.about-page .about {
+  max-width: 900px;
+  margin: 70px auto;
+  text-align: center;
+  padding: 0 20px;
+}
+
+body.about-page .about h2 {
+  color: #ff6600;
+  margin-bottom: 20px;
+}
+
+body.about-page .about p {
+  line-height: 1.8;
+  color: #ddd;
+}
+
+body.about-page .features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  padding: 50px 20px;
+}
+
+body.about-page .feature-box {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 10px;
+  width: 250px;
+  text-align: center;
+  border-top: 3px solid #ff6600;
+}
+
+body.about-page .feature-box h3 {
+  color: #ff6600;
+}
+
+body.about-page .feature-box p {
+  color: #ccc;
+}
+
+body.about-page .footer {
+  background: #000;
+  border-top: 1px solid #222;
+  color: #aaa;
+  margin-top: 40px;
+}
+
+/* =============================================
+   CONTACT PAGE
+   ============================================= */
+
+body.contact-page .hero {
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80")
+    center/cover;
+  position: relative;
+}
+
+body.contact-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+body.contact-page .hero h1,
+body.contact-page .hero p {
+  position: relative;
+  z-index: 1;
+}
+
+body.contact-page .hero h1 {
+  font-size: 52px;
+  color: #ff6a00;
+}
+
+body.contact-page .section {
+  padding: 60px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+body.contact-page .card {
+  width: 100%;
+  max-width: 650px;
+  background: #111;
+  padding: 35px;
+  border-top: 4px solid #ff6a00;
+  border-radius: 16px;
+}
+
+body.contact-page .card h3 {
+  text-align: center;
+  color: #ff6a00;
+}
+
+body.contact-page .info {
+  padding: 14px 0;
+  border-bottom: 1px solid #222;
+}
+
+body.contact-page .info strong {
+  color: #ff6a00;
+}
+
+/* =============================================
+   PROFILE PAGE
+   ============================================= */
+
+body.profile-page .navbar {
+  background: #000;
+}
+
+body.profile-page .navbar .logo {
+  color: #ff6a00;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+body.profile-page .errorWrap {
+  padding: 10px;
+  margin: 0 0 20px 0;
+  background: #dd3d36;
+  color: #fff;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+body.profile-page .succWrap {
+  padding: 10px;
+  margin: 0 0 20px 0;
+  background: #5cb85c;
+  color: #fff;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* =============================================
+   CHANGE PASSWORD PAGE
+   ============================================= */
+
+body.changepwd-page .navbar {
+  background: #000;
+}
+
+body.changepwd-page .navbar .logo {
+  color: #ff6a00;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+body.changepwd-page .errorWrap {
+  padding: 10px;
+  margin: 0 0 20px 0;
+  background: #fff;
+  border-left: 4px solid #dd3d36;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+body.changepwd-page .succWrap {
+  padding: 10px;
+  margin: 0 0 20px 0;
+  background: #fff;
+  border-left: 4px solid #5cb85c;
+  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+}

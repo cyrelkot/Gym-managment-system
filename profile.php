@@ -56,34 +56,9 @@ echo "<script> window.location.href = 'profile.php';</script>";
 
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="css/style.css"/>
-
-<style>
-.navbar{
-    position:relative;
-    display:flex;
-    padding:20px;
-    border-bottom:2px solid #ff6a00;
-    background:#000;
-}
-.navbar .logo{
-    color:#ff6a00;
-    font-weight:bold;
-    font-size:22px;
-}
-.nav-center{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-}
-.nav-center a{
-    color:#fff;
-    margin:0 15px;
-    text-decoration:none;
-}
-.nav-center a:hover{ color:#ff6a00; }
-</style>
+	<link rel="stylesheet" href="css/user.css"/>
 </head>
-<body>
+<body class="profile-page">
 	<!-- Page Preloder -->
 	
 
@@ -195,21 +170,3 @@ echo "<script> window.location.href = 'profile.php';</script>";
 </html>
  <?php } ?>
 
-  <style>
-.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #dd3d36;
-    color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #5cb85c;
-    color:#fff;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-        </style>

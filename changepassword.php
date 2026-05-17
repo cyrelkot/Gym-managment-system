@@ -58,32 +58,7 @@ if (isset($_POST['submit'])) {
 
 	<!-- Main Stylesheets -->
 	<link rel="stylesheet" href="css/style.css"/>
-
-<style>
-.navbar{
-    position:relative;
-    display:flex;
-    padding:20px;
-    border-bottom:2px solid #ff6a00;
-    background:#000;
-}
-.navbar .logo{
-    color:#ff6a00;
-    font-weight:bold;
-    font-size:22px;
-}
-.nav-center{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-}
-.nav-center a{
-    color:#fff;
-    margin:0 15px;
-    text-decoration:none;
-}
-.nav-center a:hover{ color:#ff6a00; }
-</style>
+	<link rel="stylesheet" href="css/user.css"/>
 <script type="text/javascript">
 function valid()
 {
@@ -96,26 +71,8 @@ return false;
 return true;
 }
 </script>
-  <style>
-		.errorWrap {
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #fff;
-    border-left: 4px solid #dd3d36;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-.succWrap{
-    padding: 10px;
-    margin: 0 0 20px 0;
-    background: #fff;
-    border-left: 4px solid #5cb85c;
-    -webkit-box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.1);
-}
-		</style>
 </head>
-<body>
+<body class="changepwd-page">
 	<!-- Page Preloder -->
 	
 
