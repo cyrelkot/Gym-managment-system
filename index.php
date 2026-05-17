@@ -22,7 +22,7 @@ if($user && intval($user['status']) === 1){
 }
 
 /* GET PACKAGES ALREADY BOOKED BY THIS USER */
-$bookedQuery = $dbh->prepare("SELECT package_id FROM tblbooking WHERE userid = :uid");
+$bookedQuery = $dbh->prepare("SELECT package_id FROM tblbooking WHERE userid = :uid AND status = 'active'");
 $bookedQuery->bindParam(':uid', $uid, PDO::PARAM_INT);
 $bookedQuery->execute();
 $bookedPackageIds = array_map('intval', $bookedQuery->fetchAll(PDO::FETCH_COLUMN));
@@ -41,7 +41,7 @@ if(isset($_POST['submit'])){
 
     $pid = intval($_POST['pid']);
 
-    $dupCheck = $dbh->prepare("SELECT id FROM tblbooking WHERE userid = :uid AND package_id = :pid LIMIT 1");
+    $dupCheck = $dbh->prepare("SELECT id FROM tblbooking WHERE userid = :uid AND package_id = :pid AND status = 'active' LIMIT 1");
     $dupCheck->bindParam(':uid', $uid, PDO::PARAM_INT);
     $dupCheck->bindParam(':pid', $pid, PDO::PARAM_INT);
     $dupCheck->execute();

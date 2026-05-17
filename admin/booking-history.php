@@ -25,6 +25,16 @@ if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
     header('Location: booking-history.php');
     exit;
 }
+
+/* EXPIRE */
+if (isset($_POST['expire_booking']) && isset($_POST['bookingid'])) {
+    $bookingId = intval($_POST['bookingid']);
+    $stmt = $dbh->prepare("UPDATE tblbooking SET status = 'expired' WHERE id = :id");
+    $stmt->bindParam(':id', $bookingId, PDO::PARAM_INT);
+    $stmt->execute();
+    header('Location: booking-history.php');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -74,6 +84,7 @@ href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.cs
 <th>Date</th>
 <th>Plan</th>
 <th>Status</th>
+<th>Booking</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -86,7 +97,8 @@ t3.fname as Name,
 t3.email,
 t1.booking_date,
 t2.titlename as Plan,
-t1.paymentType
+t1.paymentType,
+t1.status
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
 LEFT JOIN tbluser t3 ON t1.userid = t3.id";
@@ -119,6 +131,14 @@ if($row->paymentType == "Full Payment"){
 ?>
 </td>
 
+<td>
+<?php if($row->status === 'active'): ?>
+    <span class="badge badge-success">Active</span>
+<?php else: ?>
+    <span class="badge badge-secondary">Expired</span>
+<?php endif; ?>
+</td>
+
 <td class="action-cell">
 <a href="edit-booking.php?bookingid=<?php echo (int)$row->bookingid; ?>" class="btn btn-success btn-sm">Edit</a>
 
@@ -128,6 +148,17 @@ if($row->paymentType == "Full Payment"){
 <button type="submit" name="delete_booking" class="btn btn-danger btn-sm"
 onclick="return confirm('Are you sure you want to delete this booking?');">Delete</button>
 </form>
+
+<?php if($row->status === 'active'): ?>
+<form method="post" style="display:inline;">
+    <?php echo csrf_field(); ?>
+    <input type="hidden" name="bookingid" value="<?php echo (int)$row->bookingid; ?>">
+    <button type="submit" name="expire_booking" class="btn btn-warning btn-sm"
+        onclick="return confirm('Mark this booking as expired? The user will be able to rebook.');">
+        Expire
+    </button>
+</form>
+<?php endif; ?>
 </td>
 
 </tr>

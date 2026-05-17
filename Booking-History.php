@@ -85,7 +85,8 @@ t2.titlename,
 t2.PackageDuration,
 t2.Price,
 t2.Description,
-t4.category_name
+t4.category_name,
+t1.status
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
 LEFT JOIN tblcategory t4 ON t2.category = t4.id
@@ -113,6 +114,7 @@ $cnt=1;
 <th>Duration</th>
 <th>Price</th>
 <th>Category</th>
+<th>Status</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -127,6 +129,13 @@ $cnt=1;
 <td><?php echo htmlspecialchars($row->PackageDuration, ENT_QUOTES, 'UTF-8'); ?></td>
 <td>₱<?php echo htmlspecialchars($row->Price, ENT_QUOTES, 'UTF-8'); ?></td>
 <td><?php echo htmlspecialchars($row->category_name, ENT_QUOTES, 'UTF-8'); ?></td>
+<td>
+<?php if($row->status === 'active'): ?>
+    <span style="color:#28a745;font-weight:600;">Active</span>
+<?php else: ?>
+    <span style="color:#6c757d;font-weight:600;">Expired</span>
+<?php endif; ?>
+</td>
 <td>
 <a href="booking-details.php?bookingid=<?php echo (int)$row->bookingid; ?>">
 <button class="btn-view">View</button>

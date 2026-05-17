@@ -85,7 +85,8 @@ CREATE TABLE `tblbooking` (
   `userid` varchar(45) DEFAULT NULL,
   `booking_date` timestamp NULL DEFAULT current_timestamp(),
   `payment` varchar(45) DEFAULT NULL,
-  `paymentType` varchar(45) DEFAULT NULL
+  `paymentType` varchar(45) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
