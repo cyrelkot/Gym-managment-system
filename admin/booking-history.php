@@ -120,16 +120,6 @@ if($row->paymentType == "Full Payment"){
 </td>
 
 <td class="action-cell">
-<button class="btn btn-primary btn-sm"
-onclick="openModal(
-<?php echo json_encode((string)$row->bookingid); ?>,
-<?php echo json_encode($row->Name); ?>,
-<?php echo json_encode($row->email); ?>,
-<?php echo json_encode($row->booking_date); ?>,
-<?php echo json_encode($row->Plan); ?>,
-<?php echo json_encode($row->paymentType); ?>
-)">View</button>
-
 <a href="edit-booking.php?bookingid=<?php echo (int)$row->bookingid; ?>" class="btn btn-success btn-sm">Edit</a>
 
 <form method="post" style="display:inline;">
@@ -153,22 +143,6 @@ onclick="return confirm('Are you sure you want to delete this booking?');">Delet
 </div>
 </main>
 
-<!-- MODAL -->
-<div id="modal" class="modal-overlay">
-<div class="modal-box">
-<span class="modal-close" onclick="closeModal()">&times;</span>
-
-<h3>Booking Details</h3>
-
-<p><b>ID:</b> <span id="m_id"></span></p>
-<p><b>Name:</b> <span id="m_name"></span></p>
-<p><b>Email:</b> <span id="m_email"></span></p>
-<p><b>Date:</b> <span id="m_date"></span></p>
-<p><b>Plan:</b> <span id="m_package"></span></p>
-<p><b>Payment:</b> <span id="m_payment"></span></p>
-
-</div>
-</div>
 
 <script src="js/jquery-3.2.1.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -186,26 +160,6 @@ src="js/plugins/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
 $('#sampleTable').DataTable();
 
-function openModal(id,name,email,date,pack,payment){
-    document.getElementById("m_id").innerText=id;
-    document.getElementById("m_name").innerText=name;
-    document.getElementById("m_email").innerText=email;
-    document.getElementById("m_date").innerText=date;
-    document.getElementById("m_package").innerText=pack;
-    document.getElementById("m_payment").innerText=payment;
-
-    document.getElementById("modal").style.display="block";
-}
-
-function closeModal(){
-    document.getElementById("modal").style.display="none";
-}
-
-window.onclick=function(e){
-    if(e.target==document.getElementById("modal")){
-        closeModal();
-    }
-}
 </script>
 
 </body>
