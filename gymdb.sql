@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2026 at 05:34 AM
+-- Generation Time: May 17, 2026 at 12:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -89,14 +89,6 @@ CREATE TABLE `tblbooking` (
   `status` varchar(20) NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblbooking`
---
-
-INSERT INTO `tblbooking` (`id`, `package_id`, `userid`, `booking_date`, `payment`, `paymentType`) VALUES
-(5, '1', '8', '2026-05-16 16:00:00', '599', 'Full Payment'),
-(7, '5', '7', '2026-05-17 03:01:10', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -133,13 +125,6 @@ CREATE TABLE `tblpayment` (
   `payment_date` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tblpayment`
---
-
-INSERT INTO `tblpayment` (`id`, `bookingID`, `paymentType`, `payment`, `payment_date`) VALUES
-(12, '5', 'Full Payment', '599', '2026-05-16 16:16:35');
-
 -- --------------------------------------------------------
 
 --
@@ -165,8 +150,7 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`id`, `fname`, `lname`, `email`, `mobile`, `password`, `status`, `state`, `city`, `address`, `create_date`) VALUES
-(7, 'angel ', 'yuki', 'angel@gmail.com', '09123456789', '$2y$10$WoveUy5bMRFhZ58q6prHqObKvZ4N3LYQ8kk8B1TmcJenbVEI3bN7u', 1, NULL, 'Ormoc', NULL, '2026-05-16 03:11:21'),
-(8, 'yan', 'yan', 'yanyan@gmail.com', '12345678901', '$2y$10$c1rO8UZfwYAhAJTbmLO6u.TyDlvAPfa8ngVPMSawPbkkaWL7w5uW.', 1, NULL, 'Albuera', NULL, '2026-05-16 16:01:24');
+(7, 'angel ', 'yuki', 'angel@gmail.com', '09123456789', '$2y$10$WoveUy5bMRFhZ58q6prHqObKvZ4N3LYQ8kk8B1TmcJenbVEI3bN7u', 1, '', 'Ormoc', '', '2026-05-16 03:11:21');
 
 --
 -- Indexes for dumped tables
@@ -216,7 +200,7 @@ ALTER TABLE `tbluser`
 -- AUTO_INCREMENT for table `tbladdpackage`
 --
 ALTER TABLE `tbladdpackage`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tbladmin`
@@ -228,19 +212,19 @@ ALTER TABLE `tbladmin`
 -- AUTO_INCREMENT for table `tblbooking`
 --
 ALTER TABLE `tblbooking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `tblcategory`
 --
 ALTER TABLE `tblcategory`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tblpayment`
 --
 ALTER TABLE `tblpayment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `tbluser`

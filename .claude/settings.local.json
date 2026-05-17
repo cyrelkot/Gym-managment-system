@@ -30,7 +30,10 @@
       "Bash(find /c/xampp/htdocs/gym -type f -name \"*.sql\" -o -name \"*package*\" -o -name \"*booking*\" 2>/dev/null | head -30)",
       "Bash(ls -la /c/xampp/htdocs/gym/*.php)",
       "Bash(find C:/xampp/htdocs/gym -type f -name \"*.sql\" -o -name \"*schema*\" -o -name \"*migration*\" 2>/dev/null | head -20)",
-      "Bash(ls -la C:/xampp/htdocs/gym/*.php | grep -i book)"
+      "Bash(ls -la C:/xampp/htdocs/gym/*.php | grep -i book)",
+      "Bash(ls -lh /c/xampp/htdocs/gym/*.sql /c/xampp/htdocs/gym/*.md /c/xampp/htdocs/gym/*.docx 2>&1)",
+      "Bash(find /c/xampp/htdocs/gym -not -path \"*/.git/*\" -not -path \"*/node_modules/*\" -type f -exec ls -lh {})",
+      "Bash(sort -k2)"
     ]
   }
 }

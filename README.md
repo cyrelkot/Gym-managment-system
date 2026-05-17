@@ -21,6 +21,7 @@ Password: Test@12345
 
 # Employer Credential
 
-Username: john@test.com
-Password: Test@123
+Username: angel@gmail.com
+Password: @Angel17
+
 or Register a new user
