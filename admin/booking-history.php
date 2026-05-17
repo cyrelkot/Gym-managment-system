@@ -237,6 +237,8 @@ onclick="openModal(
 <?php echo json_encode($row->paymentType); ?>
 )">View</button>
 
+<a href="edit-booking.php?bookingid=<?php echo (int)$row->bookingid; ?>" class="btn btn-success btn-sm">Edit</a>
+
 <form method="post" style="display:inline;">
 <?php echo csrf_field(); ?>
 <input type="hidden" name="bookingid" value="<?php echo (int)$row->bookingid;?>">
