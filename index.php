@@ -21,15 +21,11 @@ if($user && intval($user['status']) === 1){
     $approved = true;
 }
 
-/* CHECK IF USER HAS BOOKING */
-$hasBooking = false;
-$checkBooking = $dbh->prepare("SELECT id FROM tblbooking WHERE userid = :uid LIMIT 1");
-$checkBooking->bindParam(':uid', $uid, PDO::PARAM_INT);
-$checkBooking->execute();
-
-if($checkBooking->rowCount() > 0){
-    $hasBooking = true;
-}
+/* GET PACKAGES ALREADY BOOKED BY THIS USER */
+$bookedQuery = $dbh->prepare("SELECT package_id FROM tblbooking WHERE userid = :uid");
+$bookedQuery->bindParam(':uid', $uid, PDO::PARAM_INT);
+$bookedQuery->execute();
+$bookedPackageIds = array_map('intval', $bookedQuery->fetchAll(PDO::FETCH_COLUMN));
 
 /* BOOKING */
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
@@ -43,16 +39,25 @@ if(isset($_POST['submit'])){
         exit;
     }
 
-    $pid=$_POST['pid'];
+    $pid = intval($_POST['pid']);
 
-    $sql="INSERT INTO tblbooking (package_id,userid) VALUES (:pid,:uid)";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':pid',$pid,PDO::PARAM_STR);
-    $query->bindParam(':uid',$uid,PDO::PARAM_STR);
-    $query->execute();
+    $dupCheck = $dbh->prepare("SELECT id FROM tblbooking WHERE userid = :uid AND package_id = :pid LIMIT 1");
+    $dupCheck->bindParam(':uid', $uid, PDO::PARAM_INT);
+    $dupCheck->bindParam(':pid', $pid, PDO::PARAM_INT);
+    $dupCheck->execute();
 
-    echo "<script>alert('Package booked successfully');</script>";
-    echo "<script>window.location.href='booking-history.php'</script>";
+    if($dupCheck->rowCount() > 0){
+        echo "<script>alert('You have already booked this package.');</script>";
+    } else {
+        $sql="INSERT INTO tblbooking (package_id,userid) VALUES (:pid,:uid)";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':pid',$pid,PDO::PARAM_INT);
+        $query->bindParam(':uid',$uid,PDO::PARAM_INT);
+        $query->execute();
+
+        echo "<script>alert('Package booked successfully');</script>";
+        echo "<script>window.location.href='booking-history.php'</script>";
+    }
 }
 
 /* FETCH PACKAGES WITH ENRICHED DATA */
@@ -508,8 +513,8 @@ body{
                     <div class="btn-container">
                         <?php if(!$approved){ ?>
                             <button class="btn-book-disabled" disabled>Awaiting Approval</button>
-                        <?php } elseif($hasBooking){ ?>
-                            <a href="booking-history.php" class="btn-book-outline">View My Booking</a>
+                        <?php } elseif(in_array((int)$result->id, $bookedPackageIds)){ ?>
+                            <button class="btn-book-disabled" disabled>Already Booked</button>
                         <?php } else { ?>
                             <form method="post">
                                 <?php echo csrf_field(); ?>
