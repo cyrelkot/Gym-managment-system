@@ -129,12 +129,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
         </div>
       </div>
       </div>
-      <?php 
-if(Isset($_POST['Submit'])){?>
-<?php
- $fdate=$_POST['fdate'];
- $tdate=$_POST['todate'];
-?>
+      <?php
+      if (isset($_POST['Submit'])) {
+          $fdate = $_POST['fdate'];
+          $tdate = $_POST['todate'];
+          $sql = "SELECT t1.id as bookingid, t3.fname as Name, t3.email as email,
+                  t1.booking_date as bookingdate, t2.titlename as title,
+                  t2.PackageDuration as PackageDuration, t2.Price as Price,
+                  t2.Description as Description, t4.category_name as category_name,
+                  t2.titlename as Plan
+                  FROM tblbooking as t1
+                  LEFT JOIN tbladdpackage as t2 ON t1.package_id = t2.id
+                  LEFT JOIN tbluser as t3 ON t1.userid = t3.id
+                  LEFT JOIN tblcategory as t4 ON t2.category = t4.id
+                  WHERE date(booking_date) BETWEEN :fdate AND :tdate
+                  ORDER BY t1.booking_date DESC";
+          $query = $dbh->prepare($sql);
+          $query->bindParam(':fdate', $fdate, PDO::PARAM_STR);
+          $query->bindParam(':tdate', $tdate, PDO::PARAM_STR);
+      } else {
+          $sql = "SELECT t1.id as bookingid, t3.fname as Name, t3.email as email,
+                  t1.booking_date as bookingdate, t2.titlename as title,
+                  t2.PackageDuration as PackageDuration, t2.Price as Price,
+                  t2.Description as Description, t4.category_name as category_name,
+                  t2.titlename as Plan
+                  FROM tblbooking as t1
+                  LEFT JOIN tbladdpackage as t2 ON t1.package_id = t2.id
+                  LEFT JOIN tbluser as t3 ON t1.userid = t3.id
+                  LEFT JOIN tblcategory as t4 ON t2.category = t4.id
+                  ORDER BY t1.booking_date DESC";
+          $query = $dbh->prepare($sql);
+      }
+      $query->execute();
+      $results = $query->fetchAll(PDO::FETCH_OBJ);
+      $cnt = 1;
+      ?>
        <div class="row">
         <div class="col-md-12">
           <div class="tile">
@@ -142,67 +171,41 @@ if(Isset($_POST['Submit'])){?>
               <table class="table table-hover table-bordered" id="sampleTable">
                 <thead>
                   <tr>
-                     <th>Sr.No</th>
-        <th hidden>bookingid</th>
-        <th>Name</th>
-        <th>email</th>
-        <th>bookingdate</th>
-        <th hidden>title</th>
-        <th>Duration</th>
-        <th>price</th>
-        <th hidden>Description</th>
-        <th>category_name</th>
-        <th>Plan</th>
-        
-                    
+                    <th>Sr.No</th>
+                    <th hidden>bookingid</th>
+                    <th>Name</th>
+                    <th>email</th>
+                    <th>bookingdate</th>
+                    <th hidden>title</th>
+                    <th>Duration</th>
+                    <th>price</th>
+                    <th hidden>Description</th>
+                    <th>category_name</th>
+                    <th>Plan</th>
                   </tr>
                 </thead>
-                  <?php
-                  $sql="SELECT t1.id as bookingid,t3.fname as Name, t3.email as email,t1.booking_date as bookingdate,t2.titlename as title,t2.PackageDuration as PackageDuration,
-t2.Price as Price,t2.Description as Description,t4.category_name as category_name,t2.titlename as Plan FROM tblbooking as t1
-LEFT JOIN tbladdpackage as t2
-ON t1.package_id =t2.id
-LEFT JOIN tbluser as t3
-ON t1.userid=t3.id
-LEFT JOIN tblcategory as t4
-ON t2.category=t4.id
-where date(booking_date) between :fdate and :tdate";
-                  $query= $dbh->prepare($sql);
-                  $query->bindParam(':fdate',$fdate, PDO::PARAM_STR);
-                  $query->bindParam(':tdate',$tdate, PDO::PARAM_STR);
-                  $query-> execute();
-                  $results = $query -> fetchAll(PDO::FETCH_OBJ);
-                  $cnt=1;
-                  if($query -> rowCount() > 0)
-                  {
-                  foreach($results as $result)
-                  {
-                  ?>
-
                 <tbody>
+                  <?php foreach ($results as $result) { ?>
                   <tr>
-                    <td><?php echo($cnt);?></td>
-                    <td hidden><?php echo htmlentities($result->bookingid);?></td>
-                    <td><?php echo htmlspecialchars($result->Name, ENT_QUOTES, 'UTF-8');?></td>
-                    <td><?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8');?></td>
-                    <td><?php echo htmlspecialchars($result->bookingdate, ENT_QUOTES, 'UTF-8');?></td>
-                    <td hidden><?php echo htmlspecialchars($result->title, ENT_QUOTES, 'UTF-8');?></td>
-                    <td><?php echo htmlspecialchars($result->PackageDuration, ENT_QUOTES, 'UTF-8');?></td>
-                    <td><?php echo htmlspecialchars($result->Price, ENT_QUOTES, 'UTF-8');?></td>
-                    <td hidden><?php echo htmlspecialchars($result->Description, ENT_QUOTES, 'UTF-8');?></td>
-                    <td><?php echo htmlspecialchars($result->category_name, ENT_QUOTES, 'UTF-8');?></td>
-                    <td><?php echo htmlspecialchars($result->Plan, ENT_QUOTES, 'UTF-8');?></td>
-                     
+                    <td><?php echo $cnt++; ?></td>
+                    <td hidden><?php echo htmlentities($result->bookingid); ?></td>
+                    <td><?php echo htmlspecialchars($result->Name, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($result->bookingdate, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td hidden><?php echo htmlspecialchars($result->title, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($result->PackageDuration, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($result->Price, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td hidden><?php echo htmlspecialchars($result->Description, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($result->category_name, ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($result->Plan, ENT_QUOTES, 'UTF-8'); ?></td>
                   </tr>
-                    <?php  $cnt=$cnt+1; } } ?>
-              
+                  <?php } ?>
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
-      <?php }?>
     </main>
     <!-- Essential javascripts for application to work-->
      <script src="js/jquery-3.2.1.min.js"></script>
