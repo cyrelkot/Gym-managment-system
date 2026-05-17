@@ -176,11 +176,11 @@ t3.email as email,
 t1.booking_date as bookingdate,
 t1.paymentType as status,
 t2.titlename as title,
-t2.PackageDuratiobn as PackageDuratiobn,
+t2.PackageDuration as PackageDuration,
 t2.Price as Price,
 t2.Description as Description,
 t4.category_name as category_name,
-COALESCE(t5.PackageName, t2.titlename) as Plan
+t2.titlename as Plan
 
 FROM tblbooking as t1
 
@@ -192,9 +192,6 @@ ON t1.userid=t3.id
 
 LEFT JOIN tblcategory as t4
 ON t2.category=t4.id
-
-LEFT JOIN tblpackage as t5
-ON t2.PackageType=t5.id
 
 WHERE t1.paymentType IS NULL OR t1.paymentType=''";
 

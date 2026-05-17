@@ -183,13 +183,12 @@ tr:nth-child(even){
 <?php
 $bookingid=$_GET['bookingid'];
 
-$sql="SELECT t1.*, t2.titlename,t2.PackageDuratiobn,t2.Price,t2.Description,
-t4.category_name,t5.PackageName as Plan,t3.fname,t3.email
+$sql="SELECT t1.*, t2.titlename,t2.PackageDuration,t2.Price,t2.Description,
+t4.category_name,t3.fname,t3.email
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id=t2.id
 LEFT JOIN tbluser t3 ON t1.userid=t3.id
 LEFT JOIN tblcategory t4 ON t2.category=t4.id
-LEFT JOIN tblpackage t5 ON t2.PackageType=t5.id
 WHERE t1.id=:id AND t1.userid=:uid";
 
 $query=$dbh->prepare($sql);
@@ -214,8 +213,7 @@ if (!$row) {
 <div><span class="label">Date</span><br><span class="value"><?php echo htmlspecialchars($row->booking_date, ENT_QUOTES, 'UTF-8');?></span></div>
 <div><span class="label">Category</span><br><span class="value"><?php echo htmlspecialchars($row->category_name, ENT_QUOTES, 'UTF-8');?></span></div>
 <div><span class="label">Title</span><br><span class="value"><?php echo htmlspecialchars($row->titlename, ENT_QUOTES, 'UTF-8');?></span></div>
-<div><span class="label">Plan</span><br><span class="value"><?php echo htmlspecialchars($row->Plan, ENT_QUOTES, 'UTF-8');?></span></div>
-<div><span class="label">Duration</span><br><span class="value"><?php echo htmlspecialchars($row->PackageDuratiobn, ENT_QUOTES, 'UTF-8');?></span></div>
+<div><span class="label">Duration</span><br><span class="value"><?php echo htmlspecialchars($row->PackageDuration, ENT_QUOTES, 'UTF-8');?></span></div>
 <div><span class="label">Price</span><br><span class="value">₱<?php echo htmlspecialchars($row->Price, ENT_QUOTES, 'UTF-8');?></span></div>
 </div>
 

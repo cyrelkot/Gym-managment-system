@@ -112,16 +112,14 @@ if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
                   </tr>
                 </thead>
                <?php
-                  $sql="SELECT t1.id as bookingid,t3.fname as Name, t3.email as email,t1.booking_date as bookingdate,t2.titlename as title,t2.PackageDuratiobn as PackageDuratiobn,
-t2.Price as Price,t2.Description as Description,t4.category_name as category_name,t5.PackageName as Plan FROM tblbooking as t1
+                  $sql="SELECT t1.id as bookingid,t3.fname as Name, t3.email as email,t1.booking_date as bookingdate,t2.titlename as title,t2.PackageDuration as PackageDuration,
+t2.Price as Price,t2.Description as Description,t4.category_name as category_name,t2.titlename as Plan FROM tblbooking as t1
  LEFT JOIN tbladdpackage as t2
  ON t1.package_id = t2.id
  LEFT JOIN tbluser as t3
  ON t1.userid = t3.id
  LEFT JOIN tblcategory as t4
  ON t2.category = t4.id
- LEFT JOIN tblpackage as t5
- ON t2.PackageType = t5.id
  WHERE t1.paymentType='Full Payment'";
                   $query= $dbh->prepare($sql);
                   $query-> execute();

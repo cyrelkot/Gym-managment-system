@@ -157,14 +157,13 @@ $sql="SELECT t1.id as bookingid,
         t3.fname,
         t3.email,
         t2.Price,
-        COALESCE(t5.PackageName, t2.titlename) as Plan,
+        t2.titlename as Plan,
         t1.paymentType
 
         FROM tblbooking t1
 
         LEFT JOIN tbladdpackage t2 ON t1.package_id=t2.id
         LEFT JOIN tbluser t3 ON t1.userid=t3.id
-        LEFT JOIN tblpackage t5 ON t2.PackageType=t5.id
 
         WHERE t1.id=:bookindid";
 
@@ -224,14 +223,12 @@ if (empty($packageId)) {
 
 // If package info is missing, load it by packageId
 if (empty($result->Plan) && !empty($packageId)) {
-    $packageStmt = $dbh->prepare("SELECT t5.PackageName FROM tbladdpackage t2
-        LEFT JOIN tblpackage t5 ON t2.PackageType=t5.id
-        WHERE t2.id = :pid");
+    $packageStmt = $dbh->prepare("SELECT titlename FROM tbladdpackage WHERE id = :pid");
     $packageStmt->bindParam(':pid', $packageId, PDO::PARAM_INT);
     $packageStmt->execute();
     $packageInfo = $packageStmt->fetch(PDO::FETCH_OBJ);
     if ($packageInfo) {
-        $result->Plan = $packageInfo->PackageName;
+        $result->Plan = $packageInfo->titlename;
     }
 }
 /* TOTAL PAYMENT */

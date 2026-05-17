@@ -196,15 +196,13 @@ tr:nth-child(even){
 $sql="SELECT t1.id as bookingid,
 t1.booking_date,
 t2.titlename,
-t2.PackageDuratiobn,
+t2.PackageDuration,
 t2.Price,
 t2.Description,
-t4.category_name,
-t5.PackageName as Plan
+t4.category_name
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
 LEFT JOIN tblcategory t4 ON t2.category = t4.id
-LEFT JOIN tblpackage t5 ON t2.PackageType = t5.id
 WHERE t1.userid=:uid";
 
 $query= $dbh->prepare($sql);
@@ -229,7 +227,6 @@ $cnt=1;
 <th>Duration</th>
 <th>Price</th>
 <th>Category</th>
-<th>Plan</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -241,10 +238,9 @@ $cnt=1;
 <td><?php echo $cnt++; ?></td>
 <td><?php echo htmlspecialchars($row->booking_date, ENT_QUOTES, 'UTF-8'); ?></td>
 <td><?php echo htmlspecialchars($row->titlename, ENT_QUOTES, 'UTF-8'); ?></td>
-<td><?php echo htmlspecialchars($row->PackageDuratiobn, ENT_QUOTES, 'UTF-8'); ?></td>
+<td><?php echo htmlspecialchars($row->PackageDuration, ENT_QUOTES, 'UTF-8'); ?></td>
 <td>₱<?php echo htmlspecialchars($row->Price, ENT_QUOTES, 'UTF-8'); ?></td>
 <td><?php echo htmlspecialchars($row->category_name, ENT_QUOTES, 'UTF-8'); ?></td>
-<td><?php echo htmlspecialchars($row->Plan, ENT_QUOTES, 'UTF-8'); ?></td>
 <td>
 <a href="booking-details.php?bookingid=<?php echo (int)$row->bookingid; ?>">
 <button class="btn-view">View</button>

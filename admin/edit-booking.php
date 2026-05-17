@@ -151,13 +151,12 @@ if (isset($_POST['update_booking'])) {
 $sql = "SELECT t1.id as bookingid, t1.booking_date as bookingdate, t1.paymentType as paymentType, t1.payment as paymentAmount,
         t1.userid as userId, t1.package_id as packageId,
         t3.fname as Name, t3.email as email,
-        t2.titlename as title, t2.PackageDuratiobn as PackageDuratiobn, t2.Price as Price,
-        t4.category_name as category_name, t5.PackageName as Plan
+        t2.titlename as title, t2.PackageDuration as PackageDuration, t2.Price as Price,
+        t4.category_name as category_name, t2.titlename as Plan
         FROM tblbooking as t1
         LEFT JOIN tbladdpackage as t2 ON t1.package_id = t2.id
         LEFT JOIN tbluser as t3 ON t1.userid = t3.id
         LEFT JOIN tblcategory as t4 ON t2.category = t4.id
-        LEFT JOIN tblpackage as t5 ON t2.PackageType = t5.id
         WHERE t1.id = :bookingId";
 
 $query = $dbh->prepare($sql);
@@ -176,9 +175,8 @@ $userStmt->execute();
 $users = $userStmt->fetchAll(PDO::FETCH_OBJ);
 
 // Load packages for selection
-$packageStmt = $dbh->prepare("SELECT t2.id, t2.Price, t5.PackageName, t2.titlename FROM tbladdpackage t2
-    LEFT JOIN tblpackage t5 ON t2.PackageType = t5.id
-    ORDER BY t5.PackageName, t2.titlename");
+$packageStmt = $dbh->prepare("SELECT t2.id, t2.Price, t2.titlename FROM tbladdpackage t2
+    ORDER BY t2.titlename");
 $packageStmt->execute();
 $packages = $packageStmt->fetchAll(PDO::FETCH_OBJ);
 
@@ -245,7 +243,7 @@ if ($remainingBalance < 0) {
                                 <option value="" data-price="0">-- Select Package --</option>
                                 <?php foreach ($packages as $package) { ?>
                                     <option value="<?php echo $package->id; ?>" data-price="<?php echo floatval($package->Price); ?>" <?php echo $package->id == $booking->packageId ? 'selected' : ''; ?>>
-                                        <?php echo htmlentities($package->PackageName . ' / ' . $package->titlename); ?>
+                                        <?php echo htmlentities($package->titlename); ?>
                                     </option>
                                 <?php } ?>
                             </select>

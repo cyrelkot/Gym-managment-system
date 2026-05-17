@@ -182,12 +182,11 @@ $sql="SELECT t1.id as bookingid,
 t3.fname as Name,
 t3.email,
 t1.booking_date,
-COALESCE(t5.PackageName, t2.titlename) as Plan,
+t2.titlename as Plan,
 t1.paymentType
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
-LEFT JOIN tbluser t3 ON t1.userid = t3.id
-LEFT JOIN tblpackage t5 ON t2.PackageType = t5.id";
+LEFT JOIN tbluser t3 ON t1.userid = t3.id";
 
 $query= $dbh->prepare($sql);
 $query->execute();
