@@ -80,8 +80,20 @@ if (isset($_POST['submit'])) {
         <a href="about.php">About</a>
         <a href="contact.php">Contact</a>
         <a href="booking-history.php">Booking History</a>
-        <a href="profile.php">Profile</a>
-        <a href="logout.php">Logout</a>
+    </div>
+    <div class="nav-right">
+        <div class="user-menu">
+            <div class="user-trigger">
+                <span class="user-avatar"><?php echo htmlspecialchars(strtoupper(substr($_SESSION['fname'], 0, 1)), ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="user-name"><?php echo htmlspecialchars($_SESSION['fname'], ENT_QUOTES, 'UTF-8'); ?></span>
+                <span class="user-caret">&#9660;</span>
+            </div>
+            <div class="user-dropdown">
+                <a href="profile.php">Profile</a>
+                <a href="changepassword.php">Change Password</a>
+                <a href="logout.php">Logout</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -145,6 +157,21 @@ if (isset($_POST['submit'])) {
     <div class="footer-tagline">Train harder. Live better.</div>
     <div class="footer-copy">© 2026 Gym Management System. All rights reserved.</div>
 </footer>
+
+<script>
+(function() {
+    var trigger = document.querySelector('.user-trigger');
+    if (!trigger) return;
+    var menu = trigger.closest('.user-menu');
+    trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.classList.toggle('open');
+    });
+    document.addEventListener('click', function() {
+        menu.classList.remove('open');
+    });
+})();
+</script>
 
 </body>
 </html>
