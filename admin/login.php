@@ -57,6 +57,7 @@ if (isset($_POST['login'])) {
   <title>Admin Login</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <style>
     body {
@@ -77,27 +78,35 @@ if (isset($_POST['login'])) {
     }
 
     .login-box {
-      background: rgba(0,0,0,0.80);
+      background: rgba(0,0,0,0.82);
       padding: 40px;
-      border-radius: 12px;
-      width: 350px;
-      box-shadow: 0 0 25px rgba(0,0,0,0.7);
+      border-radius: 14px;
+      width: 360px;
+      box-shadow: 0 0 40px rgba(255,102,0,0.18), 0 0 80px rgba(0,0,0,0.7);
       text-align: center;
-      border: 1px solid #ff6600;
+      border: 1px solid rgba(255,102,0,0.55);
+      animation: glowPulse 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowPulse {
+      from { box-shadow: 0 0 30px rgba(255,102,0,0.12), 0 0 70px rgba(0,0,0,0.6); }
+      to   { box-shadow: 0 0 45px rgba(255,102,0,0.28), 0 0 90px rgba(0,0,0,0.7); }
     }
 
     .logo {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 4px;
       color: #ff6600;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
     }
 
     .tagline {
-      font-size: 13px;
-      color: #aaa;
-      margin-bottom: 25px;
+      font-size: 11px;
+      color: #888;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
     }
 
     .form-group {
@@ -112,9 +121,23 @@ if (isset($_POST['login'])) {
       display: block;
     }
 
+    .input-icon-wrap {
+      position: relative;
+    }
+
+    .input-icon-wrap .fa {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
     .form-control {
       width: 100%;
-      padding: 10px;
+      padding: 10px 10px 10px 36px;
       border: none;
       border-radius: 6px;
       outline: none;
@@ -122,11 +145,12 @@ if (isset($_POST['login'])) {
       color: #fff;
       font-size: 14px;
       border: 1px solid #333;
+      box-sizing: border-box;
     }
 
     .form-control:focus {
       border: 1px solid #ff6600;
-      box-shadow: 0 0 5px #ff6600;
+      box-shadow: 0 0 0 3px rgba(255,102,0,0.22);
     }
 
     .btn-login {
@@ -174,9 +198,9 @@ if (isset($_POST['login'])) {
 <div class="login-container">
   <div class="login-box">
 
-    <div class="logo">
-      ADMIN
-    </div>
+    <div class="logo">GYM MS</div>
+    <div class="tagline">Admin Panel</div>
+
     <?php if ($errmsg) { ?>
       <div class="alert"><?php echo htmlentities($errmsg); ?></div>
     <?php } ?>
@@ -185,12 +209,18 @@ if (isset($_POST['login'])) {
       <?php echo csrf_field(); ?>
       <div class="form-group">
         <label>Email</label>
-        <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+        <div class="input-icon-wrap">
+          <i class="fa fa-envelope"></i>
+          <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+        </div>
       </div>
 
       <div class="form-group">
         <label>Password</label>
-        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+        <div class="input-icon-wrap">
+          <i class="fa fa-lock"></i>
+          <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+        </div>
       </div>
 
       <button type="submit" name="login" class="btn-login">LOGIN</button>

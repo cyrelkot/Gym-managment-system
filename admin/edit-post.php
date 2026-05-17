@@ -63,34 +63,7 @@ $durations = ['1 Month', '3 Months', '6 Months', '12 Months'];
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        body, .app-content {
-            background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
-                        url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
-            background-size: cover;
-            background-position: center;
-            color: #fff;
-        }
-        .tile {
-            background: rgba(0,0,0,0.80);
-            border: 1px solid rgba(255,102,0,0.45);
-            border-radius: 14px;
-            box-shadow: 0 0 22px rgba(0,0,0,0.35);
-            color: #fff;
-        }
-        h3, label, .tile-body, .tile-body * { color: #fff; }
-        hr { border-top: 1px solid rgba(255,102,0,0.35); }
-        .form-control { background: #1a1a1a; border: 1px solid #333; color: #fff; }
-        .form-control:focus {
-            background: #1a1a1a;
-            border-color: #ff6600;
-            box-shadow: 0 0 5px rgba(255,102,0,0.35);
-            color: #fff;
-        }
-        select.form-control option { background: #1a1a1a; color: #fff; }
-        .btn-primary { background: #ff6600; border-color: #ff6600; }
-        .btn-primary:hover { background: #e65c00; border-color: #e65c00; }
-    </style>
+
 </head>
 <body class="app sidebar-mini rtl">
     <?php include 'include/header.php'; ?>
