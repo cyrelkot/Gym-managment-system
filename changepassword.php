@@ -33,138 +33,118 @@ if (isset($_POST['submit'])) {
         $chngpwd1->bindParam(':email',       $email,     PDO::PARAM_STR);
         $chngpwd1->bindParam(':newpassword', $hashedNew, PDO::PARAM_STR);
         $chngpwd1->execute();
-        $msg = "Your Password successfully changed";
+        $msg = "Your password has been changed successfully.";
     } else {
         $error = "Your current password is not valid.";
     }
 }
 ?>
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 <head>
-	<title>Ahana | Yoga HTML Template</title>
-	<meta charset="UTF-8">
-	<meta name="description" content="Ahana Yoga HTML Template">
-	<meta name="keywords" content="yoga, html">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/magnific-popup.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
-	<link rel="stylesheet" href="css/animate.css"/>
-
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
-	<link rel="stylesheet" href="css/user.css"/>
-<script type="text/javascript">
-function valid()
-{
-if(document.chngpwd.newpassword.value!= document.chngpwd.confirmpassword.value)
-{
-alert("New Password and Confirm Password Field do not match  !!");
-document.chngpwd.confirmpassword.focus();
-return false;
-}
-return true;
-}
-</script>
+    <title>Gym Management System | Change Password</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/user.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <script>
+    function valid() {
+        if (document.chngpwd.newpassword.value != document.chngpwd.confirmpassword.value) {
+            alert("New Password and Confirm Password do not match!");
+            document.chngpwd.confirmpassword.focus();
+            return false;
+        }
+        return true;
+    }
+    function togglePwd(inputId, iconEl) {
+        var input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            iconEl.classList.remove('fa-eye');
+            iconEl.classList.add('fa-eye-slash');
+        } else {
+            input.type = 'password';
+            iconEl.classList.remove('fa-eye-slash');
+            iconEl.classList.add('fa-eye');
+        }
+    }
+    </script>
 </head>
 <body class="changepwd-page">
-	<!-- Page Preloder -->
-	
 
-	<!-- NAVBAR -->
-	<div class="navbar">
-	    <div class="logo">GYM</div>
-	    <div class="nav-center">
-	        <a href="index.php">Home</a>
-	        <a href="about.php">About</a>
-	        <a href="contact.php">Contact</a>
-	        <a href="booking-history.php">Booking History</a>
-	        <a href="logout.php">Logout</a>
-	    </div>
-	</div>
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">GYM</div>
+    <div class="nav-center">
+        <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
+        <a href="booking-history.php">Booking History</a>
+        <a href="profile.php">Profile</a>
+        <a href="logout.php">Logout</a>
+    </div>
+</div>
 
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>changepassword</h2>
-				</div>
-			</div>
-		</div>
-	</section>
+<!-- HERO -->
+<div class="hero">
+    <h1>Change Password</h1>
+</div>
 
+<!-- CHANGE PASSWORD SECTION -->
+<div class="changepwd-section">
+    <div class="changepwd-card">
+        <h3><i class="fa fa-lock"></i> Update Your Password</h3>
 
+        <?php if ($error) { ?>
+        <div class="errorWrap"><strong>ERROR:</strong> <?php echo htmlentities($error); ?></div>
+        <?php } elseif ($msg) { ?>
+        <div class="succWrap"><strong>SUCCESS:</strong> <?php echo htmlentities($msg); ?></div>
+        <?php } ?>
 
-	<!-- Pricing Section -->
-	<section class="pricing-section spad">
-		<div class="container">
-			
-			<div class="row">
-				<div class="col-lg-4 col-sm-6">
-					
-				</div>
-				<div class="col-lg-4 col-sm-6">
-					<div class="pricing-item entermediate">
-						<div class="pi-top">
-							<h4>changepassword</h4>
-						</div>
-						  <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
-				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
-						
-						<form class="singup-form contact-form" method="post" onSubmit="return valid();">
-<?php echo csrf_field(); ?>
-						<div class="row">
-							<div class="col-md-12">
-								<input type="password" name="password" id="password" placeholder="Old Password" autocomplete="off">
-							</div>
-							<div class="col-md-12">
-								<input type="password" name="newpassword" id="newpassword" placeholder="New Password" autocomplete="off">
-							</div>
-							
-							<div class="col-md-12">
-								<input type="password" name="confirmpassword" id="confirmpassword" placeholder="Confirm Password" autocomplete="off">
-							</div>
-							
-						</div>
-					
-					<input type="submit" id="submit" name="submit" value="Submit" class="site-btn sb-gradient">
-</form>
-					</div>
-				</div>
-				<div class="col-lg-4 col-sm-6">
-					
-				</div>
-				
-			</div>
-		</div>
-	</section>
-	
+        <form name="chngpwd" method="post" onsubmit="return valid();">
+            <?php echo csrf_field(); ?>
 
-	<!-- Footer Section -->
-	<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
+            <div class="form-group">
+                <label for="password">Current Password</label>
+                <div class="pwd-wrap">
+                    <input type="password" name="password" id="password" autocomplete="off">
+                    <span class="toggle-pwd" onclick="togglePwd('password', this.querySelector('i'))">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </div>
+            </div>
 
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
+            <div class="form-group">
+                <label for="newpassword">New Password</label>
+                <div class="pwd-wrap">
+                    <input type="password" name="newpassword" id="newpassword" autocomplete="off">
+                    <span class="toggle-pwd" onclick="togglePwd('newpassword', this.querySelector('i'))">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </div>
+            </div>
 
-	<!-- Search model end -->
+            <div class="form-group">
+                <label for="confirmpassword">Confirm New Password</label>
+                <div class="pwd-wrap">
+                    <input type="password" name="confirmpassword" id="confirmpassword" autocomplete="off">
+                    <span class="toggle-pwd" onclick="togglePwd('confirmpassword', this.querySelector('i'))">
+                        <i class="fa fa-eye"></i>
+                    </span>
+                </div>
+            </div>
 
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
+            <button type="submit" name="submit" class="btn-submit">Update Password</button>
+        </form>
+    </div>
+</div>
 
-	</body>
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-brand">GYM</div>
+    <div class="footer-tagline">Train harder. Live better.</div>
+    <div class="footer-copy">© 2026 Gym Management System. All rights reserved.</div>
+</footer>
+
+</body>
 </html>
-<?php } ?>

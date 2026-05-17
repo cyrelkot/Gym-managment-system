@@ -2,10 +2,10 @@
 session_start();
 error_reporting(0);
 require_once('include/config.php');
-if(strlen( $_SESSION["uid"])==0)
-    {   
-header('location:login.php');
-exit;
+if(strlen($_SESSION["uid"])==0)
+{
+    header('location:login.php');
+    exit;
 }
 else{
 
@@ -15,158 +15,130 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
 
 if(isset($_POST['submit']))
 {
-$uid=$_SESSION['uid'];
-$fname=$_POST['fname'];
-$lname=$_POST['lname'];
-$email=$_POST['email'];
-$mobile=$_POST['mobile'];
-$city=$_POST['city'];
-$state=$_POST['state'];
-$address=$_POST['address'];
-$sql="update tbluser set fname=:fname,lname=:lname,mobile=:mobile,city=:city,state=:state,address=:Address where id=:uid";
-$query = $dbh->prepare($sql);
-$query->bindParam(':fname',$fname,PDO::PARAM_STR);
-$query->bindParam(':lname',$lname,PDO::PARAM_STR);
-$query->bindParam(':mobile',$mobile,PDO::PARAM_STR);
-$query->bindParam(':city',$city,PDO::PARAM_STR);
-$query->bindParam(':state',$state,PDO::PARAM_STR);
-$query->bindParam(':Address',$address,PDO::PARAM_STR);
-$query->bindParam(':uid',$uid,PDO::PARAM_INT);
-$query->execute();
-//$msg="<script>toastr.success('Mobile info updated Successfully', {timeOut: 5000})</script>";
-echo "<script>alert('Profile has been updated.');</script>";
-echo "<script> window.location.href = 'profile.php';</script>";
-
+    $uid=$_SESSION['uid'];
+    $fname=$_POST['fname'];
+    $lname=$_POST['lname'];
+    $email=$_POST['email'];
+    $mobile=$_POST['mobile'];
+    $city=$_POST['city'];
+    $state=$_POST['state'];
+    $address=$_POST['address'];
+    $sql="update tbluser set fname=:fname,lname=:lname,mobile=:mobile,city=:city,state=:state,address=:Address where id=:uid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':fname',$fname,PDO::PARAM_STR);
+    $query->bindParam(':lname',$lname,PDO::PARAM_STR);
+    $query->bindParam(':mobile',$mobile,PDO::PARAM_STR);
+    $query->bindParam(':city',$city,PDO::PARAM_STR);
+    $query->bindParam(':state',$state,PDO::PARAM_STR);
+    $query->bindParam(':Address',$address,PDO::PARAM_STR);
+    $query->bindParam(':uid',$uid,PDO::PARAM_INT);
+    $query->execute();
+    echo "<script>alert('Profile has been updated.');</script>";
+    echo "<script>window.location.href = 'profile.php';</script>";
 }
 
-
- ?>
+?>
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="en">
 <head>
-	<title>Gym Management System | User Profile</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<!-- Stylesheets -->
-	<link rel="stylesheet" href="css/bootstrap.min.css"/>
-	<link rel="stylesheet" href="css/font-awesome.min.css"/>
-	<link rel="stylesheet" href="css/owl.carousel.min.css"/>
-	<link rel="stylesheet" href="css/nice-select.css"/>
-	<link rel="stylesheet" href="css/slicknav.min.css"/>
-
-	<!-- Main Stylesheets -->
-	<link rel="stylesheet" href="css/style.css"/>
-	<link rel="stylesheet" href="css/user.css"/>
+    <title>Gym Management System | My Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/user.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 <body class="profile-page">
-	<!-- Page Preloder -->
-	
 
-	<!-- NAVBAR -->
-	<div class="navbar">
-	    <div class="logo">GYM</div>
-	    <div class="nav-center">
-	        <a href="index.php">Home</a>
-	        <a href="about.php">About</a>
-	        <a href="contact.php">Contact</a>
-	        <a href="booking-history.php">Booking History</a>
-	        <a href="logout.php">Logout</a>
-	    </div>
-	</div>
+<!-- NAVBAR -->
+<div class="navbar">
+    <div class="logo">GYM</div>
+    <div class="nav-center">
+        <a href="index.php">Home</a>
+        <a href="about.php">About</a>
+        <a href="contact.php">Contact</a>
+        <a href="booking-history.php">Booking History</a>
+        <a href="changepassword.php">Change Password</a>
+        <a href="logout.php">Logout</a>
+    </div>
+</div>
 
-	
-	                                                                              
-	<!-- Page top Section -->
-	<section class="page-top-section set-bg" data-setbg="img/page-top-bg.jpg">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-7 m-auto text-white">
-					<h2>Profile</h2>
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Page top Section end -->
+<!-- HERO -->
+<div class="hero">
+    <h1>My Profile</h1>
+</div>
 
-	<!-- Contact Section -->
-	<section class="contact-page-section spad overflow-hidden">
-		<div class="container">
-			
-			<div class="row">
-				<div class="col-lg-2">
-				</div>
-				<div class="col-lg-8">
-					<form class="singup-form contact-form" method="post">
-<?php echo csrf_field(); ?>
-						<div class="row">
-							<?php 
-							$uid=$_SESSION['uid'];
-							$sql ="SELECT id, fname, lname, email, mobile, password, address,state,city, create_date from tbluser where id=:uid ";
-							$query= $dbh -> prepare($sql);
-							$query->bindParam(':uid',$uid, PDO::PARAM_STR);
-							$query-> execute();
-							$results = $query -> fetchAll(PDO::FETCH_OBJ);
-							$cnt=1;
-							if($query->rowCount() > 0)
-							{
-							foreach($results as $result)
-							{				?>	
-							<div class="col-md-6">
-								<input type="text" name="fname" id="fname" placeholder="First Name" autocomplete="off" value="<?php echo htmlspecialchars($result->fname, ENT_QUOTES, 'UTF-8');?>">
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="lname" id="lname" placeholder="Last Name" autocomplete="off" value="<?php echo htmlspecialchars($result->lname, ENT_QUOTES, 'UTF-8');?>">
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="email" id="email" placeholder="Your Email" autocomplete="off" value="<?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8');?>" readonly>
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="mobile" id="mobile" placeholder="Mobile Number" autocomplete="off" value="<?php echo htmlspecialchars($result->mobile, ENT_QUOTES, 'UTF-8');?>">
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="state" id="state" placeholder="State" autocomplete="off" value="<?php echo htmlspecialchars($result->state, ENT_QUOTES, 'UTF-8');?>">
-							</div>
-							<div class="col-md-6">
-								<input type="text" name="city" id="city" placeholder="City" autocomplete="off" value="<?php echo htmlspecialchars($result->city, ENT_QUOTES, 'UTF-8');?>">
-							</div>
-							
-							<div class="col-md-12">
-								<input type="text" name="address" id="address" placeholder="Address" autocomplete="off" value="<?php echo htmlspecialchars($result->address, ENT_QUOTES, 'UTF-8');?>">
-							</div>
-							<div class="col-md-12">
-						<input type="submit" id="submit" name="submit" value="Update" class="site-btn sb-gradient">
-								
-							</div>
-							<?php }} ?>
-						</div>
-					</form>
-				</div>
-				<div class="col-lg-2">
-				</div>
-			</div>
-		</div>
-	</section>
-	<!-- Trainers Section end -->
-<?php include 'include/footer.php'; ?>
-	<!-- Footer Section end -->
-	
-	<div class="back-to-top"><img src="img/icons/up-arrow.png" alt=""></div>
+<!-- PROFILE SECTION -->
+<div class="profile-section">
+    <div class="profile-card">
+        <h3>Account Details</h3>
 
-	<!-- Search model -->
-	
-	<!-- Search model end -->
+        <?php
+        $uid=$_SESSION['uid'];
+        $sql ="SELECT id, fname, lname, email, mobile, address, state, city FROM tbluser WHERE id=:uid";
+        $query= $dbh->prepare($sql);
+        $query->bindParam(':uid',$uid, PDO::PARAM_STR);
+        $query->execute();
+        $results = $query->fetchAll(PDO::FETCH_OBJ);
+        if($query->rowCount() > 0)
+        {
+        foreach($results as $result)
+        { ?>
 
-	<!--====== Javascripts & Jquery ======-->
-	<script src="js/vendor/jquery-3.2.1.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.slicknav.min.js"></script>
-	<script src="js/owl.carousel.min.js"></script>
-	<script src="js/jquery.nice-select.min.js"></script>
-	<script src="js/jquery-ui.min.js"></script>
-	<script src="js/jquery.magnific-popup.min.js"></script>
-	<script src="js/main.js"></script>
+        <form method="post">
+            <?php echo csrf_field(); ?>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="fname">First Name</label>
+                    <input type="text" name="fname" id="fname" autocomplete="off"
+                        value="<?php echo htmlspecialchars($result->fname, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="lname">Last Name</label>
+                    <input type="text" name="lname" id="lname" autocomplete="off"
+                        value="<?php echo htmlspecialchars($result->lname, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" id="email" autocomplete="off" readonly
+                        value="<?php echo htmlspecialchars($result->email, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="mobile">Mobile</label>
+                    <input type="text" name="mobile" id="mobile" autocomplete="off"
+                        value="<?php echo htmlspecialchars($result->mobile, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="state">State</label>
+                    <input type="text" name="state" id="state" autocomplete="off"
+                        value="<?php echo htmlspecialchars($result->state, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <input type="text" name="city" id="city" autocomplete="off"
+                        value="<?php echo htmlspecialchars($result->city, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group full-width">
+                    <label for="address">Address</label>
+                    <input type="text" name="address" id="address" autocomplete="off"
+                        value="<?php echo htmlspecialchars($result->address, ENT_QUOTES, 'UTF-8'); ?>">
+                </div>
+                <div class="form-group full-width">
+                    <button type="submit" name="submit" id="submit" class="btn-submit">Update Profile</button>
+                </div>
+            </div>
+        </form>
 
-	</body>
+        <?php }} ?>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-brand">GYM</div>
+    <div class="footer-tagline">Train harder. Live better.</div>
+    <div class="footer-copy">© 2026 Gym Management System. All rights reserved.</div>
+</footer>
+
+</body>
 </html>
- <?php } ?>
-
+<?php } ?>

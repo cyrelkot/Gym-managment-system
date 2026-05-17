@@ -23,7 +23,10 @@
       "Read(//<style/,/</**)",
       "Bash(done)",
       "Bash(ls -la /c/xampp/htdocs/gym/*.css 2>/dev/null || echo \"No CSS files in root\")",
-      "Bash(find /c/xampp/htdocs/gym -name \"*.css\" -type f | xargs wc -l | tail -1)"
+      "Bash(find /c/xampp/htdocs/gym -name \"*.css\" -type f | xargs wc -l | tail -1)",
+      "Bash(ls -la /c/xampp/htdocs/gym/ | grep -E \"\\\\.php$\")",
+      "Bash(find /c/xampp/htdocs/gym/css -name \"bootstrap*\" -o -name \"*.min.css\" 2>/dev/null | head -20)",
+      "Bash(grep -r \"bootstrap\" /c/xampp/htdocs/gym/*.php | head -20)"
     ]
   }
 }

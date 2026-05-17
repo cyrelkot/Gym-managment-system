@@ -1,11 +1,11 @@
-<?php 
+<?php
 session_start();
 error_reporting(0);
 include 'include/config.php';
 
 $uid = $_SESSION['uid'];
 
-if (isset($_POST['submit'])) { 
+if (isset($_POST['submit'])) {
     $pid = $_POST['pid'];
 
     $sql = "INSERT INTO tblbooking (package_id, userid) VALUES (:pid, :uid)";
@@ -22,13 +22,11 @@ if (isset($_POST['submit'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Gym Management System</title>
+    <title>Gym Management System | Contact</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/font-awesome.min.css"/>
     <link rel="stylesheet" href="css/user.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 </head>
 
 <body class="contact-page">
@@ -61,17 +59,28 @@ if (isset($_POST['submit'])) {
 
         <h3>GET IN TOUCH</h3>
 
-        <div class="info"><strong>Email:</strong> gymfitness@gmail.com</div>
-        <div class="info"><strong>Contact:</strong> 09925965016</div>
-        <div class="info"><strong>Address:</strong> Rizal St.</div>
+        <div class="info">
+            <i class="fa fa-envelope"></i>
+            <span><strong>Email:</strong> gymfitness@gmail.com</span>
+        </div>
+        <div class="info">
+            <i class="fa fa-phone"></i>
+            <span><strong>Contact:</strong> 09925965016</span>
+        </div>
+        <div class="info">
+            <i class="fa fa-map-marker"></i>
+            <span><strong>Address:</strong> Rizal St.</span>
+        </div>
 
     </div>
 </div>
 
 <!-- FOOTER -->
-<div class="footer">
-    © 2026 Gym Management System
-</div>
+<footer class="footer">
+    <div class="footer-brand">GYM</div>
+    <div class="footer-tagline">Train harder. Live better.</div>
+    <div class="footer-copy">© 2026 Gym Management System. All rights reserved.</div>
+</footer>
 
 </body>
 </html>

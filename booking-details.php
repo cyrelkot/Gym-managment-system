@@ -149,5 +149,12 @@ if ($remainingAfter < 0) {
 
 </div>
 
+<!-- FOOTER -->
+<footer class="footer">
+    <div class="footer-brand">GYM</div>
+    <div class="footer-tagline">Train harder. Live better.</div>
+    <div class="footer-copy">© 2026 Gym Management System. All rights reserved.</div>
+</footer>
+
 </body>
 </html>

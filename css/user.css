@@ -2,6 +2,10 @@
    GLOBAL / SHARED STYLES
    ============================================= */
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: "Segoe UI", sans-serif;
@@ -9,19 +13,25 @@ body {
   color: #fff;
 }
 
+/* --- Navbar --- */
 .navbar {
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display: flex;
   align-items: center;
-  padding: 20px;
-  background: #000;
-  border-bottom: 2px solid #ff6a00;
+  padding: 16px 24px;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid rgba(255, 106, 0, 0.5);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
 }
 
 .logo {
   color: #ff6a00;
-  font-weight: bold;
+  font-weight: 800;
   font-size: 22px;
+  letter-spacing: 2px;
 }
 
 .nav-center {
@@ -31,19 +41,64 @@ body {
 }
 
 .nav-center a {
-  color: #fff;
+  color: #ccc;
   margin: 0 15px;
   text-decoration: none;
+  position: relative;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-center a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #ff6a00;
+  transition: width 0.25s;
 }
 
 .nav-center a:hover {
   color: #ff6a00;
 }
 
+.nav-center a:hover::after {
+  width: 100%;
+}
+
+/* --- Footer --- */
 .footer {
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 106, 0, 0.25);
   text-align: center;
-  padding: 20px;
-  color: #777;
+  padding: 40px 20px 20px;
+  color: #666;
+}
+
+.footer-brand {
+  color: #ff6a00;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 4px;
+}
+
+.footer-tagline {
+  color: #555;
+  font-size: 13px;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.footer-copy {
+  font-size: 12px;
+  color: #444;
+  border-top: 1px solid #1a1a1a;
+  padding-top: 16px;
+  margin-top: 4px;
 }
 
 /* =============================================
@@ -76,6 +131,14 @@ body.index-page .hero-content {
 body.index-page .hero h1 {
   font-size: 55px;
   color: #ff6a00;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+body.index-page .hero p {
+  color: #ccc;
+  font-style: italic;
+  margin-top: 8px;
+  font-size: 16px;
 }
 
 .section {
@@ -644,6 +707,8 @@ body.booking-details-page .hero::before {
 body.booking-details-page .hero h1 {
   position: relative;
   color: #ff6a00;
+  font-size: 40px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 body.booking-details-page .container {
@@ -652,9 +717,10 @@ body.booking-details-page .container {
 
 body.booking-details-page .card {
   background: #111;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+  border-top: 3px solid #ff6a00;
+  padding: 28px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(255, 106, 0, 0.15);
   margin-bottom: 20px;
 }
 
@@ -665,8 +731,10 @@ body.booking-details-page .grid {
 }
 
 body.booking-details-page .label {
-  color: #aaa;
-  font-size: 13px;
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 body.booking-details-page .value {
@@ -698,16 +766,20 @@ body.booking-details-page table {
 
 body.booking-details-page th,
 body.booking-details-page td {
-  padding: 10px;
+  padding: 12px;
+  border-bottom: 1px solid #1e1e1e;
 }
 
-body.booking-details-page th {
-  background: #1a1a1a;
-  color: #ff6a00;
-}
-
-body.booking-details-page tr:nth-child(even) {
+body.booking-details-page thead th {
   background: #0f0f0f;
+  color: #ff6a00;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+body.booking-details-page tbody tr:hover {
+  background: rgba(255, 106, 0, 0.09);
 }
 
 /* =============================================
@@ -740,6 +812,7 @@ body.booking-history-page .hero-content {
 body.booking-history-page .hero h1 {
   color: #ff6a00;
   font-size: 40px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 body.booking-history-page .container {
@@ -748,9 +821,10 @@ body.booking-history-page .container {
 
 body.booking-history-page .card {
   background: #111;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(255, 106, 0, 0.2);
+  border-top: 3px solid #ff6a00;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 4px 20px rgba(255, 106, 0, 0.15);
 }
 
 body.booking-history-page table {
@@ -762,15 +836,19 @@ body.booking-history-page table {
 body.booking-history-page th,
 body.booking-history-page td {
   padding: 12px;
+  border-bottom: 1px solid #1e1e1e;
 }
 
-body.booking-history-page th {
-  background: #1a1a1a;
-  color: #ff6a00;
-}
-
-body.booking-history-page tr:nth-child(even) {
+body.booking-history-page thead th {
   background: #0f0f0f;
+  color: #ff6a00;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+body.booking-history-page tbody tr:hover {
+  background: rgba(255, 106, 0, 0.09);
 }
 
 body.booking-history-page .btn-view {
@@ -780,6 +858,9 @@ body.booking-history-page .btn-view {
   color: #000;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background 0.2s;
 }
 
 body.booking-history-page .btn-view:hover {
@@ -787,9 +868,11 @@ body.booking-history-page .btn-view:hover {
 }
 
 body.booking-history-page .alert {
-  background: #222;
-  padding: 15px;
+  background: #1a1200;
+  padding: 15px 18px;
   border-left: 4px solid #ff6a00;
+  border-radius: 4px;
+  color: #ffcc66;
   margin-bottom: 20px;
 }
 
@@ -809,13 +892,22 @@ body.about-page .hero {
   align-items: center;
   justify-content: center;
   text-align: center;
+  position: relative;
+}
+
+body.about-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.70);
 }
 
 body.about-page .hero h1 {
-  font-size: 40px;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px 40px;
-  border-radius: 10px;
+  position: relative;
+  font-size: 44px;
+  color: #ff6a00;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
 body.about-page .about {
@@ -850,6 +942,19 @@ body.about-page .feature-box {
   width: 250px;
   text-align: center;
   border-top: 3px solid #ff6600;
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+
+body.about-page .feature-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(255, 102, 0, 0.2);
+}
+
+body.about-page .feature-box .fa {
+  color: #ff6600;
+  font-size: 32px;
+  margin-bottom: 14px;
+  display: block;
 }
 
 body.about-page .feature-box h3 {
@@ -862,8 +967,7 @@ body.about-page .feature-box p {
 
 body.about-page .footer {
   background: #000;
-  border-top: 1px solid #222;
-  color: #aaa;
+  border-top: 1px solid rgba(255, 106, 0, 0.25);
   margin-top: 40px;
 }
 
@@ -900,6 +1004,12 @@ body.contact-page .hero p {
 body.contact-page .hero h1 {
   font-size: 52px;
   color: #ff6a00;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+
+body.contact-page .hero p {
+  color: #ccc;
+  font-style: italic;
 }
 
 body.contact-page .section {
@@ -920,77 +1030,306 @@ body.contact-page .card {
 body.contact-page .card h3 {
   text-align: center;
   color: #ff6a00;
+  margin-bottom: 24px;
 }
 
 body.contact-page .info {
   padding: 14px 0;
   border-bottom: 1px solid #222;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ccc;
+}
+
+body.contact-page .info:last-child {
+  border-bottom: none;
+}
+
+body.contact-page .info .fa {
+  color: #ff6a00;
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 body.contact-page .info strong {
   color: #ff6a00;
+  margin-right: 6px;
 }
 
 /* =============================================
    PROFILE PAGE
    ============================================= */
 
-body.profile-page .navbar {
-  background: #000;
+body.profile-page .hero {
+  height: 300px;
+  background: url("https://images.unsplash.com/photo-1554284126-aa88f22d8b74?auto=format&fit=crop&w=1600&q=80")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-body.profile-page .navbar .logo {
+body.profile-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.70);
+}
+
+body.profile-page .hero h1 {
+  position: relative;
   color: #ff6a00;
-  font-weight: bold;
-  font-size: 22px;
+  font-size: 44px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
-body.profile-page .errorWrap {
-  padding: 10px;
-  margin: 0 0 20px 0;
-  background: #dd3d36;
+body.profile-page .profile-section {
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+body.profile-page .profile-card {
+  width: 100%;
+  max-width: 700px;
+  background: #111;
+  border-top: 3px solid #ff6a00;
+  border-radius: 14px;
+  padding: 35px;
+  box-shadow: 0 4px 20px rgba(255, 106, 0, 0.15);
+}
+
+body.profile-page .profile-card h3 {
+  color: #ff6a00;
+  margin-bottom: 24px;
+  font-size: 20px;
+}
+
+body.profile-page .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+body.profile-page .form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+body.profile-page .form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+body.profile-page .form-group label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+
+body.profile-page .form-group input {
+  background: #1a1a1a;
+  border: 1px solid #333;
   color: #fff;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  padding: 11px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+body.profile-page .form-group input:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.22);
+}
+
+body.profile-page .form-group input[readonly] {
+  color: #666;
+  cursor: default;
+}
+
+body.profile-page .btn-submit {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s, transform 0.15s;
+}
+
+body.profile-page .btn-submit:hover {
+  background: #e65c00;
+  transform: translateY(-1px);
 }
 
 body.profile-page .succWrap {
-  padding: 10px;
-  margin: 0 0 20px 0;
-  background: #5cb85c;
-  color: #fff;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  background: rgba(0, 180, 60, 0.12);
+  border-left: 4px solid #00b43c;
+  color: #4dff88;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+body.profile-page .errorWrap {
+  background: rgba(220, 50, 50, 0.12);
+  border-left: 4px solid #dc3232;
+  color: #ff6b6b;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
 
 /* =============================================
    CHANGE PASSWORD PAGE
    ============================================= */
 
-body.changepwd-page .navbar {
-  background: #000;
+body.changepwd-page .hero {
+  height: 300px;
+  background: url("https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1600&q=80")
+    center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
 
-body.changepwd-page .navbar .logo {
+body.changepwd-page .hero::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.70);
+}
+
+body.changepwd-page .hero h1 {
+  position: relative;
   color: #ff6a00;
-  font-weight: bold;
-  font-size: 22px;
+  font-size: 44px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
 }
 
-body.changepwd-page .errorWrap {
-  padding: 10px;
-  margin: 0 0 20px 0;
-  background: #fff;
-  border-left: 4px solid #dd3d36;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+body.changepwd-page .changepwd-section {
+  padding: 50px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+body.changepwd-page .changepwd-card {
+  width: 100%;
+  max-width: 450px;
+  background: #111;
+  border-top: 3px solid #ff6a00;
+  border-radius: 14px;
+  padding: 35px;
+  box-shadow: 0 4px 20px rgba(255, 106, 0, 0.15);
+}
+
+body.changepwd-page .changepwd-card h3 {
+  color: #ff6a00;
+  margin-bottom: 24px;
+  font-size: 18px;
+  text-align: center;
+}
+
+body.changepwd-page .form-group {
+  margin-bottom: 18px;
+}
+
+body.changepwd-page .form-group label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  margin-bottom: 6px;
+}
+
+body.changepwd-page .pwd-wrap {
+  position: relative;
+}
+
+body.changepwd-page .form-group input[type="password"],
+body.changepwd-page .form-group input[type="text"] {
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 11px 42px 11px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+body.changepwd-page .form-group input:focus {
+  border-color: #ff6600;
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.22);
+}
+
+body.changepwd-page .toggle-pwd {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #aaa;
+  user-select: none;
+}
+
+body.changepwd-page .toggle-pwd:hover {
+  color: #ff6a00;
+}
+
+body.changepwd-page .btn-submit {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  margin-top: 8px;
+}
+
+body.changepwd-page .btn-submit:hover {
+  background: #e65c00;
+  transform: translateY(-1px);
 }
 
 body.changepwd-page .succWrap {
-  padding: 10px;
-  margin: 0 0 20px 0;
-  background: #fff;
-  border-left: 4px solid #5cb85c;
-  -webkit-box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  background: rgba(0, 180, 60, 0.12);
+  border-left: 4px solid #00b43c;
+  color: #4dff88;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+body.changepwd-page .errorWrap {
+  background: rgba(220, 50, 50, 0.12);
+  border-left: 4px solid #dc3232;
+  color: #ff6b6b;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  font-size: 14px;
 }
