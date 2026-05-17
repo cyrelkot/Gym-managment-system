@@ -13,13 +13,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
 if (isset($_POST['delete_package']) && isset($_POST['packageid'])) {
     $packageId = intval($_POST['packageid']);
 
-    $delPayments = $dbh->prepare("DELETE FROM tblpayment WHERE bookingID IN (SELECT id FROM tblbooking WHERE package_id = :packageId)");
-    $delPayments->bindParam(':packageId', $packageId, PDO::PARAM_INT);
-    $delPayments->execute();
+    // Block deletion if any bookings reference this package
+    $checkStmt = $dbh->prepare("SELECT COUNT(*) FROM tblbooking WHERE package_id = :packageId");
+    $checkStmt->bindParam(':packageId', $packageId, PDO::PARAM_INT);
+    $checkStmt->execute();
+    $bookingCount = (int)$checkStmt->fetchColumn();
 
-    $delBookings = $dbh->prepare("DELETE FROM tblbooking WHERE package_id = :packageId");
-    $delBookings->bindParam(':packageId', $packageId, PDO::PARAM_INT);
-    $delBookings->execute();
+    if ($bookingCount > 0) {
+        $_SESSION['pkg_error'] = "Cannot delete: {$bookingCount} user(s) have booked this package. Remove all their bookings first.";
+        header('Location: manage-post.php');
+        exit;
+    }
 
     $delPackage = $dbh->prepare("DELETE FROM tbladdpackage WHERE id = :id");
     $delPackage->bindParam(':id', $packageId, PDO::PARAM_INT);
@@ -51,6 +55,13 @@ if (isset($_POST['delete_package']) && isset($_POST['packageid'])) {
                     <div class="tile-body">
                         <h3>Manage Packages</h3>
                         <hr/>
+                        <?php if (!empty($_SESSION['pkg_error'])): ?>
+                            <div class="alert alert-danger alert-dismissible" role="alert">
+                                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                <?php echo htmlspecialchars($_SESSION['pkg_error'], ENT_QUOTES, 'UTF-8');
+                                      unset($_SESSION['pkg_error']); ?>
+                            </div>
+                        <?php endif; ?>
                         <table class="table table-hover table-bordered" id="sampleTable">
                             <thead>
                                 <tr>

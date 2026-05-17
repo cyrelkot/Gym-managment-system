@@ -26,7 +26,9 @@
       "Bash(find /c/xampp/htdocs/gym -name \"*.css\" -type f | xargs wc -l | tail -1)",
       "Bash(ls -la /c/xampp/htdocs/gym/ | grep -E \"\\\\.php$\")",
       "Bash(find /c/xampp/htdocs/gym/css -name \"bootstrap*\" -o -name \"*.min.css\" 2>/dev/null | head -20)",
-      "Bash(grep -r \"bootstrap\" /c/xampp/htdocs/gym/*.php | head -20)"
+      "Bash(grep -r \"bootstrap\" /c/xampp/htdocs/gym/*.php | head -20)",
+      "Bash(find /c/xampp/htdocs/gym -type f -name \"*.sql\" -o -name \"*package*\" -o -name \"*booking*\" 2>/dev/null | head -30)",
+      "Bash(ls -la /c/xampp/htdocs/gym/*.php)"
     ]
   }
 }
