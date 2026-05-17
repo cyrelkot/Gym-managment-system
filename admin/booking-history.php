@@ -29,139 +29,149 @@ if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Gym Admin | Bookings</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="">
+<title>Admin | Booking History</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="css/main.css">
+
+<link rel="stylesheet" type="text/css"
+href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
-
-/* GLOBAL */
-body{
-    margin:0;
-    font-family:Segoe UI;
-    background:#000;
-    color:#fff;
+body,
+.app-content {
+    background: linear-gradient(rgba(0,0,0,0.88), rgba(0,0,0,0.96)),
+    url('https://images.unsplash.com/photo-1554284126-aa88f22d8b74');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
 }
 
-/* HEADER */
-.header{
-    display:flex;
-    justify-content:space-between;
-    padding:15px 30px;
-    background:#0d0d0d;
-    border-bottom:2px solid #ff6a00;
+.tile {
+    background: rgba(0, 0, 0, 0.80);
+    border: 1px solid rgba(255, 102, 0, 0.45);
+    border-radius: 14px;
+    box-shadow: 0 0 22px rgba(0, 0, 0, 0.35);
+    color: #fff;
 }
 
-.header h2{ color:#ff6a00; }
-.header a{
-    color:#fff;
-    margin-left:20px;
-    text-decoration:none;
+h3,
+.table,
+.table th,
+.table td {
+    color: #fff !important;
 }
 
-/* CONTAINER */
-.container{ padding:30px; }
-
-/* CARD */
-.card{
-    background:#111;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 0 20px rgba(255,106,0,0.2);
+hr {
+    border-top: 1px solid rgba(255, 102, 0, 0.35);
 }
 
-/* TABLE */
-table{
-    width:100%;
-    border-collapse:collapse;
-    margin-top:20px;
+.table-bordered,
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid rgba(255,255,255,0.12) !important;
 }
 
-th, td{
-    padding:12px;
+.table thead {
+    background: rgba(255, 102, 0, 0.12);
 }
 
-th{
-    background:#1a1a1a;
-    color:#ff6a00;
+.table-hover tbody tr:hover {
+    background: rgba(255, 102, 0, 0.08);
 }
 
-tr:nth-child(even){
-    background:#0f0f0f;
+.btn-primary {
+    background: #ff6600;
+    border-color: #ff6600;
 }
 
-/* BUTTONS */
-.btn-view{
-    background:#00bfff;
-    border:none;
-    padding:6px 10px;
-    color:#fff;
-    border-radius:5px;
-    cursor:pointer;
+.btn-primary:hover,
+.btn-primary:focus {
+    background: #e65c00;
+    border-color: #e65c00;
 }
 
-.btn-delete{
-    background:#ff4d4d;
-    border:none;
-    padding:6px 10px;
-    color:#fff;
-    border-radius:5px;
-    cursor:pointer;
+.btn-danger {
+    background: #c82333;
+    border-color: #bd2130;
+    color: #fff;
 }
 
-/* BADGE */
-.badge{
-    padding:5px 10px;
-    border-radius:5px;
-    font-size:12px;
-}
-.full{ background:#00cc66; }
-.partial{ background:#ffaa00; }
-.none{ background:#555; }
-
-/* MODAL */
-.modal{
-    display:none;
-    position:fixed;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.8);
+.btn-danger:hover,
+.btn-danger:focus {
+    background: #a71d2a;
+    border-color: #a71d2a;
+    color: #fff;
 }
 
-.modal-content{
-    background:#111;
-    padding:20px;
-    width:350px;
-    margin:10% auto;
-    border-radius:10px;
+.action-cell form {
+    display: inline-block;
 }
 
-.close{
-    float:right;
-    cursor:pointer;
-    color:#ff6a00;
-    font-size:22px;
+.action-cell .btn {
+    margin-right: 4px;
 }
 
+/* Badge colours */
+.badge-full    { background: #00cc66; }
+.badge-partial { background: #ffaa00; }
+.badge-none    { background: #555; }
+
+/* Modal */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 9999;
+}
+
+.modal-box {
+    background: #111;
+    padding: 20px;
+    width: 350px;
+    margin: 10% auto;
+    border-radius: 10px;
+    color: #fff;
+}
+
+.modal-close {
+    float: right;
+    cursor: pointer;
+    color: #ff6a00;
+    font-size: 22px;
+}
 </style>
 </head>
 
-<body>
+<body class="app sidebar-mini rtl">
 
-<div class="header">
-    <h2>💪 Gym Admin</h2>
-    <div>
-        <a href="index.php">Dashboard</a>
-        <a href="logout.php">Logout</a>
-    </div>
-</div>
+<?php include 'include/header.php'; ?>
 
-<div class="container">
-<div class="card">
+<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+
+<?php include 'include/sidebar.php'; ?>
+
+<main class="app-content">
+
+<div class="row">
+<div class="col-md-12">
+
+<div class="tile">
+
+<div class="tile-body">
 
 <h3>All Bookings</h3>
 
-<table>
+<hr />
+
+<table class="table table-hover table-bordered" id="sampleTable">
+
 <thead>
 <tr>
 <th>#</th>
@@ -205,19 +215,19 @@ foreach($results as $row){
 <td><?php echo htmlspecialchars($row->Plan, ENT_QUOTES, 'UTF-8'); ?></td>
 
 <td>
-<?php 
+<?php
 if($row->paymentType == "Full Payment"){
-    echo "<span class='badge full'>Full</span>";
+    echo "<span class='badge badge-full'>Full</span>";
 }else if($row->paymentType == "Partial Payment"){
-    echo "<span class='badge partial'>Partial</span>";
+    echo "<span class='badge badge-partial'>Partial</span>";
 }else{
-    echo "<span class='badge none'>Pending</span>";
+    echo "<span class='badge badge-none'>Pending</span>";
 }
 ?>
 </td>
 
-<td>
-<button class="btn-view"
+<td class="action-cell">
+<button class="btn btn-primary btn-sm"
 onclick="openModal(
 <?php echo json_encode((string)$row->bookingid); ?>,
 <?php echo json_encode($row->Name); ?>,
@@ -230,7 +240,8 @@ onclick="openModal(
 <form method="post" style="display:inline;">
 <?php echo csrf_field(); ?>
 <input type="hidden" name="bookingid" value="<?php echo (int)$row->bookingid;?>">
-<button type="submit" name="delete_booking" class="btn-delete">Delete</button>
+<button type="submit" name="delete_booking" class="btn btn-danger btn-sm"
+onclick="return confirm('Are you sure you want to delete this booking?');">Delete</button>
 </form>
 </td>
 
@@ -243,11 +254,14 @@ onclick="openModal(
 
 </div>
 </div>
+</div>
+</div>
+</main>
 
 <!-- MODAL -->
-<div id="modal" class="modal">
-<div class="modal-content">
-<span class="close" onclick="closeModal()">&times;</span>
+<div id="modal" class="modal-overlay">
+<div class="modal-box">
+<span class="modal-close" onclick="closeModal()">&times;</span>
 
 <h3>Booking Details</h3>
 
@@ -261,7 +275,22 @@ onclick="openModal(
 </div>
 </div>
 
-<script>
+<script src="js/jquery-3.2.1.min.js"></script>
+<script src="js/popper.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+
+<script src="js/plugins/pace.min.js"></script>
+
+<script type="text/javascript"
+src="js/plugins/jquery.dataTables.min.js"></script>
+
+<script type="text/javascript"
+src="js/plugins/dataTables.bootstrap.min.js"></script>
+
+<script type="text/javascript">
+$('#sampleTable').DataTable();
+
 function openModal(id,name,email,date,pack,payment){
     document.getElementById("m_id").innerText=id;
     document.getElementById("m_name").innerText=name;
