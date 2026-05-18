@@ -119,7 +119,7 @@ foreach($results as $r){
 
 <!-- NAVBAR -->
 <div class="navbar">
-    <div class="logo">GYM</div>
+    <div class="logo">GYM slkfjsjdf</div>
     <div class="nav-center">
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
