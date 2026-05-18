@@ -3,7 +3,16 @@
     "allow": [
       "Bash(find /c/xampp/htdocs/gym -type f ! -path '*/\\\\.git/*' ! -path '*.git*' -exec basename {} \\\\; | sort | uniq)",
       "Bash(git add:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(find /c/xampp/htdocs/gym -maxdepth 1 -name \"*.toml\" -o -name \"Dockerfile\" -o -name \".env*\" 2>/dev/null | head -20)",
+      "Bash(grep -r \"error_reporting\\\\|display_errors\\\\|DEBUG\\\\|PRODUCTION\\\\|DEVELOPMENT\" /c/xampp/htdocs/gym/*.php | head -20)",
+      "Bash(git -C /c/xampp/htdocs/gym log --oneline -15)",
+      "Bash(git -C /c/xampp/htdocs/gym show 7cb486e:admin/include/config.php 2>/dev/null | head -20)",
+      "Bash(git -C /c/xampp/htdocs/gym show ec28a65 --stat | head -20)",
+      "Bash(git -C /c/xampp/htdocs/gym show a53f2af --stat)",
+      "Bash(find /c/xampp/htdocs/gym -maxdepth 1 -type f -name \".*\" 2>/dev/null | head -30)",
+      "Bash(ls -la /c/xampp/htdocs/gym/*.toml 2>/dev/null || echo \"No TOML files found\")",
+      "Bash(find /c/xampp/htdocs/gym -maxdepth 2 -name \".env*\" -o -name \"env*\" 2>/dev/null | grep -v node_modules)"
     ]
   }
 }
