@@ -1,6 +1,6 @@
-<?php session_start();
+<?php
 error_reporting(0);
-include  'include/config.php'; 
+include  'include/config.php';
 
 $successmsg = "";
 $errormsg = "";

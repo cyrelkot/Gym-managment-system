@@ -1,4 +1,4 @@
-<?php session_start();
+<?php
 error_reporting(0);
 include 'include/config.php';
 if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {

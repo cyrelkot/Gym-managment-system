@@ -1,5 +1,4 @@
-<?php 
-session_start();
+<?php
 error_reporting(E_ALL);
 include 'include/config.php';
 
