@@ -4,9 +4,9 @@ ini_set('session.cookie_samesite', 'Strict');
 session_start();
 // DB credentials — override via environment variables in production
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_USER', getenv('DB_USER') ?: 'gymapp');
-define('DB_PASS', getenv('DB_PASS') ?: '@AngelYukiNekki123');
-define('DB_NAME', getenv('DB_NAME') ?: 'gymdb');
+define('DB_USER', getenv('DB_USER') ?: 'u535161146_gymapp');
+define('DB_PASS', getenv('DB_PASS') ?: '@Nekki161011');
+define('DB_NAME', getenv('DB_NAME') ?: 'u535161146_gymdb');
 // Establish database connection.
 try
 {
