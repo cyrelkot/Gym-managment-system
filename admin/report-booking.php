@@ -5,6 +5,7 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   header('location:logout.php');
   exit;
   } else{
+require_permission('view_reports');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
     die('Invalid request. Please go back and try again.');

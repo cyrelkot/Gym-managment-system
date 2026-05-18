@@ -18,7 +18,7 @@ if (isset($_POST['login'])) {
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
-    $sql = "SELECT id, password FROM tbladmin WHERE email=:email LIMIT 1";
+    $sql = "SELECT id, password, role FROM tbladmin WHERE email=:email LIMIT 1";
     $query = $dbh->prepare($sql);
     $query->bindParam(':email', $email, PDO::PARAM_STR);
     $query->execute();
@@ -43,6 +43,7 @@ if (isset($_POST['login'])) {
         session_regenerate_id(true);
         $_SESSION['adminid'] = $admin['id'];
         $_SESSION['email'] = $email;
+        $_SESSION['adminrole'] = $admin['role'];
         header('location:index.php');
         exit();
     } else {

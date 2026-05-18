@@ -63,6 +63,7 @@ CREATE TABLE `tbladmin` (
   `email` varchar(45) DEFAULT NULL,
   `mobile` varchar(45) DEFAULT NULL,
   `password` varchar(100) DEFAULT NULL,
+  `role` enum('super_admin','staff') NOT NULL DEFAULT 'super_admin',
   `create_date` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -70,8 +71,8 @@ CREATE TABLE `tbladmin` (
 -- Dumping data for table `tbladmin`
 --
 
-INSERT INTO `tbladmin` (`id`, `name`, `email`, `mobile`, `password`, `create_date`) VALUES
-(1, 'admin', 'admin@gmail.com', '99197896857', '$2y$10$fV56mZhXshqV3xk/zXgSNuWCyldBkJ8aXw.tMkkYU/D05vBfH1xLq', '2022-01-19 11:25:17');
+INSERT INTO `tbladmin` (`id`, `name`, `email`, `mobile`, `password`, `role`, `create_date`) VALUES
+(1, 'admin', 'admin@gmail.com', '99197896857', '$2y$10$fV56mZhXshqV3xk/zXgSNuWCyldBkJ8aXw.tMkkYU/D05vBfH1xLq', 'super_admin', '2022-01-19 11:25:17');
 
 -- --------------------------------------------------------
 

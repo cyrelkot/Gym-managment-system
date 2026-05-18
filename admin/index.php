@@ -34,6 +34,11 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
     <h1><i class="fa fa-dashboard"></i> Dashboard</h1>
   </div>
 
+  <?php if (!empty($_SESSION['flash_error'])): ?>
+    <div class="alert alert-danger"><?= htmlspecialchars($_SESSION['flash_error'], ENT_QUOTES, 'UTF-8') ?></div>
+    <?php unset($_SESSION['flash_error']); ?>
+  <?php endif; ?>
+
   <div class="row">
 
     <!-- Package Type -->

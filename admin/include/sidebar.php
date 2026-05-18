@@ -4,6 +4,7 @@
     <span class="sidebar-section-label">MAIN</span>
     <li><a class="app-menu__item" href="index.php"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
 
+    <?php if (admin_can('manage_packages')): ?>
     <span class="sidebar-section-label">PACKAGES</span>
     <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-tags"></i><span class="app-menu__label">Categories</span><i class="treeview-indicator fa fa-angle-right"></i></a>
       <ul class="treeview-menu">
@@ -16,6 +17,7 @@
         <li><a class="treeview-item" href="manage-post.php"><i class="icon fa fa-circle-o"></i> Manage</a></li>
       </ul>
     </li>
+    <?php endif; ?>
 
     <span class="sidebar-section-label">BOOKINGS</span>
     <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Booking History</span><i class="treeview-indicator fa fa-angle-right"></i></a>
@@ -27,13 +29,24 @@
       </ul>
     </li>
 
+    <?php if (admin_can('view_reports') || admin_can('approve_users')): ?>
     <span class="sidebar-section-label">REPORTS</span>
     <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-bar-chart"></i><span class="app-menu__label">Reports</span><i class="treeview-indicator fa fa-angle-right"></i></a>
       <ul class="treeview-menu">
+        <?php if (admin_can('view_reports')): ?>
         <li><a class="treeview-item" href="report-booking.php"><i class="icon fa fa-circle-o"></i> Booking Report</a></li>
+        <?php endif; ?>
+        <?php if (admin_can('approve_users')): ?>
         <li><a class="treeview-item" href="report-registration.php"><i class="icon fa fa-circle-o"></i> Registration Report</a></li>
+        <?php endif; ?>
       </ul>
     </li>
+    <?php endif; ?>
+
+    <?php if (admin_can('manage_admins')): ?>
+    <span class="sidebar-section-label">ADMIN MANAGEMENT</span>
+    <li><a class="app-menu__item" href="manage-admins.php"><i class="app-menu__icon fa fa-user-secret"></i><span class="app-menu__label">Manage Admins</span></a></li>
+    <?php endif; ?>
 
   </ul>
 </aside>

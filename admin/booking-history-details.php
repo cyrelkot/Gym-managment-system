@@ -7,6 +7,7 @@ if(strlen($_SESSION['adminid'])==0){
 header('location:logout.php');
 exit;
 }else{
+require_permission('manage_bookings');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_verify()) {
     die('Invalid request. Please go back and try again.');

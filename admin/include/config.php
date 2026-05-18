@@ -30,4 +30,24 @@ function csrf_verify(): bool {
     return isset($_POST['csrf_token'], $_SESSION['csrf_token']) &&
            hash_equals($_SESSION['csrf_token'], $_POST['csrf_token']);
 }
+
+// RBAC
+define('RBAC_PERMISSIONS', [
+    'super_admin' => ['manage_packages', 'manage_bookings', 'approve_users', 'view_reports', 'manage_admins'],
+    'staff'       => ['manage_bookings'],
+]);
+
+function admin_can(string $permission): bool {
+    $role = $_SESSION['adminrole'] ?? '';
+    $perms = RBAC_PERMISSIONS[$role] ?? [];
+    return in_array($permission, $perms, true);
+}
+
+function require_permission(string $permission): void {
+    if (!admin_can($permission)) {
+        $_SESSION['flash_error'] = 'Access denied. You do not have permission to view that page.';
+        header('Location: index.php');
+        exit();
+    }
+}
 ?>
