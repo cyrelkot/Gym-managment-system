@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/xampp/htdocs/gym -type f ! -path '*/\\\\.git/*' ! -path '*.git*' -exec basename {} \\\\; | sort | uniq)",
+      "Bash(git add:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}
