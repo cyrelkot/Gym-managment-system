@@ -1,4 +1,6 @@
 <?php
+ini_set('session.cookie_httponly', '1');
+ini_set('session.cookie_samesite', 'Strict');
 // DB credentials — override via environment variables in production
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
 define('DB_USER', getenv('DB_USER') ?: 'gymapp');
