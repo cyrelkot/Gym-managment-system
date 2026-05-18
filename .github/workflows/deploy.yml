@@ -13,17 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
       - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: 153.92.8.144
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./
-          server-dir: /public_html/
-          exclude: |
-            **/.git*
-            **/.git*/**
-            **/.claude/**
-            **/*.docx
-            **/gymdb.sql
+        env:
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        run: |
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" ftp://153.92.8.144 <<EOF
+          set ssl:verify-certificate no
+          set ftp:passive-mode yes
+          mirror --reverse --delete --verbose \
+            --exclude-glob .git/ \
+            --exclude-glob .claude/ \
+            --exclude-glob .github/ \
+            --exclude-glob "*.docx" \
+            --exclude-glob gymdb.sql \
+            --exclude-glob .ftp-deploy-sync-state.json \
+            . /public_html/
+          quit
+          EOF
