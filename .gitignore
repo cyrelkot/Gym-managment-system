@@ -1,2 +1,3 @@
 tmp_*.php
 .env
+.claude/
