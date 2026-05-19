@@ -155,7 +155,7 @@ foreach($results as $r){
 <div class="section">
 
     <div class="title">
-        <h2>Fitness Plans slkfjsjfd</h2>
+        <h2>Fitness Plans</h2>
         <p style="color:#888;margin-top:5px;">Choose the plan that fits your goals</p>
         <div class="section-title-bar"></div>
     </div>
