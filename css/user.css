@@ -743,6 +743,7 @@ body.reg-page button {
   font-weight: 800;
   cursor: pointer;
   transition: 0.3s;
+  box-sizing: border-box;
 }
 
 body.reg-page button:hover {
