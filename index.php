@@ -146,7 +146,7 @@ foreach($results as $r){
 <div class="hero">
     <div class="hero-content">
         <h1>BUILD YOUR BODY</h1>
-        <p>Train hard. Stay strong.</p>
+        <p>Train hard. home strong.</p>
     </div>
 </div>
 
