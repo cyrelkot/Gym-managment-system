@@ -17,7 +17,8 @@
       "Bash(grep -r \"register_globals\\\\|magic_quotes\\\\|global \\\\$\\\\|extract\\(\" /c/xampp/htdocs/gym --include=\"*.php\" | head -20)",
       "Bash(grep -r \"\\\\$_GET\\\\['\\\\|_POST\\\\['\\\\|_REQUEST\\\\['\" /c/xampp/htdocs/gym --include=\"*.php\" | grep -v \"bindParam\\\\|htmlspecialchars\\\\|intval\\\\|trim\" | head -20)",
       "Bash(grep -n \"\\\\$_GET\\\\['del'\\\\]\\\\|\\\\$_GET\\\\['pid'\\\\]\\\\|\\\\$_GET\\\\['bookingid'\\\\]\" /c/xampp/htdocs/gym/admin/*.php)",
-      "Bash(grep -n \"intval\" /c/xampp/htdocs/gym/admin/*.php | wc -l)"
+      "Bash(grep -n \"intval\" /c/xampp/htdocs/gym/admin/*.php | wc -l)",
+      "Bash(git commit:*)"
     ]
   }
 }
