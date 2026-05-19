@@ -64,4 +64,4 @@ jobs:
           OPCACHE_RESET_TOKEN: ${{ secrets.OPCACHE_RESET_TOKEN }}
           SITE_URL: ${{ secrets.SITE_URL }}
         run: |
-          curl -sv "$SITE_URL/opcache-reset.php?token=$OPCACHE_RESET_TOKEN" || true
+          curl -svL "$SITE_URL/opcache-reset.php?token=$OPCACHE_RESET_TOKEN" || true
