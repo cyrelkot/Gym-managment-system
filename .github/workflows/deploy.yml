@@ -36,14 +36,19 @@ jobs:
           PHPEOF
 
       - name: Deploy via FTP
+        timeout-minutes: 10
         env:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         run: |
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" ftp://153.92.8.144 <<EOF
+          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" ftp://153.92.8.144 <<'FTPEOF'
           set ssl:verify-certificate no
           set ftp:passive-mode yes
-          mirror --reverse --delete --verbose \
+          set net:timeout 30
+          set net:max-retries 2
+          set net:reconnect-interval-base 5
+          set ftp:use-mdtm yes
+          mirror --reverse --delete --verbose --parallel=4 \
             --exclude-glob .git/ \
             --exclude-glob .claude/ \
             --exclude-glob .github/ \
@@ -52,7 +57,7 @@ jobs:
             --exclude-glob .ftp-deploy-sync-state.json \
             . /public_html/
           quit
-          EOF
+          FTPEOF
 
       - name: Clear OPcache
         env:
