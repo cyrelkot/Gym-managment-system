@@ -1,4 +1,3 @@
 tmp_*.php
 .env
 .claude/
-.github/
