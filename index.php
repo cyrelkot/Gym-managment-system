@@ -150,11 +150,16 @@ foreach($results as $r){
     </div>
 </div>
 
+<!-- DEPLOY TEST BANNER — remove after confirming deployment works -->
+<div style="background:#ff6600;color:#fff;text-align:center;padding:12px;font-weight:bold;font-size:15px;letter-spacing:1px;">
+    DEPLOY TEST — If you see this on Hostinger, CI/CD is working!
+</div>
+
 <!-- PRICING -->
 <div class="section">
 
     <div class="title">
-        <h2>Fitness Plans YOW</h2>
+        <h2>Fitness Plans</h2>
         <p style="color:#888;margin-top:5px;">Choose the plan that fits your goals</p>
         <div class="section-title-bar"></div>
     </div>
