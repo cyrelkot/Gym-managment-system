@@ -48,7 +48,7 @@ jobs:
           set net:max-retries 2
           set net:reconnect-interval-base 5
           set ftp:use-mdtm yes
-          mirror --reverse --delete --verbose --parallel=4 \
+          mirror --reverse --verbose --parallel=4 \
             --exclude-glob .git/ \
             --exclude-glob .claude/ \
             --exclude-glob .github/ \
