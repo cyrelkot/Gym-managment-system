@@ -150,9 +150,6 @@ foreach($results as $r){
     </div>
 </div>
 
-<p style="color: red; background-color: blue;">CI/CD PIPELINE TEST!</p>
-
-
 <!-- PRICING -->
 <div class="section">
 
