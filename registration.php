@@ -109,24 +109,24 @@ exit();
 
 <form method="post">
 <?php echo csrf_field(); ?>
-<input type="text" name="fname" placeholder="First Name" required>
-<input type="text" name="lname" placeholder="Last Name" required>
-<input type="email" name="email" placeholder="Email Address" required>
+<input type="text" name="fname" placeholder="First Name" value="<?php echo htmlspecialchars($_POST['fname'] ?? ''); ?>" required>
+<input type="text" name="lname" placeholder="Last Name" value="<?php echo htmlspecialchars($_POST['lname'] ?? ''); ?>" required>
+<input type="email" name="email" placeholder="Email Address" value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
 
 <!-- FIXED MOBILE INPUT -->
-<input type="text" name="mobile" placeholder="Mobile Number" maxlength="12" required>
+<input type="text" name="mobile" placeholder="Mobile Number" maxlength="12" value="<?php echo htmlspecialchars($_POST['mobile'] ?? ''); ?>" required>
 
-<input type="text" name="city" placeholder="City" required>
+<input type="text" name="city" placeholder="City" value="<?php echo htmlspecialchars($_POST['city'] ?? ''); ?>" required>
 
 <small>Min 8 chars: Uppercase + lowercase + number + symbol</small>
 
 <div class="pass-wrapper">
-<input type="password" id="password" name="password" placeholder="Password" required>
+<input type="password" id="password" name="password" placeholder="Password" value="<?php echo htmlspecialchars($_POST['password'] ?? ''); ?>" required>
 <span onclick="togglePass('password')">👁</span>
 </div>
 
 <div class="pass-wrapper">
-<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" required>
+<input type="password" id="repeat" name="RepeatPassword" placeholder="Confirm Password" value="<?php echo htmlspecialchars($_POST['RepeatPassword'] ?? ''); ?>" required>
 <span onclick="togglePass('repeat')">👁</span>
 </div>
 
