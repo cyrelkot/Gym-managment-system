@@ -31,6 +31,8 @@ if ($bookingPackageRow && empty($bookingPackageRow->package_id)) {
     }
 }
 
+$err = '';
+
 if(isset($_POST['submit']))
 {
 
@@ -71,9 +73,11 @@ $paymentAmount=$remaining;
 
 /* PREVENT OVERPAY */
 
-if($paymentAmount>$remaining){
+if ($Paymenttype == "Partial Payment" && $paymentAmount <= 0) {
+    $err = 'Partial payment amount must be greater than zero.';
+} elseif($paymentAmount>$remaining){
 
-echo "<script>alert('Payment exceeds remaining balance');</script>";
+$err = 'Payment exceeds remaining balance.';
 
 }else{
 
@@ -308,7 +312,13 @@ $remaining=$result->Price-$gpayment;
 name="PartialPayment"
 id="PartialPayment"
 class="form-control"
+min="100"
+step="0.01"
 value="<?php echo $lastpayment;?>">
+<div id="paymentError"
+     style="color:#dc3545;font-size:0.875em;margin-top:4px;<?php echo $err ? '' : 'display:none;'; ?>">
+  <?php echo htmlspecialchars($err, ENT_QUOTES, 'UTF-8'); ?>
+</div>
 
 </td>
 
@@ -415,6 +425,14 @@ $(document).ready(function(){
 
 var remaining=<?php echo $remaining;?>;
 
+function showError(msg) {
+    if (msg) {
+        $('#paymentError').text(msg).show();
+    } else {
+        $('#paymentError').hide();
+    }
+}
+
 function checkPayment(){
 
 var type=$("#Payment").val();
@@ -423,6 +441,16 @@ if(type=="Full Payment"){
 
 $("#PartialPayment").val(remaining);
 $("#PartialPayment").prop("readonly",true);
+showError('');
+
+}else if(type=="Partial Payment"){
+
+$("#PartialPayment").prop("readonly",false);
+var current = parseFloat($("#PartialPayment").val()) || 0;
+if (current <= 0) {
+    $("#PartialPayment").val(100);
+}
+showError('');
 
 }else{
 
@@ -433,6 +461,25 @@ $("#PartialPayment").prop("readonly",false);
 }
 
 $("#Payment").change(checkPayment);
+
+$("#PartialPayment").on('input', function() {
+    var val = parseFloat($(this).val()) || 0;
+    if (val > 0) {
+        showError('');
+    }
+});
+
+$('form').on('submit', function(e) {
+    if ($('#Payment').val() === 'Partial Payment') {
+        var amount = parseFloat($('#PartialPayment').val()) || 0;
+        if (amount <= 0) {
+            e.preventDefault();
+            showError('Please enter a payment amount greater than zero.');
+            $('#PartialPayment').focus();
+            return false;
+        }
+    }
+});
 
 checkPayment();
 

@@ -11,6 +11,7 @@ require_permission('manage_bookings');
 $bookingId = isset($_GET['bookingid']) ? intval($_GET['bookingid']) : 0;
 $err = '';
 $success = '';
+$paymentErr = '';
 
 if ($bookingId <= 0) {
     header('Location: partial-payment-bookings.php');
@@ -119,7 +120,10 @@ if (isset($_POST['update_booking'])) {
         $newPaymentAmount = $packagePrice;
     }
 
-    if ($newPaymentAmount < 0) {
+    if ($newPaymentType === 'Partial Payment' && $newPaymentAmount <= 0) {
+        $paymentErr = 'Partial payment amount must be greater than zero.';
+        $err = $paymentErr;
+    } elseif ($newPaymentAmount < 0) {
         $err = 'Payment amount cannot be negative.';
     } elseif ($newPaymentAmount > $packagePrice) {
         $err = 'Payment cannot exceed package amount.';
@@ -254,7 +258,7 @@ if ($remainingBalance < 0) {
                         </div>
                         <div class="form-group">
                             <label>Payment Type</label>
-                            <select name="paymentType" class="form-control">
+                            <select name="paymentType" id="paymentType" class="form-control">
                                 <option value="" <?php echo $booking->paymentType === '' ? 'selected' : ''; ?>>Not paid</option>
                                 <option value="Partial Payment" <?php echo $booking->paymentType === 'Partial Payment' ? 'selected' : ''; ?>>Partial Payment</option>
                                 <option value="Full Payment" <?php echo $booking->paymentType === 'Full Payment' ? 'selected' : ''; ?>>Full Payment</option>
@@ -262,7 +266,11 @@ if ($remainingBalance < 0) {
                         </div>
                         <div class="form-group">
                             <label>Payment Amount</label>
-                            <input type="text" name="paymentAmount" class="form-control" value="<?php echo htmlentities($booking->paymentAmount); ?>" placeholder="Enter amount">
+                            <input type="number" name="paymentAmount" id="paymentAmount" class="form-control" min="100" step="0.01" value="<?php echo htmlentities($booking->paymentAmount); ?>" placeholder="Enter amount">
+                            <div id="paymentError"
+                                 style="color:#dc3545;font-size:0.875em;margin-top:4px;<?php echo $paymentErr ? '' : 'display:none;'; ?>">
+                              <?php echo htmlspecialchars($paymentErr, ENT_QUOTES, 'UTF-8'); ?>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Remaining Balance</label>
@@ -284,9 +292,17 @@ if ($remainingBalance < 0) {
 <script src="js/main.js"></script>
 <script>
     $(document).ready(function() {
+        function showError(msg) {
+            if (msg) {
+                $('#paymentError').text(msg).show();
+            } else {
+                $('#paymentError').hide();
+            }
+        }
+
         function updateRemaining() {
             var price = parseFloat($('#packageId option:selected').data('price')) || 0;
-            var payment = parseFloat($('input[name="paymentAmount"]').val()) || 0;
+            var payment = parseFloat($('#paymentAmount').val()) || 0;
             var remaining = price - payment;
             if (remaining < 0) {
                 remaining = 0;
@@ -295,9 +311,54 @@ if ($remainingBalance < 0) {
             $('#remainingBalance').val(remaining.toFixed(2));
         }
 
-        $('#packageId').on('change', updateRemaining);
-        $('input[name="paymentAmount"]').on('input', updateRemaining);
+        function handlePaymentTypeChange() {
+            var type = $('#paymentType').val();
+            var price = parseFloat($('#packageId option:selected').data('price')) || 0;
+            if (type === 'Full Payment') {
+                $('#paymentAmount').val(price.toFixed(2)).prop('readonly', true);
+                showError('');
+            } else if (type === 'Partial Payment') {
+                $('#paymentAmount').prop('readonly', false);
+                var current = parseFloat($('#paymentAmount').val()) || 0;
+                if (current <= 0) {
+                    $('#paymentAmount').val(100);
+                }
+                showError('');
+            } else {
+                $('#paymentAmount').prop('readonly', false);
+            }
+            updateRemaining();
+        }
+
+        $('#paymentType').on('change', handlePaymentTypeChange);
+
+        $('#packageId').on('change', function() {
+            updateRemaining();
+            handlePaymentTypeChange();
+        });
+
+        $('#paymentAmount').on('input', function() {
+            var val = parseFloat($(this).val()) || 0;
+            if (val > 0) {
+                showError('');
+            }
+            updateRemaining();
+        });
+
+        $('form').on('submit', function(e) {
+            if ($('#paymentType').val() === 'Partial Payment') {
+                var amount = parseFloat($('#paymentAmount').val()) || 0;
+                if (amount <= 0) {
+                    e.preventDefault();
+                    showError('Please enter a payment amount greater than zero.');
+                    $('#paymentAmount').focus();
+                    return false;
+                }
+            }
+        });
+
         updateRemaining();
+        handlePaymentTypeChange();
     });
 </script>
 </body>
