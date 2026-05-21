@@ -20,21 +20,39 @@ if (isset($_POST['Submit'])) {
     $Price       = $_POST['Price'];
     $description = $_POST['description'];
 
-    $sql = "UPDATE tbladdpackage
-            SET category=:category, titlename=:titlename, PackageDuration=:duration,
-                Price=:Price, Description=:description
-            WHERE id=:pid";
-    $query = $dbh->prepare($sql);
-    $query->bindParam(':category',    $category,    PDO::PARAM_STR);
-    $query->bindParam(':titlename',   $titlename,   PDO::PARAM_STR);
-    $query->bindParam(':duration',    $duration,    PDO::PARAM_STR);
-    $query->bindParam(':Price',       $Price,       PDO::PARAM_STR);
-    $query->bindParam(':description', $description, PDO::PARAM_STR);
-    $query->bindParam(':pid',         $pid,         PDO::PARAM_INT);
-    $query->execute();
+    // Compare against current DB values
+    $chkStmt = $dbh->prepare("SELECT category, titlename, PackageDuration, Price, Description FROM tbladdpackage WHERE id = :pid");
+    $chkStmt->bindParam(':pid', $pid, PDO::PARAM_INT);
+    $chkStmt->execute();
+    $current = $chkStmt->fetch(PDO::FETCH_OBJ);
 
-    echo "<script>alert('Package updated successfully.');</script>";
-    echo "<script>window.location.href='manage-post.php';</script>";
+    $unchanged = $current &&
+        (string)$current->category        === (string)$category &&
+        trim($current->titlename)         === trim($titlename) &&
+        (string)$current->PackageDuration === (string)$duration &&
+        (string)$current->Price           === (string)$Price &&
+        trim($current->Description)       === trim($description);
+
+    if ($unchanged) {
+        echo "<script>alert('No changes were made.');</script>";
+        echo "<script>window.location.href='manage-post.php';</script>";
+    } else {
+        $sql = "UPDATE tbladdpackage
+                SET category=:category, titlename=:titlename, PackageDuration=:duration,
+                    Price=:Price, Description=:description
+                WHERE id=:pid";
+        $query = $dbh->prepare($sql);
+        $query->bindParam(':category',    $category,    PDO::PARAM_STR);
+        $query->bindParam(':titlename',   $titlename,   PDO::PARAM_STR);
+        $query->bindParam(':duration',    $duration,    PDO::PARAM_STR);
+        $query->bindParam(':Price',       $Price,       PDO::PARAM_STR);
+        $query->bindParam(':description', $description, PDO::PARAM_STR);
+        $query->bindParam(':pid',         $pid,         PDO::PARAM_INT);
+        $query->execute();
+
+        echo "<script>alert('Package updated successfully.');</script>";
+        echo "<script>window.location.href='manage-post.php';</script>";
+    }
 }
 
 // Fetch existing record

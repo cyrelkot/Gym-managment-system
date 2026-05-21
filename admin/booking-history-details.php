@@ -314,7 +314,7 @@ id="PartialPayment"
 class="form-control"
 min="100"
 step="0.01"
-value="<?php echo $lastpayment;?>">
+value="">
 <div id="paymentError"
      style="color:#dc3545;font-size:0.875em;margin-top:4px;<?php echo $err ? '' : 'display:none;'; ?>">
   <?php echo htmlspecialchars($err, ENT_QUOTES, 'UTF-8'); ?>

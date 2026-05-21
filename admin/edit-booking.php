@@ -128,25 +128,43 @@ if (isset($_POST['update_booking'])) {
     } elseif ($newPaymentAmount > $packagePrice) {
         $err = 'Payment cannot exceed package amount.';
     } else {
-        $update = $dbh->prepare("UPDATE tblbooking
-            SET booking_date = :bookingDate,
-                userid = :userId,
-                package_id = :packageId,
-                paymentType = :paymentType,
-                payment = :payment
-            WHERE id = :bookingId");
-        $update->bindParam(':bookingDate', $newBookingDate, PDO::PARAM_STR);
-        $update->bindParam(':userId', $newUserId, PDO::PARAM_INT);
-        $update->bindParam(':packageId', $newPackageId, PDO::PARAM_INT);
-        $update->bindParam(':paymentType', $newPaymentType, PDO::PARAM_STR);
-        $update->bindParam(':payment', $newPaymentAmount, PDO::PARAM_STR);
-        $update->bindParam(':bookingId', $bookingId, PDO::PARAM_INT);
+        // Compare against current DB values before writing
+        $chkStmt = $dbh->prepare("SELECT booking_date, userid, package_id, paymentType, payment FROM tblbooking WHERE id = :bid");
+        $chkStmt->bindParam(':bid', $bookingId, PDO::PARAM_INT);
+        $chkStmt->execute();
+        $orig = $chkStmt->fetch(PDO::FETCH_OBJ);
 
-        if ($update->execute()) {
-            admin_sync_tblpayment_for_booking($dbh, $bookingId, $newPaymentAmount, $newPaymentType);
-            $success = 'Booking updated successfully.';
+        $origDate  = $orig ? date('Y-m-d', strtotime($orig->booking_date)) : '';
+        $unchanged = $orig &&
+            $origDate                  === $newBookingDate &&
+            (int)$orig->userid         === $newUserId &&
+            (int)$orig->package_id     === $newPackageId &&
+            (string)$orig->paymentType === $newPaymentType &&
+            abs((float)$orig->payment - $newPaymentAmount) < 0.009;
+
+        if ($unchanged) {
+            $success = 'No changes were made.';
         } else {
-            $err = 'Failed to update booking.';
+            $update = $dbh->prepare("UPDATE tblbooking
+                SET booking_date = :bookingDate,
+                    userid = :userId,
+                    package_id = :packageId,
+                    paymentType = :paymentType,
+                    payment = :payment
+                WHERE id = :bookingId");
+            $update->bindParam(':bookingDate', $newBookingDate, PDO::PARAM_STR);
+            $update->bindParam(':userId', $newUserId, PDO::PARAM_INT);
+            $update->bindParam(':packageId', $newPackageId, PDO::PARAM_INT);
+            $update->bindParam(':paymentType', $newPaymentType, PDO::PARAM_STR);
+            $update->bindParam(':payment', $newPaymentAmount, PDO::PARAM_STR);
+            $update->bindParam(':bookingId', $bookingId, PDO::PARAM_INT);
+
+            if ($update->execute()) {
+                admin_sync_tblpayment_for_booking($dbh, $bookingId, $newPaymentAmount, $newPaymentType);
+                $success = 'Booking updated successfully.';
+            } else {
+                $err = 'Failed to update booking.';
+            }
         }
     }
 }
