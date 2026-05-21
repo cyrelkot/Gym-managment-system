@@ -493,3 +493,19 @@ select.form-control option {
   color: #a8f0bc;
   border-radius: 4px;
 }
+
+/* ---- 15. Password eye toggle — matches registration.php design ---- */
+.pass-wrapper {
+  position: relative;
+}
+.pass-wrapper span {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer !important;
+  color: #ff6600;
+  font-size: 1rem;
+  line-height: 1;
+  user-select: none;
+}

@@ -191,8 +191,13 @@ $admins = $dbh->query("SELECT id, name, email, mobile, role, create_date FROM tb
     <!-- Add New Admin -->
     <div class="col-md-4">
       <div class="tile">
-        <h3 class="tile-title">Add New Admin</h3>
-        <div class="tile-body">
+        <div class="tile-title-w-btn">
+          <h3 class="title">Add New Admin</h3>
+          <button type="button" id="toggleAddForm" class="btn btn-primary btn-sm">
+            <i class="fa fa-plus"></i> Add New Admin
+          </button>
+        </div>
+        <div class="tile-body collapse <?php echo ($errormsg || $msg) ? 'show' : ''; ?>" id="addAdminForm">
           <form method="post">
             <?= csrf_field() ?>
             <div class="form-group">
@@ -209,7 +214,10 @@ $admins = $dbh->query("SELECT id, name, email, mobile, role, create_date FROM tb
             </div>
             <div class="form-group">
               <label>Password</label>
-              <input type="password" name="password" class="form-control" required>
+              <div class="pass-wrapper">
+                <input type="password" name="password" id="adminPassword" class="form-control" required>
+                <span id="adminPasswordToggle" onclick="togglePass('adminPassword', this)"><i class="fa fa-eye"></i></span>
+              </div>
             </div>
             <div class="form-group">
               <label>Role</label>
@@ -232,6 +240,23 @@ $admins = $dbh->query("SELECT id, name, email, mobile, role, create_date FROM tb
 <script src="js/popper.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/main.js"></script>
+<script>
+function togglePass(id, btn) {
+  var x = document.getElementById(id);
+  var showing = x.type === 'password';
+  x.type = showing ? 'text' : 'password';
+  btn.querySelector('i').className = showing ? 'fa fa-eye-slash' : 'fa fa-eye';
+}
+
+document.getElementById('toggleAddForm').addEventListener('click', function () {
+  var panel = document.getElementById('addAdminForm');
+  if (panel.classList.contains('show')) {
+    panel.classList.remove('show');
+  } else {
+    panel.classList.add('show');
+  }
+});
+</script>
 
 </body>
 </html>
