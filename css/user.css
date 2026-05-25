@@ -689,6 +689,7 @@ body.reg-page .container {
 
 body.reg-page .form-box {
   width: 420px;
+  overflow: hidden;
   background: rgba(20, 20, 20, 0.85);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 102, 0, 0.3);
@@ -706,6 +707,7 @@ body.reg-page h3 {
 
 body.reg-page input {
   width: 100%;
+  max-width: 100%;
   padding: 12px;
   margin-bottom: 12px;
   border-radius: 8px;
@@ -719,6 +721,13 @@ body.reg-page input {
 body.reg-page input:focus {
   border: 1px solid #ff6600;
   box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
+}
+
+body.reg-page input:-webkit-autofill,
+body.reg-page input:-webkit-autofill:hover,
+body.reg-page input:-webkit-autofill:focus {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 body.reg-page .pass-wrapper {
