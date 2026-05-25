@@ -225,6 +225,7 @@ if ($remainingBalance < 0) {
     <title>Admin | Edit Booking</title>
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="icon" type="image/png" href="../icon-fonts/gym-logo.png">
 </head>
 <body class="app sidebar-mini rtl">
 <?php include 'include/header.php'; ?>

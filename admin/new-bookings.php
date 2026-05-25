@@ -51,6 +51,7 @@ if (isset($_POST['delete_booking']) && isset($_POST['bookingid'])) {
 
 <link rel="stylesheet" type="text/css"
 href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="icon" type="image/png" href="../icon-fonts/gym-logo.png">
 
 </head>
 

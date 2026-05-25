@@ -191,6 +191,7 @@ if (isset($_POST['login'])) {
     }
 
   </style>
+<link rel="icon" type="image/png" href="../icon-fonts/gym-logo.png">
 </head>
 
 <body>

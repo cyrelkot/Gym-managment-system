@@ -68,6 +68,7 @@ if (isset($_POST['submit'])) {
         }
     }
     </script>
+<link rel="icon" type="image/png" href="icon-fonts/gym-logo.png">
 </head>
 <body class="changepwd-page">
 

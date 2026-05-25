@@ -18,7 +18,7 @@ if (!isset($_SESSION['adminid']) || strlen($_SESSION['adminid']) == 0) {
   <!-- Main CSS -->
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
+  <link rel="icon" type="image/png" href="../icon-fonts/gym-logo.png">
 
 </head>
 

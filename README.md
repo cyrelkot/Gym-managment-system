@@ -25,3 +25,7 @@ Username: angel@gmail.com
 Password: @Angel17
 
 or Register a new user
+
+## Image Credits
+
+- **Gym logo** (`icon-fonts/gym-logo.png`): [Gym-dynamic-gradient.png](https://commons.wikimedia.org/wiki/File:Gym-dynamic-gradient.png) via Wikimedia Commons

@@ -77,6 +77,7 @@ if (!empty($email) && !empty($password)) {
 
 <link rel="stylesheet" href="css/font-awesome.min.css">
 <link rel="stylesheet" href="css/user.css"/>
+<link rel="icon" type="image/png" href="icon-fonts/gym-logo.png">
 
 </head>
 
