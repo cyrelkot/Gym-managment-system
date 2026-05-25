@@ -73,7 +73,9 @@ $paymentAmount=$remaining;
 
 /* PREVENT OVERPAY */
 
-if ($Paymenttype == "Partial Payment" && $paymentAmount <= 0) {
+if (empty($Paymenttype)) {
+    $err = 'Please select a payment type.';
+} elseif ($Paymenttype == "Partial Payment" && $paymentAmount <= 0) {
     $err = 'Partial payment amount must be greater than zero.';
 } elseif($paymentAmount>$remaining){
 
@@ -470,6 +472,12 @@ $("#PartialPayment").on('input', function() {
 });
 
 $('form').on('submit', function(e) {
+    if ($('#Payment').val() === '') {
+        e.preventDefault();
+        showError('Please select a payment type.');
+        $('#Payment').focus();
+        return false;
+    }
     if ($('#Payment').val() === 'Partial Payment') {
         var amount = parseFloat($('#PartialPayment').val()) || 0;
         if (amount <= 0) {
