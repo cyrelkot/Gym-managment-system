@@ -100,7 +100,7 @@ if (!empty($email) && !empty($password)) {
 <div class="main">
 
 <div class="hero-text">
-<h1>Train <span>Hard</span><br>Stay <span>Strong</span></h1>
+<h1>Train <span>Hard</span><br>Stay <span>Strong</span><br>Work <span>Hard</span></h1>
 <p>Join our gym and achieve your fitness goals.</p>
 </div>
 
