@@ -57,7 +57,9 @@ if (isset($_POST['change_role'])) {
     $targetId = (int)($_POST['target_id'] ?? 0);
     $newRole  = $_POST['new_role'] ?? '';
 
-    if ($targetId === $currentAdminId) {
+    if ($targetId === $lockedAdminId) {
+        $errormsg = 'This account\'s role is permanently locked and cannot be changed.';
+    } elseif ($targetId === $currentAdminId) {
         $errormsg = 'You cannot change your own role.';
     } elseif (!in_array($newRole, ['super_admin', 'staff'], true)) {
         $errormsg = 'Invalid role selected.';
@@ -78,6 +80,8 @@ if (isset($_POST['delete_admin'])) {
     $targetId = (int)($_POST['target_id'] ?? 0);
     if ($targetId === $currentAdminId) {
         $errormsg = 'You cannot delete your own account.';
+    } elseif ($targetId === $lockedAdminId) {
+        $errormsg = 'This account is permanently locked and cannot be deleted.';
     } elseif ($targetId === 0) {
         $errormsg = 'Invalid admin selected.';
     } else {
@@ -93,6 +97,7 @@ if (isset($_POST['delete_admin'])) {
 
 // Fetch all admins
 $admins = $dbh->query("SELECT id, name, email, mobile, role, create_date FROM tbladmin ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
+$lockedAdminId = !empty($admins) ? (int)$admins[0]['id'] : 0;
 ?>
 
 <!DOCTYPE html>
@@ -160,7 +165,9 @@ $admins = $dbh->query("SELECT id, name, email, mobile, role, create_date FROM tb
                 </td>
                 <td><?= htmlspecialchars(date('M d, Y', strtotime($adm['create_date'])), ENT_QUOTES, 'UTF-8') ?></td>
                 <td>
-                  <?php if ((int)$adm['id'] !== $currentAdminId): ?>
+                  <?php if ((int)$adm['id'] === $lockedAdminId): ?>
+                    <span class="badge badge-secondary"><i class="fa fa-lock"></i> Locked</span>
+                  <?php elseif ((int)$adm['id'] !== $currentAdminId): ?>
                     <!-- Change Role -->
                     <form method="post" style="display:inline-block; margin-bottom:4px;">
                       <?= csrf_field() ?>
