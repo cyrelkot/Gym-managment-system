@@ -110,6 +110,38 @@ if (!$row) {
 
 </div>
 
+<?php
+$sql="SELECT * FROM tblpayment WHERE bookingID=:id ORDER BY payment_date ASC, id ASC";
+$query=$dbh->prepare($sql);
+$query->bindParam(':id',$bookingid);
+$query->execute();
+$payments=$query->fetchAll(PDO::FETCH_OBJ);
+
+$packageTotal = isset($row->Price) ? (float) $row->Price : 0;
+$totalPaid = 0;
+foreach($payments as $pay){ $totalPaid += (float) $pay->payment; }
+$remaining = max(0, $packageTotal - $totalPaid);
+
+if($totalPaid >= $packageTotal && $packageTotal > 0){
+    $payStatus = '<span style="background:#28a745;color:#fff;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;">Fully Paid</span>';
+} elseif($totalPaid > 0){
+    $payStatus = '<span style="background:#ff6600;color:#fff;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;">Partially Paid</span>';
+} else {
+    $payStatus = '<span style="background:#6c757d;color:#fff;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;">Not Paid</span>';
+}
+?>
+
+<!-- PAYMENT SUMMARY -->
+<div class="card">
+<h3>Payment Summary</h3>
+<div class="grid">
+<div><span class="label">Package Price</span><br><span class="value">₱<?php echo number_format($packageTotal, 2, '.', ''); ?></span></div>
+<div><span class="label">Total Paid</span><br><span class="value">₱<?php echo number_format($totalPaid, 2, '.', ''); ?></span></div>
+<div><span class="label">Remaining Balance</span><br><span class="value">₱<?php echo number_format($remaining, 2, '.', ''); ?></span></div>
+<div><span class="label">Payment Status</span><br><span class="value"><?php echo $payStatus; ?></span></div>
+</div>
+</div>
+
 <!-- PAYMENT HISTORY -->
 <div class="card">
 <h3>Payment History</h3>
@@ -118,34 +150,23 @@ if (!$row) {
 <tr>
 <th>Type</th>
 <th>Amount</th>
-<th>Total Amount</th>
+<th>Package Price</th>
 <th>Remaining Balance</th>
 <th>Updated Date</th>
 </tr>
 
 <?php
-$sql="SELECT * FROM tblpayment WHERE bookingID=:id ORDER BY payment_date ASC, id ASC";
-$query=$dbh->prepare($sql);
-$query->bindParam(':id',$bookingid);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-
-$packageTotal = isset($row->Price) ? (float) $row->Price : 0;
 $cumulativePaid = 0;
-
-foreach($results as $pay){
+foreach($payments as $pay){
 $cumulativePaid += (float) $pay->payment;
-$remainingAfter = $packageTotal - $cumulativePaid;
-if ($remainingAfter < 0) {
-    $remainingAfter = 0;
-}
+$remainingAfter = max(0, $packageTotal - $cumulativePaid);
 ?>
 
 <tr>
 <td><?php echo htmlentities($pay->paymentType);?></td>
-<td><?php echo number_format((float) $pay->payment, 2, '.', '');?></td>
-<td><?php echo number_format($packageTotal, 2, '.', '');?></td>
-<td><?php echo number_format($remainingAfter, 2, '.', '');?></td>
+<td>₱<?php echo number_format((float) $pay->payment, 2, '.', '');?></td>
+<td>₱<?php echo number_format($packageTotal, 2, '.', '');?></td>
+<td>₱<?php echo number_format($remainingAfter, 2, '.', '');?></td>
 <td><?php echo htmlentities($pay->payment_date);?></td>
 </tr>
 
@@ -153,7 +174,7 @@ if ($remainingAfter < 0) {
 
 <tr>
 <th>Total Paid</th>
-<th colspan="4"><?php echo number_format($cumulativePaid, 2, '.', '');?></th>
+<th colspan="4">₱<?php echo number_format($totalPaid, 2, '.', '');?></th>
 </tr>
 
 </table>

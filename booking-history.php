@@ -86,7 +86,9 @@ t2.PackageDuration,
 t2.Price,
 t2.Description,
 t4.category_name,
-t1.status
+t1.status,
+t1.paymentType,
+t1.payment
 FROM tblbooking t1
 LEFT JOIN tbladdpackage t2 ON t1.package_id = t2.id
 LEFT JOIN tblcategory t4 ON t2.category = t4.id
@@ -115,6 +117,7 @@ $cnt=1;
 <th>Price</th>
 <th>Category</th>
 <th>Status</th>
+<th>Payment</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -134,6 +137,15 @@ $cnt=1;
     <span style="color:#28a745;font-weight:600;">Active</span>
 <?php else: ?>
     <span style="color:#6c757d;font-weight:600;">Expired</span>
+<?php endif; ?>
+</td>
+<td>
+<?php if($row->paymentType === 'Full Payment'): ?>
+    <span style="background:#28a745;color:#fff;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;">Fully Paid</span>
+<?php elseif($row->paymentType === 'Partial Payment'): ?>
+    <span style="background:#ff6600;color:#fff;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;">Partially Paid</span>
+<?php else: ?>
+    <span style="background:#6c757d;color:#fff;padding:3px 10px;border-radius:12px;font-size:0.82em;font-weight:600;">Not Paid</span>
 <?php endif; ?>
 </td>
 <td>
