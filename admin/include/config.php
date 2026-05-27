@@ -45,7 +45,7 @@ function csrf_verify(): bool {
 // RBAC
 define('RBAC_PERMISSIONS', [
     'super_admin' => ['manage_packages', 'manage_bookings', 'approve_users', 'view_reports', 'manage_admins'],
-    'staff'       => ['manage_bookings'],
+    'staff'       => ['manage_bookings', 'view_reports'],
 ]);
 
 function admin_can(string $permission): bool {
